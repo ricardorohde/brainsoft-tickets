@@ -1,0 +1,245 @@
+<?php 
+  session_start();
+  if (!isset($_SESSION['ticket_page_'.$_SESSION['login']])) {
+    header("Location:../dashboard");
+  }
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Brainsoft Sistemas - Buscar | Pesquisar Tickets</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Custom icon font-->
+    <link rel="stylesheet" href="../css/fontastic.css">
+    <!-- Google fonts - Roboto -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <!-- jQuery Circle-->
+    <link rel="stylesheet" href="../css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <!-- Custom Scrollbar-->
+    <link rel="stylesheet" href="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="../css/custom.css">
+
+    <link type="text/css" href="../css/jquery-ui.css" rel="stylesheet"/>
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="favicon.png">
+
+  </head>
+  <?php 
+    $target_adm = "../administrativo";
+    $target_ticket = "../tickets";
+    $target_user = "../usuarios"; 
+    $target_registry = "../cartorios";
+    $target_registration_forms = "../cadastros";
+    $target_internal_queue = "../fila-interna";
+    $target_authorization = "../autorizacoes";
+    $target_report = "../relatorios";
+
+    $target_logout = "../logout";
+  ?>
+  <body>
+    <?php include ("../navs/navbar.php");?>
+    <div class="root-page forms-page">
+      <?php include ("../navs/header.php");?>
+
+      <?php 
+        $sql_ticket = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source != ? ORDER BY id DESC LIMIT 5");
+        $sql_ticket->execute(array("telefone")); $tickets = $sql_ticket->fetchAll();
+
+        $sql_calls = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 3");
+        $sql_calls->execute(array("telefone")); $calls = $sql_calls->fetchAll();
+      ?>
+
+      <section class="forms">
+        <div class="container-fluid">
+          <header> 
+            <h1 class="h3 display">Criar Ticket</h1>
+          </header>
+          <div class="row">    
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header d-flex align-items-center">
+                  <h2 class="h5 display">Informe o código do Chat ou Ligação!</h2>
+                </div>
+                <div class="card-body">
+                  <form class="form-horizontal" action="ticket.php" method="GET">
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label mt-4">Código</label>
+                      <div class="col-sm-10 select ui-widget">
+                        <input type="text" name="id_chat" id="id_chat" class="justNumbers form-control" maxlength="7" autofocus="" autocomplete="off" required><span class="help-block-none">Informe o código do chat atendido.</span>
+                      </div>
+                    </div>                  
+                    <div class="form-group row">
+                      <div class="col-sm-12 offset-sm-2">
+                        <button type="submit" class="btn col-sm-10 btn-primary">BUSCAR / REGISTRAR!</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">    
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0" style="padding: 0.65rem 0.75rem; font-size: 1rem;">Últimos Tickets</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group row">
+                    <div class="table-responsive" style="overflow-x: hidden;">
+                      <table class="table table-striped last-tickets">
+                      <thead>
+                        <tr>
+                          <th>Chat</th>
+                          <th>Status</th>      
+                          <th>Módulo</th>
+                          <th>Atendente</th>
+                          <th>Registrado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php if (!empty($tickets)) : ?>
+                        <?php foreach ($tickets as $ticket) : ?>
+
+                          <?php 
+                            $sql_module = $connection->getConnection()->prepare("SELECT description FROM ticket_module WHERE id = ?"); $sql_module->execute(array($ticket['id_module'])); 
+                              $module = $sql_module->fetch();
+
+                            $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); $sql_attendant->execute(array($ticket['id_attendant'])); 
+                              $attendant = $sql_attendant->fetch();
+
+                            $sql_chat = $connection->getConnection()->prepare("SELECT id_chat FROM chat WHERE id = ?"); $sql_chat->execute(array($ticket['id_chat'])); 
+                              $id_chat = $sql_chat->fetch();
+                          ?>
+
+                          <tr>
+                            <td><?php echo $id_chat[0]; ?></td>
+                            <td><?php echo ucfirst($ticket['t_status']); ?></td>
+                            <td><?php echo $module[0]; ?></td>
+                            <td><?php echo $attendant[0]; ?></td>
+                            <td><?php echo date('d/m/Y H:i:s', strtotime($ticket['registered_at'])); ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php else : ?>
+                        <tr>
+                          <td colspan="6">Nenhum chat registrado.</td>
+                        </tr>
+                      <?php endif; ?>
+                      </tbody>
+                      </table>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+
+              <div id="accordion">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                      <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Ligações Recentes
+                      </button>
+                    </h5>
+                  </div>
+
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-striped last-tickets">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Status</th>      
+                            <th>Módulo</th>
+                            <th>Atendente</th>
+                            <th>Registrado</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <?php if (!empty($calls)) : ?>
+                          <?php foreach ($calls as $call) : ?>
+                            <?php 
+                              $sql_module = $connection->getConnection()->prepare("SELECT description FROM ticket_module WHERE id = ?"); $sql_module->execute(array($call['id_module'])); 
+                                $module = $sql_module->fetch();
+
+                              $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); $sql_attendant->execute(array($call['id_attendant'])); 
+                                $attendant = $sql_attendant->fetch();
+
+                              $sql_chat = $connection->getConnection()->prepare("SELECT id_chat FROM chat WHERE id = ?"); $sql_chat->execute(array($call['id_chat'])); 
+                                $id_chat = $sql_chat->fetch();
+                            ?>
+
+                            <tr>
+                              <td><?php echo $id_chat[0]; ?></td>
+                              <td><?php echo ucfirst($call['t_status']); ?></td>
+                              <td><?php echo $module[0]; ?></td>
+                              <td><?php echo $attendant[0]; ?></td>
+                              <td><?php echo date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
+                            </tr>
+                          <?php endforeach; ?>
+                        <?php else : ?>
+                          <tr>
+                            <td colspan="6">Nenhuma ligação registrada.</td>
+                          </tr>
+                        <?php endif; ?>
+                        </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <footer class="main-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Your company &copy; 2017-2019</p>
+            </div>
+            <div class="col-sm-6 text-right">
+              <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
+              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- Javascript files-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../jquery-ui.js"></script>
+    <script src="../../js/jquery.mask.js"></script>
+    <script src="../js/front.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="../js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
+    <script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
+    <!---->
+  </body>
+</html>
