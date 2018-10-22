@@ -18,6 +18,8 @@ $opening_time = "";
 $transfer_time = "";
 $attendant_time_after_transfer = "";
 
+$customers_at_reception = 0;
+
 $ch_1 = curl_init();
 $ch_2 = curl_init();
 
@@ -59,6 +61,10 @@ foreach ($data1 as $key => $value){
       $start = $value->chat_inicio;
       $final = $value->chat_final;
       $rating = $value->chat_nota_atendimento;
+    }
+
+    if ($value->chat_atendente == "camila" && $value->departamento == "Camila"){
+      $customers_at_reception++;
     }
 }
 

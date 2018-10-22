@@ -3,6 +3,8 @@
   if (!isset($_SESSION['ticket_page_'.$_SESSION['login']])) {
     header("Location:../dashboard");
   }
+
+  include ("../../utils/api-chat/api-last-chats.php");
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +38,31 @@
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
 
+    <script type="text/javascript">
+      var contador = '30';
+
+      function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        setInterval(function() {
+          minutes = parseInt(timer / 60, 10)
+          seconds = parseInt(timer % 60, 10);
+
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          display.textContent = minutes + ":" + seconds;
+
+          if (--timer < 2) {
+            location.reload();
+          }
+        }, 1000);
+      }
+
+      window.onload = function() {
+        var count = parseInt(contador), display = document.querySelector('#time');
+        startTimer(count, display);
+      };
+    </script>
   </head>
   <?php 
     $target_adm = "../administrativo";
@@ -65,7 +92,7 @@
       <section class="forms">
         <div class="container-fluid">
           <header> 
-            <h1 class="h3 display">Criar Ticket</h1>
+            <h1 class="h3 display">Criar Ticket | <span>Atualização automática em <span id="time">...</span></span></h1>
           </header>
           <div class="row">    
             <div class="col-lg-12">
@@ -96,7 +123,7 @@
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-header">
-                  <h5 class="mb-0" style="padding: 0.65rem 0.75rem; font-size: 1rem;">Últimos Tickets</h5>
+                  <h5 class="mb-0" style="padding: 0.65rem 0.75rem; font-size: 1rem;">Chats em atendimento</h5>
                 </div>
                 <div class="card-body">
                   <div class="form-group row">
@@ -104,41 +131,30 @@
                       <table class="table table-striped last-tickets">
                       <thead>
                         <tr>
-                          <th>Chat</th>
-                          <th>Status</th>      
-                          <th>Módulo</th>
+                          <th>Chat</th>    
                           <th>Atendente</th>
-                          <th>Registrado</th>
+                          <th>Cliente</th>
+                          <th>Iniciado ás</th>
                         </tr>
                       </thead>
                       <tbody>
-                      <?php if (!empty($tickets)) : ?>
-                        <?php foreach ($tickets as $ticket) : ?>
-
-                          <?php 
-                            $sql_module = $connection->getConnection()->prepare("SELECT description FROM ticket_module WHERE id = ?"); $sql_module->execute(array($ticket['id_module'])); 
-                              $module = $sql_module->fetch();
-
-                            $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); $sql_attendant->execute(array($ticket['id_attendant'])); 
-                              $attendant = $sql_attendant->fetch();
-
-                            $sql_chat = $connection->getConnection()->prepare("SELECT id_chat FROM chat WHERE id = ?"); $sql_chat->execute(array($ticket['id_chat'])); 
-                              $id_chat = $sql_chat->fetch();
-                          ?>
-
-                          <tr>
-                            <td><?php echo $id_chat[0]; ?></td>
-                            <td><?php echo ucfirst($ticket['t_status']); ?></td>
-                            <td><?php echo $module[0]; ?></td>
-                            <td><?php echo $attendant[0]; ?></td>
-                            <td><?php echo date('d/m/Y H:i:s', strtotime($ticket['registered_at'])); ?></td>
-                          </tr>
-                        <?php endforeach; ?>
-                      <?php else : ?>
-                        <tr>
-                          <td colspan="6">Nenhum chat registrado.</td>
-                        </tr>
-                      <?php endif; ?>
+                        <?php
+                          $actual_date = $day . "/" . $month . "/" . $year;
+                          foreach ($data1 as $key => $value){
+                            $date_formated = date('d/m/Y', strtotime($value->chat_inicio));
+                            if($date_formated == $actual_date && $value->chat_final == null): 
+                              $chat_started = date('H:m:s', strtotime($value->chat_inicio));
+                        ?>
+                              <tr>
+                                <td><?= $value->cod_chat ?></td>
+                                <td><?= ucfirst($value->chat_atendente) ?></td>
+                                <td><?= ucfirst($value->cliente_nome) ?></td>
+                                <td><?= $chat_started ?></td>
+                              </tr>
+                        <?php
+                            endif;
+                          }
+                        ?>
                       </tbody>
                       </table>
                     </div>
