@@ -37,32 +37,6 @@
     <link type="text/css" href="../css/jquery-ui.css" rel="stylesheet"/>
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
-
-    <script type="text/javascript">
-      var contador = '30';
-
-      function startTimer(duration, display) {
-        var timer = duration, minutes, seconds;
-        setInterval(function() {
-          minutes = parseInt(timer / 60, 10)
-          seconds = parseInt(timer % 60, 10);
-
-          minutes = minutes < 10 ? "0" + minutes : minutes;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
-
-          display.textContent = minutes + ":" + seconds;
-
-          if (--timer < 2) {
-            location.reload();
-          }
-        }, 1000);
-      }
-
-      window.onload = function() {
-        var count = parseInt(contador), display = document.querySelector('#time');
-        startTimer(count, display);
-      };
-    </script>
   </head>
   <?php 
     $target_adm = "../administrativo";
@@ -82,8 +56,8 @@
       <?php include ("../navs/header.php");?>
 
       <?php 
-        $sql_ticket = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source != ? ORDER BY id DESC LIMIT 5");
-        $sql_ticket->execute(array("telefone")); $tickets = $sql_ticket->fetchAll();
+        /*$sql_ticket = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source != ? ORDER BY id DESC LIMIT 5");
+        $sql_ticket->execute(array("telefone")); $tickets = $sql_ticket->fetchAll();*/
 
         $sql_calls = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 3");
         $sql_calls->execute(array("telefone")); $calls = $sql_calls->fetchAll();
@@ -92,7 +66,7 @@
       <section class="forms">
         <div class="container-fluid">
           <header> 
-            <h1 class="h3 display">Criar Ticket | <span>Atualização automática em <span id="time">...</span></span></h1>
+            <h1 class="h3 display">Criar Ticket</h1>
           </header>
           <div class="row">    
             <div class="col-lg-12">
@@ -140,20 +114,20 @@
                       <tbody>
                         <?php
                           $actual_date = $day . "/" . $month . "/" . $year;
-                          foreach ($data1 as $key => $value){
+                          foreach ($data1 as $key => $value):
                             $date_formated = date('d/m/Y', strtotime($value->chat_inicio));
                             if($date_formated == $actual_date && $value->chat_final == null): 
                               $chat_started = date('H:m:s', strtotime($value->chat_inicio));
                         ?>
                               <tr>
-                                <td><?= $value->cod_chat ?></td>
+                                <td><a href="#" class="chat-code"><?= $value->cod_chat ?></a></td>
                                 <td><?= ucfirst($value->chat_atendente) ?></td>
                                 <td><?= ucfirst($value->cliente_nome) ?></td>
                                 <td><?= $chat_started ?></td>
                               </tr>
                         <?php
                             endif;
-                          }
+                          endforeach;
                         ?>
                       </tbody>
                       </table>
@@ -203,11 +177,11 @@
                             ?>
 
                             <tr>
-                              <td><?php echo $id_chat[0]; ?></td>
-                              <td><?php echo ucfirst($call['t_status']); ?></td>
-                              <td><?php echo $module[0]; ?></td>
-                              <td><?php echo $attendant[0]; ?></td>
-                              <td><?php echo date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
+                              <td><?= $id_chat[0]; ?></td>
+                              <td><?= ucfirst($call['t_status']); ?></td>
+                              <td><?= $module[0]; ?></td>
+                              <td><?= $pieces = explode(" ", $attendant[0])[0]; ?></td>
+                              <td><?= date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
                             </tr>
                           <?php endforeach; ?>
                         <?php else : ?>
@@ -246,6 +220,7 @@
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../jquery-ui.js"></script>
     <script src="../../js/jquery.mask.js"></script>
+    <script src="../js/find-ticket.js"></script>
     <script src="../js/front.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="../vendor/jquery.cookie/jquery.cookie.js"> </script>
