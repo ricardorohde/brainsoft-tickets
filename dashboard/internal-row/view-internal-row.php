@@ -36,7 +36,7 @@
 	    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
 	    <script type="text/javascript">
-			var contador = '60';
+			var contador = '30';
 
 			function startTimer(duration, display) {
 			  var timer = duration, minutes, seconds;
