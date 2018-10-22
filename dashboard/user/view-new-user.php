@@ -275,6 +275,7 @@
     <script src="../js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
     <script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
     <script src="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../js/user.js"></script>
     <script src="../js/front.js"></script>
     <script src="../js/brain.js"></script>    
     

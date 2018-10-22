@@ -71,6 +71,14 @@
                   <a class="btn btn-default" href="cartorios"><i class="fa fa-refresh"></i> Atualizar</a>
                 </div>
             </div>
+            <div id="statusLogin" class="alert alert-success" 
+              <?php echo (isset($_SESSION['registryOk'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
+              <?php echo $_SESSION['registryOk']; unset($_SESSION['registryOk']);?>
+            </div>
+            <div id="statusLogin" class="alert alert-danger" 
+              <?php echo (isset($_SESSION['registryExists'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
+              <?php echo $_SESSION['registryExists']; unset($_SESSION['registryExists']);?>
+            </div>
           </header>
 
           <hr>

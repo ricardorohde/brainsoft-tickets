@@ -245,7 +245,7 @@ $(document).ready(function () {
     });
 
     $("input[name=login]").blur(function(){
-        $.post("../../utils/controller/ctrl_credential.php", {/*typeUser: $("input[name=typeUser]:checked").val(),*/userToVerify:$(this).val()},
+        $.post("../../utils/controller/ctrl_credential.php", {/*typeUser: $("input[name=typeUser]:checked").val(),*/userToVerify:$(this).val().trim()},
           function(result){
             if (result == 1){
                 document.formAdd.login.style.boxShadow = "0 0 5px #ff0000"; 

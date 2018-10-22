@@ -3,7 +3,7 @@
 	if (isset($_POST['newRegistry'])) {
 		$id = $_POST['id_registry'];
 
-		$name = $_POST['name'];
+		$name = $_POST['nameRegistry'];
 		$id_city = $_POST['city'];
 
 		$registryController = new RegistryController();
@@ -44,27 +44,28 @@
 			$registry = new Registry($this->getInstance());
 
 			if($id == NULL){
-				$name = utf8_decode($name);
+				$decodedName = utf8_decode($name);
 
-				$registry->setName($name);
+				$registry->setName($decodedName);
 				$registry->setIdCity($id_city);
 				$registry->register();
 			
 				//CRIANDO UMA SESSAO DE SUCESSO E REDIRECIONANDO
-	        	$_SESSION['registryOk'] = "<strong>Sucesso!</strong> Cartório <b><u>$utf8_name</u></b> cadastrado com êxito.";
-	       		header("Location:../../dashboard/registry/view-new-registry.php?id=$id");
+	        	$_SESSION['registryOk'] = 
+	        		"<strong>Sucesso!</strong> Cartório <b><u>$name</u></b> cadastrado com êxito.";
+	       		header("Location:../../dashboard/cartorios");
 	       	} else{
-	       		$name = utf8_decode($name);
-				//$utf8_name = utf8_encode($name);
+	       		$decodedName = utf8_decode($name);
 
 				$registry->setId($id);
-				$registry->setName($name);
+				$registry->setName($decodedName);
 				$registry->setIdCity($id_city);
 	       		$registry->update();
 
 	       		//CRIANDO UMA SESSAO DE SUCESSO E REDIRECIONANDO
-	        	$_SESSION['registryOk'] = "<strong>Sucesso!</strong> Cartório <b><u>$utf8_name</u></b> atualizado com êxito.";
-	       		header("Location:../../dashboard/registry/view-new-registry.php?id=$id");
+	        	$_SESSION['registryOk'] = 
+	        		"<strong>Sucesso!</strong> Cartório <b><u>$name</u></b> atualizado com êxito.";
+	       		header("Location:../../dashboard/cartorios");
 	       	}
 		}
 

@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	$("input[name=nameRegistry]").blur(function(){
-        $.post("../../utils/controller/ctrl_registry.php", {registryToVerify:$(this).val()},
+        $.post("../../utils/controller/ctrl_registry.php", {registryToVerify:$(this).val().trim()},
           function(result){
             if (result == 1){
                 document.formAddRegistry.nameRegistry.style.boxShadow = "0 0 5px #ff0000"; 

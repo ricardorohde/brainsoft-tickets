@@ -504,6 +504,14 @@
 						</tr>
 					<?php endforeach ?>
 				</table>
+				<div>
+					<div style="font-size: 10px">
+						<img src='img/is-on.png' style="height: 10px;"></img> Online
+						<img src='img/is-busy.png' style="height: 10px; margin-left: 20px;"></img> Backup
+						<img src='img/is-trainer.png' style="height: 10px; margin-left: 20px;"></img> Treinamento
+						<img src='img/is-off.png' style="height: 10px; margin-left: 20px;"></img> Offline
+					</div>
+				</div>
 			</div>
           </div>
         </div>

@@ -72,7 +72,7 @@
 		}
 
 		public function findIdByName(){
-			$name = preg_replace('/[`^~\'"]/', null, iconv('UTF-8', 'ASCII//TRANSLIT', $this->getName()));
+			$name = utf8_decode($this->getName());
 
 			$sql = $this->getConn()->prepare("SELECT id FROM registry WHERE name LIKE ?");
 			$sql->bindValue(1, $name);
@@ -89,17 +89,17 @@
 	   		return $sql->fetchAll();
 		}
 
-		public function verifyIfExists(){
-			$name = preg_replace('/[`^~\'"]/', null, iconv('UTF-8', 'ASCII//TRANSLIT', $this->getName()));
+		public function verifyIfExists(){	
+			$city = utf8_decode($this->getName());
 
-			$sql = $this->getConn()->prepare("SELECT COUNT(*) as total FROM registry WHERE name LIKE ?");
-			$sql->bindValue(1, "%".$name."%");
+			$sql = $this->getConn()->prepare("SELECT COUNT(*) as total FROM registry WHERE name LIKE :city");
+			$sql->bindValue(':city', $city, PDO::PARAM_STR);
 	    	$sql->execute();
 
 	   		while($row = $sql->fetch()){
   				$total = $row['total'];
 			}
-			
+
 			return $total;
 		}
 
