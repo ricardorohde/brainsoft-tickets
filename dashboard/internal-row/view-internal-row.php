@@ -477,7 +477,7 @@
 					<tr>
 						<td></td>
 						<td>Atendente</td>
-						<?php for ($i = 0; $i < 10; $i++) : ?>
+						<?php for ($i = 0; $i < 8; $i++) : ?>
 							<?php if($i == 0) : ?>
 								<td>Hoje</td>
 							<?php elseif($i == 1) : ?>
@@ -492,7 +492,7 @@
 							<td><?= $attendant['on_chat'] == "yes" ? "<img src='img/is-on.png'></img>" : "<img src='img/is-off.png'></img>" ?></td>
 							<td><?= explode(" ", $attendant['name'])[0]?></td>
 							
-							<?php for ($j = 0; $j < 10; $j++) : ?> 
+							<?php for ($j = 0; $j < 8; $j++) : ?> 
 								<?php $actual_date = date('Y-m-d', strtotime('-' .$j. ' days'));
 								$sql_total_calls = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND finalized_at LIKE ?");
 			        			$sql_total_calls->execute(array($attendant['id'], "%".$actual_date."%")); 

@@ -64,7 +64,7 @@
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
       <?php 
-        $sql_ticket = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC");
+        $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC");
         $sql_ticket->execute(array($actual_date_to_find."%")); $tickets = $sql_ticket->fetchAll();
 
         $sql_count_ticket = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket");
@@ -115,26 +115,30 @@
             <div id="conteudo" class="col-md-12">
               <?php if (!empty($tickets)) : ?>
                 <?php foreach ($tickets as $ticket) : ?>
-
                   <?php 
-                    $sql_module = $connection->getConnection()->prepare("SELECT description, id_category FROM ticket_module WHERE id = ?"); $sql_module->execute(array($ticket['id_module'])); 
-                      $module = $sql_module->fetch();
+                    $sql_module = $connection->getConnection()->prepare("SELECT description, id_category FROM ticket_module WHERE id = ?"); 
+                    $sql_module->execute(array($ticket['id_module'])); 
+                    $module = $sql_module->fetch();
 
-                    $sql_category_module = $connection->getConnection()->prepare("SELECT description FROM category_module WHERE id = ?"); $sql_category_module->execute(array($module['id_category'])); 
-                      $category_module = $sql_category_module->fetch();
+                    $sql_category_module = $connection->getConnection()->prepare("SELECT description FROM category_module WHERE id = ?"); 
+                    $sql_category_module->execute(array($module['id_category'])); 
+                    $category_module = $sql_category_module->fetch();
 
-                    $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); $sql_attendant->execute(array($ticket['id_attendant'])); 
-                      $attendant = $sql_attendant->fetch();
+                    $sql_registry = $connection->getConnection()->prepare("SELECT name FROM registry WHERE id = ?"); 
+                    $sql_registry->execute(array($ticket['id_registry'])); 
+                    $registry = $sql_registry->fetch();
 
-                    $sql_chat = $connection->getConnection()->prepare("SELECT id_chat, opening_time, final_time FROM chat WHERE id = ?"); $sql_chat->execute(array($ticket['id_chat'])); 
-                      $id_chat = $sql_chat->fetch();
-                  ?>
+                    $sql_client = $connection->getConnection()->prepare("SELECT name FROM client WHERE id = ?"); 
+                    $sql_client->execute(array($ticket['id_client'])); 
+                    $client = $sql_client->fetch();
 
-                  <?php if($ticket['t_status'] == "semResolução"){
-                          $initial_string = substr($ticket['t_status'], 0, 3);
-                          $final_string = substr($ticket['t_status'], 3);
-                          $ticket['t_status'] = $initial_string . " " . $final_string;
-                        }
+                    $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); 
+                    $sql_attendant->execute(array($ticket['id_attendant'])); 
+                    $attendant = $sql_attendant->fetch();
+
+                    $sql_chat = $connection->getConnection()->prepare("SELECT id_chat, opening_time, final_time FROM chat WHERE id = ?"); 
+                    $sql_chat->execute(array($ticket['id_chat'])); 
+                    $id_chat = $sql_chat->fetch();
                   ?>
 
                   <?php if ($ticket['t_status'] == "solucionado" || $ticket['t_status'] == "fechado" ){
@@ -151,18 +155,36 @@
 
                   <div class="row">
                     <myElement class="col-md-12">
-                      <a class="col-md-12" href="ticket/<?php echo $id_chat[0]; ?>">
-                        <div class="card <?php echo $status_background?> mb-3">
-                          <div class="card-header"><?php echo $category_module['description']. " -> " .$module['description']; ?> | <span id="span-ticket-header"><?php echo ucfirst($ticket['priority']); ?> - <?php echo date('d/m/Y', strtotime($ticket['registered_at'])); ?></span> <i class="fa fa-check-circle-o" style="<?php echo $status_icon?>"></i> 
+                      <a class="col-md-12" href="ticket/<?= $id_chat[0]; ?>">
+                        <div class="card <?= $status_background?> mb-3">
+                          <div class="card-header">
+                            <?= $category_module['description']. " / " .$module['description']; ?> | 
+                            <span><?= $client['name'] ?> do <?= $registry['name'] ?></span>
+                            <i class="fa fa-check-circle-o" style="<?= $status_icon?>"></i> 
                           </div>
                           <div class="card-body" style="font-size: 0.8em;">
-                            <p class="card-text" id="data-ticket-text"><strong>Chat:</strong> <?php echo $id_chat[0]; ?> | <strong>Atendente:</strong> <?php echo $attendant['name']; ?> | <strong>Abertura:</strong> <?php echo date('d/m/Y H:i:s', strtotime($ticket['registered_at'])); ?> | <strong>Encerramento:</strong> <?php echo date('d/m/Y H:i:s', strtotime($ticket['finalized_at'])); ?></p>
+                            <p class="card-text" id="data-ticket-text">
+                              <?php if($id_chat[0] > 100000): ?>
+                                <strong>Chat:</strong>
+                              <?php else: ?>
+                                <strong>Ligação:</strong>
+                              <?php endif; ?> 
+                              <?= $id_chat[0]; ?> |
+                              <strong>Atendente:</strong> <?= $attendant['name']; ?> |
+                              <strong>Abertura:</strong> <?= date('d/m/Y H:i:s', strtotime($ticket['registered_at'])); ?> 
+                              <?php
+                                $closure = date('d/m/Y H:i:s', strtotime($ticket['finalized_at']));
+                                if(strtotime($ticket['finalized_at']) > strtotime("01-01-2018 01:00:00")): ?>
+                                  | <strong>Encerramento:</strong> <?= $closure ?>
+                              <?php
+                                endif;
+                              ?>
+                            </p>
                           </div>
                         </div>      
                       </a>
                     </myElement>
                   </div>
-
                 <?php endforeach; ?>
               <?php else : ?>
                 <tr>
@@ -215,8 +237,5 @@
     <script src="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
-    <!---->
   </body>
 </html>
