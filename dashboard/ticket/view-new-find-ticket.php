@@ -59,7 +59,7 @@
         /*$sql_ticket = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source != ? ORDER BY id DESC LIMIT 5");
         $sql_ticket->execute(array("telefone")); $tickets = $sql_ticket->fetchAll();*/
 
-        $sql_calls = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 3");
+        $sql_calls = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 5");
         $sql_calls->execute(array("telefone")); $calls = $sql_calls->fetchAll();
       ?>
 

@@ -160,7 +160,11 @@
                           <div class="card-header">
                             <?= $category_module['description']. " / " .$module['description']; ?> | 
                             <span><?= $client['name'] ?> do <?= $registry['name'] ?></span>
-                            <i class="fa fa-check-circle-o" style="<?= $status_icon?>"></i> 
+                            <?php if($id_chat[0] > 100000): ?>
+                              <i class="fa fa-ticket" style="float: left; opacity: 0.4;"></i>
+                            <?php else: ?>
+                              <i class="fa fa-phone" style="float: left; opacity: 0.4;"></i>
+                            <?php endif; ?> 
                           </div>
                           <div class="card-body" style="font-size: 0.8em;">
                             <p class="card-text" id="data-ticket-text">
