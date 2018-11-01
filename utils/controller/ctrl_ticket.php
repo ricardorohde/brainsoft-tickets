@@ -187,7 +187,7 @@
 			session_start();
 
 			$_SESSION['thereIsProblemInTicket'] = "<strong>Erro!</strong> Preencha todos os campos para registrar.";
-			header("Location:/novo-site/dashboard/view_ticket.php");
+			header("Location:../dashboard/view_ticket.php");
 			die();
 		}
 

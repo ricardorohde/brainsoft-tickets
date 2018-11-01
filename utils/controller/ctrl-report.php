@@ -207,7 +207,7 @@
         $_SESSION['thereIsProblemInSaveFiles'] = "<strong>Erro 802!</strong> Problema ao salvar boleto(s) no banco de dados.";
       }
        
-      header("Location:/novo-site/dashboard/cadastros");
+      header("Location:../dashboard/cadastros");
     }
 
     function convertData($time){

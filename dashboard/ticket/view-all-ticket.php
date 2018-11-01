@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
     <!-- theme stylesheet-->
     <link rel="stylesheet" href="./css/style.default.css" id="theme-stylesheet">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="./css/custom.css">
     <!-- Favicon-->
@@ -161,9 +163,9 @@
                             <?= $category_module['description']. " / " .$module['description']; ?> | 
                             <span><?= $client['name'] ?> do <?= $registry['name'] ?></span>
                             <?php if($id_chat[0] > 100000): ?>
-                              <i class="fa fa-ticket" style="float: left; opacity: 0.4;"></i>
+                              <i class="material-icons" style="float: left; opacity: 0.4;">chat</i>
                             <?php else: ?>
-                              <i class="fa fa-phone" style="float: left; opacity: 0.4;"></i>
+                              <i class="material-icons" style="float: left; opacity: 0.4;">phone</i>
                             <?php endif; ?> 
                           </div>
                           <div class="card-body" style="font-size: 0.8em;">

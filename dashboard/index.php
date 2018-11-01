@@ -3,7 +3,7 @@
   if(!isset($_SESSION['login'])){
     if(isset($_SESSION['errorLogin'])){unset($_SESSION['errorLogin']);};
     $_SESSION['withoutLogin'] = "<strong>Informação!</strong> Informe seus dados para acessar o sistema.";
-    header("Location:/novo-site/utils/do-login.php");
+    header("Location:../utils/do-login.php");
   }else{}
 ?>
 
@@ -52,17 +52,10 @@
     <div class="root-page home-page">
       <?php include ("navs/header.php");?>
       <?php 
-        $sql_count_total_tickets = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket");
-        $sql_count_total_tickets->execute(); $row_count_total_tickets = $sql_count_total_tickets->fetch();
-
-        $sql_opened_tickets = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?");
-        $sql_opened_tickets->execute(array("aberto")); $row_opened_tickets = $sql_opened_tickets->fetch();
-
-        $sql_closed_tickets = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ? OR t_status = ?");
-        $sql_closed_tickets->execute(array("fechado", "solucionado")); $row_closed_tickets = $sql_closed_tickets->fetch();
-
-        $sql_wr_tickets = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?");
-        $sql_wr_tickets->execute(array("semResolucao")); $row_wr_tickets = $sql_wr_tickets->fetch();
+        $total_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket", "", "");
+        $open_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?", "aberto", "");
+        $pending_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?", "pendente", "");
+        $tickets_solved = $total_tickets['total'] - $pending_tickets['total'];
       ?>
 
       <div id="statusLogin" class="alert alert-success" 
@@ -107,7 +100,7 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-ticket"></i></div>
                 <div class="name"><strong class="text-uppercase">Tickets</strong>
-                  <div class="count-number"><?= $row_count_total_tickets['total']?></div>
+                  <div class="count-number"><?= $total_tickets['total'] ?></div>
                 </div>
               </div>
             </div>
@@ -115,23 +108,23 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-folder-open-alt"></i></div>
                 <div class="name"><strong class="text-uppercase">Abertos</strong>
-                  <div class="count-number"><?= $row_opened_tickets['total']?></div>
+                  <div class="count-number"><?= $open_tickets['total'] ?></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6 col-8">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-folder-open-alt"></i></div>
+                <div class="name"><strong class="text-uppercase">Solucionados</strong>
+                  <div class="count-number"><?= $tickets_solved ?></div>
                 </div>
               </div>
             </div>
             <div class="col-xl-3 col-md-6 col-8">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-folder-close-alt"></i></div>
-                <div class="name"><strong class="text-uppercase">Resolvidos</strong>
-                  <div class="count-number"><?= $row_closed_tickets['total']?></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6 col-8">
-              <div class="wrapper count-title d-flex">
-                <div class="icon"><i class="icon-warning-sign"></i></div>
-                <div class="name"><strong class="text-uppercase">Sem Resolução</strong>
-                  <div class="count-number"><?= $row_wr_tickets['total']?></div>
+                <div class="name"><strong class="text-uppercase">Pendentes</strong>
+                  <div class="count-number"><?= $pending_tickets['total'] ?></div>
                 </div>
               </div>
             </div>
@@ -257,7 +250,7 @@
                       "showLegend": "1",
                       "legendShadow": "0",
                       "legendBorderAlpha": "0",
-                      "defaultCenterLabel": "Total: <?= $row_count_total_tickets['total']?>",
+                      "defaultCenterLabel": "Total: <?= $total_tickets['total']?>",
                       "centerLabel": "Tickets $label: $value",
                       "centerLabelBold": "1",
                       "showTooltip": "0",
@@ -268,17 +261,17 @@
                   },
                   "data": [
                       {
+                          "label": "Solucionados",
+                          "value": "<?= $tickets_solved; ?>"
+                      },
+                      {
                           "label": "Abertos",
-                          "value": "<?= $row_opened_tickets['total'];?>"
+                          "value": "<?= $open_tickets['total']; ?>"
                       }, 
                       {
-                          "label": "Resolvidos",
-                          "value": "<?= $row_closed_tickets['total'];?>"
-                      }, 
-                      {
-                          "label": "Sem Resolução",
-                          "value": "<?= $row_wr_tickets['total'];?>"
-                      }, 
+                          "label": "Pendentes",
+                          "value": "<?= $pending_tickets['total']; ?>"
+                      }
                   ]
               }
           }).render();
