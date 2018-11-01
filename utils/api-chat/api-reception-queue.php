@@ -21,7 +21,7 @@ curl_close($ch_1);
 $data1 = json_decode($response_1);
 
 foreach ($data1 as $key => $value){
-    if ($value->departamento == "Camila" && $value->chat_final == NULL){
+    if ($value->chat_atendente == "camila" && $value->chat_final == NULL && $value->departamento == "Camila"){
     	$customers_at_reception++;
     } else{
     	$customers_at_reception = $customers_at_reception;

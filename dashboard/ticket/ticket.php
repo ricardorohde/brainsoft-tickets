@@ -7,7 +7,6 @@
 
 <?php 
   include_once "../../utils/api-chat/api.php"; 
-  include_once "../../utils/logger/log.php";
 ?>
 
 <!DOCTYPE html>
@@ -85,35 +84,21 @@
       <?php 
         //NÍVEL 1
         $sql_category_module_nivel1 = $connection->getConnection()->prepare("SELECT id, description as category FROM 
-        category_module WHERE t_group = ? ORDER BY description"); 
+          category_module WHERE t_group = ? ORDER BY description");
         $sql_category_module_nivel1->execute(array("nivel1"));
         $row_category_module_nivel1 = $sql_category_module_nivel1->fetchAll();
-
-        $sql_total_categories_nivel1 = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM category_module WHERE t_group = ?"); 
-        $sql_total_categories_nivel1->execute(array("nivel1")); 
-        $row_total_categories_nivel1 = $sql_total_categories_nivel1->fetchAll();
 
         $json_str_nivel1 = json_encode($row_category_module_nivel1);
         $json_obj_nivel1 = json_decode($json_str_nivel1);
 
-        $flag_nivel1 = 0;
-        $total_cat_mod_nivel1 = $row_total_categories_nivel1[0]['total'];
-
         //NÍVEL 2
         $sql_category_module_nivel2 = $connection->getConnection()->prepare("SELECT id, description as category FROM 
-        category_module WHERE t_group = ? ORDER BY description"); 
+          category_module WHERE t_group = ? ORDER BY description");
         $sql_category_module_nivel2->execute(array("nivel2"));
         $row_category_module_nivel2 = $sql_category_module_nivel2->fetchAll();
 
-        $sql_total_categories_nivel2 = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM category_module WHERE t_group = ?"); 
-        $sql_total_categories_nivel2->execute(array("nivel2")); 
-        $row_total_categories_nivel2 = $sql_total_categories_nivel2->fetchAll();
-
         $json_str_nivel2 = json_encode($row_category_module_nivel2);
         $json_obj_nivel2 = json_decode($json_str_nivel2);
-
-        $flag_nivel2 = 0;
-        $total_cat_mod_nivel2 = $row_total_categories_nivel2[0]['total'];
 
         $sql_all_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee ORDER BY name"); 
         $sql_all_attendant->execute();
@@ -355,11 +340,12 @@
                               <ul>
                                 <?php foreach ($json_obj_nivel1 as $key => $value){ ?>
                                   <li id='<?= $value->category ?>'><?= $value->category ?>
-                                    <ul>
+                                     <ul>
                                       <?php 
-                                        $sql_children = $connection->getConnection()->prepare("SELECT description FROM ticket_module WHERE status = ? AND id_category = ?"); $sql_children->execute(array("ativo", $value->id)); $row_children = $sql_children->fetchAll();
-
-                                        $sql_total_children = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket_module WHERE status = ? AND id_category = ?"); $sql_total_children->execute(array("ativo", $value->id)); $total_row_children = $sql_total_children->fetchAll();
+                                        $sql_children = $connection->getConnection()->prepare("SELECT description FROM ticket_module 
+                                          WHERE status = ? AND id_category = ?"); 
+                                        $sql_children->execute(array("ativo", $value->id)); 
+                                        $row_children = $sql_children->fetchAll();
                                     
                                         $json_children = json_encode($row_children);
                                         $json_dec_children = json_decode($json_children);
@@ -380,9 +366,10 @@
                                   <li id='<?= $value->category ?>'><?= $value->category ?>
                                     <ul>
                                       <?php 
-                                        $sql_children = $connection->getConnection()->prepare("SELECT description FROM ticket_module WHERE status = ? AND id_category = ?"); $sql_children->execute(array("ativo", $value->id)); $row_children = $sql_children->fetchAll();
-
-                                        $sql_total_children = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket_module WHERE status = ? AND id_category = ?"); $sql_total_children->execute(array("ativo", $value->id)); $total_row_children = $sql_total_children->fetchAll();
+                                        $sql_children = $connection->getConnection()->prepare("SELECT description FROM ticket_module
+                                          WHERE status = ? AND id_category = ?"); 
+                                        $sql_children->execute(array("ativo", $value->id)); 
+                                        $row_children = $sql_children->fetchAll();
                                     
                                         $json_children = json_encode($row_children);
                                         $json_dec_children = json_decode($json_children);

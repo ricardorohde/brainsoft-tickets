@@ -1,6 +1,6 @@
 <?php 
   session_start();
-  if (!isset($_SESSION['internal_queue_page_'.$_SESSION['login']])) {
+  if (!isset($_SESSION['authorization_page_'.$_SESSION['login']])) {
     header("Location:../dashboard");
   }
 ?>

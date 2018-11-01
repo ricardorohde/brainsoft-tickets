@@ -79,7 +79,7 @@
 			return $credential->verifyIfExists();
 	    }
 
-	    function verifyChangePass($result){
+    function verifyChangePass($result){
 			if ($result == 1) {
 				$this->setHeader(NULL, NULL, '202');
 			} else{
@@ -87,7 +87,7 @@
 			}
 		}
 
-	    function setHeader($id, $password, $status){
+    function setHeader($id, $password, $status){
 			switch ($status) {
 				case '200':
 					$controllerEmployee = new EmployeeController();
@@ -95,35 +95,36 @@
 
 					if ($password == "sistemabrain") {
 						$_SESSION['passDefault'] = "true";
-					} 					
-      				$_SESSION['login'] = $id;
-		      		unset($_SESSION['withoutLogin']);
-		      		unset($_SESSION['errorLogin']);
-		      		unset($_SESSION['thereIsProblemInLogin']);
-		      		header("Location:../../dashboard");
+					} 		
+
+  				$_SESSION['login'] = $id;
+      		unset($_SESSION['withoutLogin']);
+      		unset($_SESSION['errorLogin']);
+      		unset($_SESSION['thereIsProblemInLogin']);
+      		header("Location:../../dashboard");
 					break;
 				case '404':
 					unset($_SESSION['withoutLogin']);
-			   		$_SESSION['errorLogin'] = "<strong>Erro!</strong> Usuário e/ou Senha incorretos.";
-			    	header("Location:/utils/do-login.php");
-			    	break;
+		   		$_SESSION['errorLogin'] = "<strong>Erro!</strong> Usuário e/ou Senha incorretos.";
+		    	header("Location:/utils/do-login.php");
+		    	break;
 				case '202':
 					unset($_SESSION['passDefault']);
 					unset($_SESSION['needSamePass']);
 					unset($_SESSION['passNotChanged']);
-			  		$_SESSION['passChanged'] = "<strong>Sucesso!</strong> Senha alterada com êxito.";
-   					header("Location:../../dashboard");
-   					break;
-   				case '409':
-   					$_SESSION['passNotChanged'] = "<strong>Erro!</strong> Ocorreu um problema ao alterar a sua senha.";
-   					header("Location:../../dashboard");
-   					break;
-   				case '304':
-   					$_SESSION['needSamePass'] = "<strong>Erro!</strong> As senhas necessitam ser iguais.";
-   					header("Location:../../dashboard");
-   					break;
-   				case '400':
-   					$_SESSION['thereIsProblemInLogin'] = "<strong>Erro!</strong> Preencha todos os campos para entrar.";
+		  		$_SESSION['passChanged'] = "<strong>Sucesso!</strong> Senha alterada com êxito.";
+ 					header("Location:../../dashboard");
+ 					break;
+ 				case '409':
+ 					$_SESSION['passNotChanged'] = "<strong>Erro!</strong> Ocorreu um problema ao alterar a sua senha.";
+ 					header("Location:../../dashboard");
+ 					break;
+ 				case '304':
+ 					$_SESSION['needSamePass'] = "<strong>Erro!</strong> As senhas necessitam ser iguais.";
+ 					header("Location:../../dashboard");
+ 					break;
+ 				case '400':
+ 					$_SESSION['thereIsProblemInLogin'] = "<strong>Erro!</strong> Preencha todos os campos para entrar.";
 					header("Location:/utils/do-login.php");
 					break;
 				default:
@@ -132,8 +133,8 @@
 		}
 
 		function getInstance(){
-	      return new CredentialController();
-	    }
+      return new CredentialController();
+    }
 	}
 
 ?>

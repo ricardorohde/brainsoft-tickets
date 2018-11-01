@@ -6,6 +6,15 @@ $(document).ready(function () {
 	    }
 	});
 
+	$("#status").change(function(){
+		var statusSelected = $("#status option:selected").val();
+		if(statusSelected != "aberto"){
+			$("button[name='finishTicket']").hide();
+		} else{
+			$("button[name='finishTicket']").show();
+		}
+	});
+
 	$("button[type=submit]").click(function(){
 		var error = false;
 
