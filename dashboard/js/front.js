@@ -1,6 +1,10 @@
 /*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function () {
 
+    var hrefRaw = window.location.pathname;
+    var href = hrefRaw.toString().split('/');
+    $('#side-admin-menu > li > a[href="' + href[2] + '"]').parent().addClass('active');
+
     // Associa o evento do popover ao clicar no link.
     $('[data-toggle="popover"]').popover(); 
 
@@ -67,7 +71,7 @@ $(document).ready(function () {
     $("#date_filter").change(function(){
         var date_required = $(this).val();
         
-        setCookie("date_to_filter", 1);
+        setCookie("date_to_filter", 0.5);
 
         function setCookie(name, exdays){    //função universal para criar cookie
             var expires;
@@ -102,10 +106,14 @@ $(document).ready(function () {
     $("#txtBusca").keyup(function(){
         var texto = $(this).val();
         
+        if(texto == ""){
+            location.reload();
+        }
+
         $("#conteudo .mb-3").css("display", "block");
         $("#conteudo .mb-3").each(function(){
             if($(this).text().indexOf(texto) < 0)
-               $(this).css("display", "none");
+               $(this).parent().parent().parent().remove();
         });
     });
 
@@ -568,4 +576,3 @@ function redirectToTicket(idChat){
 
     window.open(url, '_blank');
 }
-

@@ -15,6 +15,9 @@
     $year = date('Y');
     $actual_date_to_find = $year . "-" . $month . "-" . $day; 
   }
+
+  $initial_date_to_find = date('Y-m-d', strtotime("-15 day", strtotime($actual_date_to_find)));
+  $filter = "";
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -66,11 +69,30 @@
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
       <?php 
-        $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC");
-        $sql_ticket->execute(array($actual_date_to_find."%")); $tickets = $sql_ticket->fetchAll();
+        if(!isset($_POST['filter-by-period'])){
+          $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC");
+          $sql_ticket->execute(array($actual_date_to_find."%")); 
+          $tickets = $sql_ticket->fetchAll();
+
+          $filter = date('d/m/Y', strtotime($actual_date_to_find));
+        } else{
+          $initial_date_to_find = date('Y-m-d', strtotime($_POST['initial-date-filter']));
+          $actual_date_to_find = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
+
+          $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC");
+          $sql_ticket->execute(array($initial_date_to_find."%", $actual_date_to_find."%")); 
+          $tickets = $sql_ticket->fetchAll();
+
+          $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
+
+          $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
+        }
 
         $sql_count_ticket = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket");
-        $sql_count_ticket->execute(); $row_count_ticket = $sql_count_ticket->fetchAll();
+        $sql_count_ticket->execute(); 
+        $row_count_ticket = $sql_count_ticket->fetchAll();
       ?>
       <section class="forms">
         <div class="container-fluid">
@@ -100,17 +122,38 @@
 
           <hr>
 
-          <div class="row">
-            <div class="col-lg-4">
-              <input type="date" name="date_filter" id="date_filter" class="form-control" min="2018-09-20" value="<?= $actual_date_to_find?>">
-              <span>Filtro</span>
+          <form id="form-filter-all-ticket" action="#" method="POST">
+            <div class="row">
+              <div class="col col-lg-3">
+                <input type="date" name="initial-date-filter" id="initial-date-filter" class="form-control" min="2018-09-20" value="<?= $initial_date_to_find?>">
+                <span>Data Inicial</span>
+              </div>
+              <div class="col col-lg-3">
+                <input type="date" name="final-actual-date-filter" id="final-actual-date-filter" class="form-control" min="2018-09-20" value="<?= $actual_date_to_find?>">
+                <span>Data Atual ou Final</span>
+              </div>
+              <div class="col col-lg-1">
+                 <button id="filter-by-period" name="filter-by-period" class="btn btn-primary">Filtrar</button>
+              </div>
+              <div class="col-lg-3 offset-md-2">
+                <input type="text" id="txtBusca" class="form-control" autofocus disabled>
+                <span>Pesquisa</span>
+              </div>
             </div>
+          </form>
 
-            <div class="col-lg-3 offset-md-4">
-              <input type="text" id="txtBusca" autofocus style="height: 38px; width: 300px;"/>
-              <span>Pesquisa</span>
-            </div>
+          <br>
 
+          <div id="divCarregando">
+            <p>Aguarde...</p>
+          </div>
+
+          <div id="actual-filter" class="hide">
+            <p>Filtro: <?= $filter ?></p>
+          </div>
+
+          <div id="qtd-tickets" class="hide">
+            <p></p>
           </div>
 
           <div class="row">
@@ -223,18 +266,20 @@
     <script src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/jquery.easyPaginate.js"></script>
     <script type="text/javascript">
-      $('#conteudo').easyPaginate({
+      /*$('#conteudo').easyPaginate({
         paginateElement: 'myElement',
-        elementsPerPage: 8,
-        effect: 'default',
+        elementsPerPage: 70,
+        effect: 'climb',
         firstButtonText: '<button type="button" class="btn btn-primary">&laquo; Primeiro</button>',
         prevButtonText: '<button type="button" class="btn btn-primary">&lsaquo; Anterior</button>',
         nextButtonText: '<button type="button" class="btn btn-primary">Próximo &rsaquo;</button>',
         lastButtonText: '<button type="button" class="btn btn-primary">Último &raquo;</button>'
-      });
+      });*/
     </script>
     <script src="./../js/jquery.mask.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
     <script src="./js/front.js"></script>
+    <script src="./js/view-all-ticket.js"></script>
     <script src="./jquery-ui.js"></script>
     <script src="./vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="./vendor/jquery.cookie/jquery.cookie.js"> </script>
