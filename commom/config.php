@@ -4,7 +4,7 @@ class ConfigDatabase{
 
 	public function getConnection(){
 		try {
-			$host = "localhost"; // Hostname
+			$host = "127.0.0.1"; // Hostname
 			$port = "3306"; // MySQL Port : Default : 3306
 			$user = "root"; // Username Here
 			$pass = "brain123"; //Password Here
