@@ -1,6 +1,6 @@
 <?php 
   session_start();
-  if (!isset($_SESSION['ticket_page_'.$_SESSION['login']])) {
+  if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
     header("Location:../dashboard");
   }
 ?>
@@ -50,16 +50,17 @@
 
   </head>
   <?php 
-    $target_adm = "administrativo";
-    $target_ticket = "tickets"; 
-    $target_user = "usuarios";
-    $target_registry = "cartorios";
-    $target_registration_forms = "cadastros";
-    $target_internal_queue = "fila-interna";
-    $target_authorization = "autorizacoes";
-    $target_report = "relatorios";
-    
-    $target_logout = "logout";
+    $targets = array(
+      "Billet" => "administrativo Administrativo fa-files-o",
+      "Ticket" => "tickets Tickets fa-ticket",
+      "User" => "usuarios Usuários fa-user-circle",
+      "Registry" => "cartorios Cartórios fa-home",
+      "Module" => "cadastros Módulos fa-caret-square-o-right",
+      "Queue" => "fila-interna Fila fa-sort-amount-asc",
+      "Authorization" => "autorizacoes Autorizações fa-caret-square-o-right",
+      "Report" => "relatorios Relatórios fa-caret-square-o-right",
+      "Logout" => "logout"
+    );
   ?>
   <body>
     <?php include ("../navs/navbar.php");?>

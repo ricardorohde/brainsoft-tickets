@@ -37,13 +37,17 @@
   </head>
 
   <?php 
-    $target_adm = "administrativo";
-    $target_ticket = "tickets"; 
-    $target_user = "usuarios";
-    $target_registry = "cartorios";
-    $target_registration_forms = "cadastros";
-    $target_internal_queue = "fila-interna";
-    $target_logout = "logout";
+    $targets = array(
+      "Billet" => "administrativo Administrativo fa-files-o",
+      "Ticket" => "tickets Tickets fa-ticket",
+      "User" => "usuarios Usuários fa-user-circle",
+      "Registry" => "cartorios Cartórios fa-home",
+      "Module" => "cadastros Módulos fa-caret-square-o-right",
+      "Queue" => "fila-interna Fila fa-sort-amount-asc",
+      "Authorization" => "autorizacoes Autorizações fa-caret-square-o-right",
+      "Report" => "relatorios Relatórios fa-caret-square-o-right",
+      "Logout" => "logout"
+    );
   ?>
 
   <body>

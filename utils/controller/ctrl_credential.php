@@ -2,6 +2,7 @@
 
 	include_once("../model/credential.php");
 	include_once("ctrl_employee.php");
+	include_once("ctrl-authorization.php");
 	session_start();
 
 	$controller = new CredentialController();
@@ -93,11 +94,16 @@
 					$controllerEmployee = new EmployeeController();
 					$controllerEmployee->isOnChat($id, "yes"); //DEIXANDO O USUÁRIO ONLINE NA FILA
 
-					if ($password == "sistemabrain") {
+					$_SESSION['login'] = $id;
+
+					$controllerAuthorization = new AuthorizationController();
+					$authorizations          = $controllerAuthorization->findAuthorizationsById();
+					$controllerAuthorization->authorizePage($authorizations);
+
+					if ($password == "sistemabrain"){
 						$_SESSION['passDefault'] = "true";
 					} 		
 
-  				$_SESSION['login'] = $id;
       		unset($_SESSION['withoutLogin']);
       		unset($_SESSION['errorLogin']);
       		unset($_SESSION['thereIsProblemInLogin']);

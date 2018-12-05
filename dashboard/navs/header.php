@@ -43,7 +43,7 @@
                     <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-bell"></i>view all notifications</strong></a></li>
                   </ul>
                 </li>
-                <li class="nav-item"><a href="<?php echo $target_logout?>" class="nav-link logout">Sair do Sistema<i class="fa fa-sign-out"></i></a></li>
+                <li class="nav-item"><a href="<?php echo $targets['Logout']?>" class="nav-link logout">Sair do Sistema<i class="fa fa-sign-out"></i></a></li>
               </ul>
             </div>
           </div>

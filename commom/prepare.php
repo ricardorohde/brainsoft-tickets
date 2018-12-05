@@ -7,13 +7,13 @@
 
 		private $connectionToDatabase;
 
-		function getConnToDatabase() {
-        return $this->connectionToDatabase;
-    }
-
 		function __construct(){
 			$this->connectionToDatabase = new ConfigDatabase();
 		}
+
+		public function getConnToDatabase() {
+   		return $this->connectionToDatabase;
+  	}
 		
 		function prepare($query, $elements, $typeReturn){
 	    $open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
@@ -27,6 +27,6 @@
 	    	return $open_connection->fetchAll();
 	    else
 	    	return $open_connection->fetch();
-	  }
+  	}
 	}
 ?>

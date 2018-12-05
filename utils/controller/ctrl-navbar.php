@@ -27,7 +27,6 @@
 			$this->setInstances();
 			$this->setPrepareAndConnection();
 			$this->setIdLoginInSession();
-			$this->unsetSessions();
 		}
 
 		function setInstances(){
@@ -36,7 +35,7 @@
 		}
 
 		function setPrepareAndConnection(){
-  		$this->connection = $this->prepareInstance->getConnToDatabase();
+  			$this->connection = $this->prepareInstance->getConnToDatabase();
 		}
 
 		function setIdLoginInSession(){
@@ -53,38 +52,19 @@
 		  return $resultDb[0];
 		}
 
-		function findAuthorizationsById(){
-			$elements_to_authorizations = [$this->idInSession, "yes"];
-		  return $this->prepareInstance->prepare("SELECT DISTINCT page.name FROM page, authorization_user_page WHERE authorization_user_page.id_user = ? AND authorization_user_page.id_page = page.id AND authorization_user_page.access = ?", 
-		    $elements_to_authorizations, "all");
-		}
+		function makeMenu($targets){
+			$menu = "";
+			$id   = $this->idInSession;
 
-		function unsetSessions(){
-			$this->session->unset($_SESSION['administrative_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['ticket_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['user_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['registry_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['registration_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['internal_queue_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['authorization_page_' . $this->idInSession]);
-			$this->session->unset($_SESSION['report_page_' . $this->idInSession]);
-		}
+			foreach ($targets as $name => $target) {
+				$target = explode(" ", $target);
+				if (isset($_SESSION[$name.'_page_'.$id])) {
+					$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>";
+				}
+			}
 
-		function authorizePage(){
-			if(func_num_args() == 0){
-				$this->session->authorize('administrative_page_' . $this->idInSession);
-				$this->session->authorize('ticket_page_' . $this->idInSession);
-				$this->session->authorize('user_page_' . $this->idInSession);
-				$this->session->authorize('registry_page_' . $this->idInSession);
-				$this->session->authorize('registration_page_' . $this->idInSession);
-				$this->session->authorize('internal_queue_page_' . $this->idInSession);
-				$this->session->authorize('authorization_page_' . $this->idInSession);
-				$this->session->authorize('report_page_' . $this->idInSession);
-			} else{
-				$this->session->authorize(func_get_arg(0) . $this->idInSession);
-			}			
+			return $menu;
 		}
-
 	}
 
 ?>

@@ -1,6 +1,6 @@
 <?php 
   session_start();
-  if (!isset($_SESSION['administrative_page_'.$_SESSION['login']])) {
+  if (!isset($_SESSION['Billet'.'_page_'.$_SESSION['login']])) {
     header("Location:../dashboard");
   }
 ?>
@@ -44,16 +44,17 @@
   </head>
 
   <?php 
-    $target_adm = "administrativo";
-    $target_ticket = "tickets"; 
-    $target_user = "usuarios";
-    $target_registry = "cartorios";
-    $target_registration_forms = "cadastros";
-    $target_internal_queue = "fila-interna";
-    $target_authorization = "autorizacoes";
-    $target_report = "relatorios";
-
-    $target_logout = "logout";
+    $targets = array(
+      "Billet" => "administrativo",
+      "Ticket" => "tickets",
+      "User" => "usuarios",
+      "Registry" => "cartorios",
+      "Register" => "cadastros",
+      "Queue" => "fila-interna",
+      "Authorization" => "autorizacoes",
+      "Report" => "relatorios",
+      "Logout" => "logout"
+    );
   ?>
 
   <body>
