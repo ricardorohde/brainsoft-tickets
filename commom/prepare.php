@@ -28,5 +28,20 @@
 	    else
 	    	return $open_connection->fetch();
   	}
+
+  	function prepareBind($query, $elements, $typeReturn){
+  		$open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
+
+  		$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
+      $open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
+      $open_connection->bindValue(':active', $elements[2], PDO::PARAM_STR);
+      $open_connection->bindValue(':cont', $elements[3], PDO::PARAM_INT);
+      $open_connection->execute();
+
+      if($typeReturn == "all")
+	    	return $open_connection->fetchAll();
+	    else
+	    	return $open_connection->fetch();
+  	}
 	}
 ?>

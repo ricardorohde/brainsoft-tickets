@@ -35,17 +35,13 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="../css/custom.css">
 
-    <!--link href="http://www.easyjstree.com/content/skin-win8/ui.easytree.css" rel="stylesheet" class="skins" type="text/css" /-->
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 
     <link type="text/css" href="../css/jquery-ui.css" rel="stylesheet"/>
 
     <link rel="shortcut icon" href="favicon.png">
-
   </head>
-
-
+  
   <?php 
     $targets = array(
       "Billet" => "../administrativo Administrativo fa-files-o",
