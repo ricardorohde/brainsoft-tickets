@@ -77,14 +77,15 @@ class QueueController extends TargetController {
 	}
 
 	function findUserInQueue($qtd_attendants, $new_queue_group, $queue_according_date) {
+		$qtd_attendants = $qtd_attendants + 1;
 		$finalized_queue_group_1 = array();
 
-		for ($i = 0; $i <= $qtd_attendants + 1; $i++){ 
-			if (!in_array($i+2, $new_queue_group)) { 
+		for ($i = 0; $i <= $qtd_attendants; $i++){ 
+			if (!in_array($i+$qtd_attendants, $new_queue_group)) { 
 				$finded = 0;
 				foreach ($queue_according_date as $key => $value){
-					if($value[0] == $i+2 && $finded == 0){
-						$finalized_queue_group_1[$key] = $i+2;
+					if($value[0] == $i+$qtd_attendants && $finded == 0){
+						$finalized_queue_group_1[$key] = $i+$qtd_attendants;
 						$finded = 1;
 					}
 				}
