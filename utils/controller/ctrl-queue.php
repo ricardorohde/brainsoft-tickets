@@ -76,16 +76,15 @@ class QueueController extends TargetController {
 		return $queue_according_data;
 	}
 
-	function findUserInQueue($qtd_attendants, $new_queue_group, $queue_according_date) {
-		$qtd_attendants = $qtd_attendants + 1;
+	function findUserInQueue($qtd_attendants, $new_queue_group, $queue_according_date, $plus) {
 		$finalized_queue_group_1 = array();
 
-		for ($i = 0; $i <= $qtd_attendants; $i++){ 
-			if (!in_array($i+$qtd_attendants, $new_queue_group)) { 
+		for ($i = 0; $i <= $qtd_attendants + 1; $i++){ 
+			if (!in_array($i+$plus, $new_queue_group)) { 
 				$finded = 0;
 				foreach ($queue_according_date as $key => $value){
-					if($value[0] == $i+$qtd_attendants && $finded == 0){
-						$finalized_queue_group_1[$key] = $i+$qtd_attendants;
+					if($value[0] == $i+$plus && $finded == 0){
+						$finalized_queue_group_1[$key] = $i+$plus;
 						$finded = 1;
 					}
 				}
@@ -169,7 +168,7 @@ class QueueController extends TargetController {
 			$count = array_count_values($stepQueue); 
 			$updatedQueue = $this->orderByQuantity($count); 
 			$queueAccordingDate = $this->orderByDate($this->finalizedQueueOfGroup1);							
-			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup1OnChat, $updatedQueue, $queueAccordingDate);
+			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup1OnChat, $updatedQueue, $queueAccordingDate, 2);
 		} else {
 			foreach ($this->initializedQueueOfGroup2 as $row) {
 				array_push($stepQueue, $row['id_attendant']);
@@ -178,7 +177,7 @@ class QueueController extends TargetController {
 			$count = array_count_values($stepQueue); 
 			$updatedQueue = $this->orderByQuantity($count); 
 			$queueAccordingDate = $this->orderByDate($this->finalizedQueueOfGroup2);							
-			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup2OnChat, $updatedQueue, $queueAccordingDate);
+			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup2OnChat, $updatedQueue, $queueAccordingDate, 5);
 		}
 		
 		return array_merge($finalQueue, $updatedQueue);
