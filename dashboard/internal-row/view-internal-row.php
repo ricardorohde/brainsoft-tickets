@@ -1,84 +1,9 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
+	date_default_timezone_set('America/Sao_Paulo');
 
-  date_default_timezone_set('America/Sao_Paulo');
-
-  class Order{
-		function orderByQuantity($contagem){
-			$queue = array();
-			foreach($contagem as $numero => $vezes){
-				if($vezes == 2){
-					array_unshift($queue, $numero);
-				}
-			}
-
-			foreach($contagem as $numero => $vezes){
-				if($vezes == 1){
-					array_unshift($queue, $numero);
-				}
-			}
-
-			return $queue;
-		}
-
-		function orderByDate($id_finalized_queue, $connection){
-			$queue_according_data = array();
-			$dates = array();
-			$position = 0;
-
-			foreach ($id_finalized_queue as $id_attendant){
-				$sql_finalized_queue_2 = $connection->getConnection()->prepare("SELECT registered_at FROM ticket 
-					WHERE id_attendant = ? ORDER BY id DESC LIMIT 1");
-				$sql_finalized_queue_2->execute(array($id_attendant['id_attendant'])); 
-				$row_finalized_queue_2 = $sql_finalized_queue_2->fetch();
-
-				$last_date = $row_finalized_queue_2['registered_at'];
-				$final_date = strtotime($last_date);
-
-				array_push($dates, $final_date);
-			}
-
-			asort($dates);
-
-			foreach ($dates as $key => $date) {
-				$dateString = date('Y-m-d H:i:s', $date);
-
-				$sql_finalized_queue_2 = $connection->getConnection()->prepare("SELECT id_attendant FROM ticket 
-					WHERE registered_at = ? ORDER BY id DESC LIMIT 1");
-				$sql_finalized_queue_2->execute(array($dateString)); 
-				$row_finalized_queue_2 = $sql_finalized_queue_2->fetch();
-
-				$queue_according_data[$position] = $row_finalized_queue_2['id_attendant'];
-
-				$position++;
-			}
-			
-			return $queue_according_data;
-		}
-
-		function findUserInQueue($qtd_attendants, $new_queue_group, $queue_according_date){
-			$finalized_queue_group_1 = array();
-
-			for ($i = 0; $i <= $qtd_attendants + 1; $i++){ 
-				if (!in_array($i+2, $new_queue_group)) { 
-					$finded = 0;
-					foreach ($queue_according_date as $key => $value){
-						if($value[0] == $i+2 && $finded == 0){
-							$finalized_queue_group_1[$key] = $i+2;
-							$finded = 1;
-						}
-					}
-				} 
-			}
-
-			ksort($finalized_queue_group_1);
-
-			return $finalized_queue_group_1;
-		}
-	}
+  include_once __DIR__.'/../../utils/controller/ctrl-queue.php';
+	$queueController = QueueController::getInstance(); 	
+	$queueController->verifyPermission();
 ?>
 
 <!DOCTYPE html>
@@ -137,79 +62,26 @@
 			};
 		</script>
 	</head>
-	<?php 
-		$targets = array(
-      "Billet" => "administrativo Administrativo fa-files-o",
-      "Ticket" => "tickets Tickets fa-ticket",
-      "User" => "usuarios Usuários fa-user-circle",
-      "Registry" => "cartorios Cartórios fa-home",
-      "Module" => "cadastros Módulos fa-caret-square-o-right",
-      "Queue" => "fila-interna Fila fa-sort-amount-asc",
-      "Authorization" => "autorizacoes Autorizações fa-caret-square-o-right",
-      "Report" => "relatorios Relatórios fa-caret-square-o-right",
-      "Logout" => "logout"
-    );
-	?>
-
+	<?php $targets = $queueController->getTargets(); ?>
 	<body>
 	  <?php include ("../navs/navbar.php");?>
 	  <div class="root-page forms-page">
 	  	<?php include ("../navs/header.php");?>
-	  	<?php
-	      /* TODOS OS CHATS ABERTOS*/
-	      $elements_to_all_chats_open = "aberto";
-	      $query = "SELECT id_module, t_group, id_chat, id_attendant as id, registered_at FROM ticket WHERE t_status = ? ORDER BY id_chat desc";
-	      $chats = $prepareInstance->prepare($query, $elements_to_all_chats_open, "all");
+	  	<?php 
+	  		$queueController->setPrepareInstance($prepareInstance); 
+	  		$queueController->openChats();
 
-	      /* QUANTIDADE DE FUNCIONÁRIOS CADASTRADOS GRUPO 1*/
-	      $elements_to_attendants_group_1 = "nivel1";
-	      $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ?";
-	      $row_attendants_1 = $prepareInstance->prepare($query, $elements_to_attendants_group_1, "all");
-	      $qtd_attendant_1 = $row_attendants_1[0]['total'];
+	  		$queueController->attendantsOnGroup1();
+	  		$queueController->attendantsAbleOnGroup1();
+	  		$queueController->makeQueueToGroup1();
 
-	      /* QUANTIDADE DE FUNCIONÁRIOS HABILITADOS GRUPO 1*/
-	      $elements_to_attendants_group_1_on_chat = ["nivel1", "yes"];
-	      $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
-	      $row_attendants_1_on_chat = $prepareInstance->prepare($query, $elements_to_attendants_group_1_on_chat, "all");
-	      $qtd_attendant_1_on_chat = $row_attendants_1_on_chat[0]['total'];
+	  		$queueController->attendantsOnGroup2();
+	  		$queueController->attendantsAbleOnGroup2();
+	  		$queueController->makeQueueToGroup2();
 
-	      /* GRUPO 1 */
-	      $limit_initialize_1 = (int) $qtd_attendant_1*2;
-	      $elements_to_initialize_queue_1 = ["aberto", "nivel1", $limit_initialize_1];
-	      $query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
-	      $row_initialized_queue_1 = $prepareInstance->prepareBind($query, $elements_to_initialize_queue_1, "all");
-
-	      $limit_finalized_1 = (int) $qtd_attendant_1;
-	      $elements_to_finalized_queue_1 = ["aberto", "nivel1", "yes", $limit_finalized_1];
-	      $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
-					t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
-				$row_id_finalized_queue_1 = $prepareInstance->prepareBind($query, $elements_to_finalized_queue_1, "all");
-
-				/* QUANTIDADE DE FUNCIONÁRIOS CADASTRADOS GRUPO 2*/
-				$element_to_attendants_group_2 = "nivel2";
-				$query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ?";
-				$row_attendants_2 = $prepareInstance->prepare($query, $element_to_attendants_group_2, "all");
-				$qtd_attendant_2 = $row_attendants_2[0]['total'];
-
-	      /* QUANTIDADE DE FUNCIONÁRIOS HABILITADOS GRUPO 2*/
-	      $elements_to_attendants_group_2_on_chat = ["nivel2", "yes"];
-	      $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
-	      $row_attendants_1_on_chat = $prepareInstance->prepare($query, $elements_to_attendants_group_2_on_chat, "all");
-	      $qtd_attendant_2_on_chat = $row_attendants_1_on_chat[0]['total'];
-
-				/* GRUPO 2 */
-				$limit_initialize_2 = (int) $qtd_attendant_2*2;
-				$elements_to_initialize_queue_2 = ["aberto", "nivel2", $limit_initialize_2];
-				$query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
-				$row_initialized_queue_2 = $prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all");
-
-				$limit_finalized_2 = (int) $qtd_attendant_2;
-				$elements_to_finalized_queue_2 = ["aberto", "nivel2", "yes", $limit_finalized_2];
-				$query = "SELECT DISTINCT id_attendant FROM ticket, employee 
-					WHERE t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
-				$row_id_finalized_queue_2 = $prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all");
-			?>
-
+	  		$queueGroup1 = $queueController->getOrderedQueue(1);
+	  		$queueGroup2 = $queueController->getOrderedQueue(2);
+	  	?>
 	    <section class="forms">
 	      <div class="container-fluid">
 	        <header>
@@ -219,39 +91,16 @@
 	            </div>
 	          </div>
 	        </header>
-
 	        <hr>
-
 	        <div id="conteudo">
 	        	<iframe class="iframe-queue" width='300px' height='23px' frameborder='0' src='/dashboard/test.php' SCROLLING="NO"></iframe>
 	        	<hr>
 	        	<h1>Disponibilidade Grupo 1</h1>  	
 		    		<div class="row" id="internal-row">
-		    			<!-- |INÍCIO| VERIFICAÇÃO E ORDENAMENTO FILA GRUPO 1 -->
-		    			<?php 
-		    				$new_queue_group_1 = array();
-		    			 	
-		    				$fila = array();
-		    				foreach ($row_initialized_queue_1 as $row) {
-		    					array_push($fila, $row['id_attendant']);
-		    				} 
-								$contagem = array_count_values($fila); 
-							?>
-
-							<?php 
-								$order = new Order();
-								
-								$new_queue_group_1 = $order->orderByQuantity($contagem);	
-								$queue_according_date = $order->orderByDate($row_id_finalized_queue_1, $connection);							
-								$finalized_queue_group_1 = $order->findUserInQueue($qtd_attendant_1_on_chat, $new_queue_group_1, $queue_according_date);
-							?>
-
-							<?php $queue_merge_1 = array_merge($finalized_queue_group_1, $new_queue_group_1) ?>
-
-					<!-- |FIM| VERIFICAÇÃO E ORDENAMENTO FILA GRUPO 1 -->
+		    		
 
 					<!-- |INÍCIO| EXIBIÇÃO FILA GRUPO 1 -->
-					<?php if($queue_merge_1 != null) : ?>
+					<?php if($queueGroup1 != null) : ?>
 						<?php 
 							$group_one = $array = [
 							    "4" => "Alex",
@@ -261,39 +110,28 @@
 						?>
 						<table align="center">
 							<tr>
-								<?php foreach($queue_merge_1 as $new_queue) {
+								<?php foreach($queueGroup1 as $new_queue) {
 									echo "<th class='place_in_line'>" . $place_in_line_1 . "º </th>";
 
 									$place_in_line_1++;
 								}?>
 							</tr>
 							<tr>
-								<?php foreach($queue_merge_1 as $new_queue) : ?>	
+								<?php foreach($queueGroup1 as $new_queue) : ?>	
 									<td class="colum_of_place">
 										<div class="card mb-3 user<?=$new_queue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
 											<div class="card-header"><?=$group_one[$new_queue]; ?></div>
 											<div class="card-body nivel1">
-					            	<?php foreach ($chats as $chat) : ?>
+					            	<?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
 					            		<?php if ($chat['t_group'] == "nivel1") : ?>
 					            			<?php 
-					            				$element_to_chat_number_and_ticket = $chat['id_chat'];
-					            				$query = "SELECT id_chat FROM chat WHERE id = ?";
-					            				$chat_number = $prepareInstance->prepare($query, $element_to_chat_number_and_ticket, "all");
-
-					            				$query = "SELECT registered_at FROM ticket WHERE id_chat = ?"; 
-					            				$ticket_time = $prepareInstance->prepare($query, $element_to_chat_number_and_ticket, "all");
+					            				$chat_number = $queueController->chatNumberToUseInLink($chat['id_chat']);
+				            					$ticket_time = $queueController->timeOfTicket($chat['id_chat']);
 					            			?>
 			           		
 					            			<?php if ($chat['id'] == $new_queue) : ?>
 					            				<div>
-						            				<?php 
-						            					date_default_timezone_set('America/Sao_Paulo');
-																	$initial_time = new DateTime(date('Y/m/d H:i:s', strtotime($ticket_time[0]['registered_at'])));
-																	$actual_time = new DateTime();
-
-																	$diff = $actual_time->diff($initial_time);
-																	$minutos = ($diff->h*60) + $diff->i + ($diff->s/60) + ($diff->days*24*60);
-						            				?>
+						            				<?php $minutos = $queueController->progressBar($ticket_time[0]['registered_at']); ?>
 
 						            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
 															   	<p><strong>Ticket: </strong><?= $chat_number[0]['id_chat'];?></p>
@@ -304,14 +142,10 @@
 							            			<a href="#"></a>
 							            			<input type="hidden" name="startedTime<?php echo $rand?>" value="<?php $ticket_time[0]['registered_at']?>">
 
-						            				<?php 
-						            					$element_to_limit_time = $chat['id_module'];
-						            					$query = "SELECT limit_time FROM ticket_module WHERE id = ?";
-						            					$testt = $prepareInstance->prepare($query, $element_to_limit_time, "all"); 
-						            				?>
+						            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
-						            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $testt[0]['limit_time']?>">
-																	<progress id="pg" value="<?= (int)$minutos?>" max="<?= $testt[0]['limit_time']?>"></progress> 
+						            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time']?>">
+																	<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time']?>"></progress> 
 																</div>
 						            			</div>
 						            		<?php endif; ?>
@@ -335,43 +169,8 @@
 
 			<h1>Disponibilidade Grupo 2</h1>
 			<div class="row" id="internal-row">
-	    	<!-- |INÍCIO| VERIFICAÇÃO E ORDENAMENTO FILA GRUPO 2 -->
-				<?php 
-					$finalized_queue_group_2 = array();
-					$new_queue_group_2 = array();
-					$fila = array();
-					foreach ($row_initialized_queue_2 as $row){
-						array_push($fila, $row['id_attendant']);
-					};
-					$contagem = array_count_values($fila);
-				?>
-
-				<?php 
-					$order = new Order();
-					$new_queue_group_2 = $order->orderByQuantity($contagem);
-
-					$queue_according_data = $order->orderByDate($row_id_finalized_queue_2, $connection);
-
-					for ($i = 0; $i <= $qtd_attendant_2_on_chat; $i++){ 
-						if (!in_array($i+5, $new_queue_group_2)){ 
-							$finded = 0;
-							foreach ($queue_according_data as $key => $value){ 
-								if($value[0] == $i+5 && $finded == 0){
-									$finalized_queue_group_2[$key] = $i+5;
-									$finded = 1;
-								}
-							}
-						} 
-					}
-
-					ksort($finalized_queue_group_2);
-					
-					$queue_merge_2 = array_merge($finalized_queue_group_2, $new_queue_group_2); 
-				?>
-				<!-- |FIM| VERIFICAÇÃO E ORDENAMENTO FILA GRUPO 2 -->
-
 				<!-- |INÍCIO| EXIBIÇÃO FILA GRUPO 2 -->
-				<?php if($queue_merge_2 != null) : ?>
+				<?php if($queueGroup2 != null) : ?>
 					<?php 
 						$group_two = $array = [
 						    "5" => "Fernando",
@@ -383,42 +182,29 @@
 					?>
 					<table align="center">
 						<tr>
-							<?php foreach($queue_merge_2 as $new_queue) {
+							<?php foreach($queueGroup2 as $new_queue) {
 								echo "<th class='place_in_line'>" . $place_in_line_2 . "º </th>";
 
 								$place_in_line_2++;
 							}?>
 						</tr>
 						<tr>
-							<?php foreach($queue_merge_2 as $new_queue) : ?>	
+							<?php foreach($queueGroup2 as $new_queue) : ?>	
 								<?php $position = 0; ?>
 								<td class="colum_of_place">	
 									<div class="card mb-3 user<?=$new_queue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
 										<div class="card-header"><?= $group_two[$new_queue]; ?></div>
 										<div class="card-body nivel2">
-				            	<?php foreach ($chats as $chat) : ?>
+				            	<?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
 				            		<?php if ($chat['t_group'] == "nivel2") : ?>
 				            			<?php 
-				            				$element_to_chat_number_and_ticket = $chat['id_chat'];
-				            				$query = "SELECT id_chat FROM chat WHERE id = ?";
-				            				$chat_number = $prepareInstance->prepare($query, $element_to_chat_number_and_ticket, "all");
-
-				            				$query = "SELECT registered_at FROM ticket WHERE id_chat = ?"; 
-				            				$ticket_time = $prepareInstance->prepare($query, $element_to_chat_number_and_ticket, "all");
+				            				$chat_number = $queueController->chatNumberToUseInLink($chat['id_chat']);
+				            				$ticket_time = $queueController->timeOfTicket($chat['id_chat']);
 			            				?>
 		           		
 				            			<?php if ($chat['id'] == $new_queue) : ?>
 				            				<div>
-				            					<?php 
-					            					date_default_timezone_set('America/Sao_Paulo');
-																$initial_time = new DateTime(date('Y/m/d H:i:s', strtotime($ticket_time[0]['registered_at']))); 
-																$actual_time = new DateTime();
-
-																$diff = $actual_time->diff($initial_time);
-																$minutos = ($diff->h*60) + $diff->i + ($diff->s/60) + ($diff->days*24*60);
-
-																$rand = substr($chat_number[0]['id_chat'], -1) + substr($chat_number[0]['id_chat'], -3, 1);
-					            				?>
+				            					<?php $minutos = $queueController->progressBar($ticket_time[0]['registered_at']); ?>
 
 					            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
 																<p><strong>Chat / Ticket: </strong><?= $chat_number[0]['id_chat'];?></p>
@@ -429,14 +215,10 @@
 						            			<a href="#"></a>
 						            			<input type="hidden" name="startedTime<?php echo $rand?>" value="<?php $ticket_time[0]['registered_at']?>">
 
-					            				<?php 
-					            					$element_to_limit_time = $chat['id_module'];
-					            					$query = "SELECT limit_time FROM ticket_module WHERE id = ?";
-					            					$testt = $prepareInstance->prepare($query, $element_to_limit_time, "all"); 
-					            				?>
+					            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
-					            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $testt[0]['limit_time']?>">
-																<progress id="pg" value="<?= (int)$minutos?>" max="<?= $testt[0]['limit_time']?>"></progress>
+					            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time']?>">
+																<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time']?>"></progress>
 															</div>
 														</div>
 					            		<?php endif; ?>
