@@ -186,37 +186,28 @@
 				$row_id_finalized_queue_1 = $prepareInstance->prepareBind($query, $elements_to_finalized_queue_1, "all");
 
 				/* QUANTIDADE DE FUNCIONÁRIOS CADASTRADOS GRUPO 2*/
-	      $sql_count_attendant_2 = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM employee WHERE t_group = ?");
-	      $sql_count_attendant_2->bindValue(1, "nivel2");
-	      $sql_count_attendant_2->execute(); 
-	      $row_count_attendant_2 = $sql_count_attendant_2->fetchAll();
-	      $qtd_attendant_2 = $row_count_attendant_2[0]['total'];
+				$element_to_attendants_group_2 = "nivel2";
+				$query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ?";
+				$row_attendants_2 = $prepareInstance->prepare($query, $element_to_attendants_group_2, "all");
+				$qtd_attendant_2 = $row_attendants_2[0]['total'];
 
 	      /* QUANTIDADE DE FUNCIONÁRIOS HABILITADOS GRUPO 2*/
-	      $sql_count_attendant_2_on_chat = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?");
-	      $sql_count_attendant_2_on_chat->bindValue(1, "nivel2");
-	      $sql_count_attendant_2_on_chat->bindValue(2, "yes"); 
-	      $sql_count_attendant_2_on_chat->execute();
-	      $row_count_attendant_2_on_chat = $sql_count_attendant_2_on_chat->fetchAll();
-	      $qtd_attendant_2_on_chat = $row_count_attendant_2_on_chat[0]['total'];
+	      $elements_to_attendants_group_2_on_chat = ["nivel2", "yes"];
+	      $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
+	      $row_attendants_1_on_chat = $prepareInstance->prepare($query, $elements_to_attendants_group_2_on_chat, "all");
+	      $qtd_attendant_2_on_chat = $row_attendants_1_on_chat[0]['total'];
 
 				/* GRUPO 2 */
-				$sql_initialize_queue_2 = $connection->getConnection()->prepare("SELECT id_attendant FROM ticket 
-					WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :cont");
-				$sql_initialize_queue_2->bindValue(':status', "aberto", PDO::PARAM_STR);
-				$sql_initialize_queue_2->bindValue(':group', "nivel2", PDO::PARAM_STR);
-				$sql_initialize_queue_2->bindValue(':cont', (int) $qtd_attendant_2*2, PDO::PARAM_INT);
-				$sql_initialize_queue_2->execute();  
-				$row_initialized_queue_2 = $sql_initialize_queue_2->fetchAll();
+				$limit_initialize_2 = (int) $qtd_attendant_2*2;
+				$elements_to_initialize_queue_2 = ["aberto", "nivel2", $limit_initialize_2];
+				$query = "SELECT id_attendant FROM ticket WHERE t_status = ? AND t_group = ? ORDER BY registered_at DESC LIMIT ?";
+				$row_initialized_queue_2 = $prepareInstance->prepare($query, $elements_to_initialize_queue_2, "all");
 
-				$sql_finalized_queue_2 = $connection->getConnection()->prepare("SELECT DISTINCT id_attendant FROM ticket, employee 
-					WHERE t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :cont");
-				$sql_finalized_queue_2->bindValue(':status', "aberto", PDO::PARAM_STR);
-	      $sql_finalized_queue_2->bindValue(':group', "nivel2", PDO::PARAM_STR);
-	      $sql_finalized_queue_2->bindValue(':active', "yes", PDO::PARAM_STR);
-	      $sql_finalized_queue_2->bindValue(':cont', (int) $qtd_attendant_2, PDO::PARAM_INT);
-				$sql_finalized_queue_2->execute(); 
-				$row_id_finalized_queue_2 = $sql_finalized_queue_2->fetchAll();
+				$limit_finalized_2 = (int) $qtd_attendant_2;
+				$elements_to_finalized_queue_2 = ["aberto", "nivel2", "yes", $limit_finalized_2];
+				$query = "SELECT DISTINCT id_attendant FROM ticket, employee 
+					WHERE t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :cont";
+				$row_id_finalized_queue_2 = $prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all");
 			?>
 
 	    <section class="forms">
@@ -408,13 +399,12 @@
 				            	<?php foreach ($chats as $chat) : ?>
 				            		<?php if ($chat['t_group'] == "nivel2") : ?>
 				            			<?php 
-				            				$sql_chat_number = $connection->getConnection()->prepare("SELECT id, id_chat FROM chat WHERE id = ?"); 
-				            				$sql_chat_number->execute(array($chat['id_chat'])); 
-				            				$chat_number = $sql_chat_number->fetchAll(); 
+				            				$element_to_chat_number_and_ticket = $chat['id_chat'];
+				            				$query = "SELECT id_chat FROM chat WHERE id = ?";
+				            				$chat_number = $prepareInstance->prepare($query, $element_to_chat_number_and_ticket, "all");
 
-				            				$sql_ticket_time = $connection->getConnection()->prepare("SELECT registered_at FROM ticket WHERE id_chat = ?"); 
-				            				$sql_ticket_time->execute(array($chat['id_chat'])); 
-				            				$ticket_time = $sql_ticket_time->fetchAll();
+				            				$query = "SELECT registered_at FROM ticket WHERE id_chat = ?"; 
+				            				$ticket_time = $prepareInstance->prepare($query, $element_to_chat_number_and_ticket, "all");
 			            				?>
 		           		
 				            			<?php if ($chat['id'] == $new_queue) : ?>
@@ -440,25 +430,14 @@
 						            			<input type="hidden" name="startedTime<?php echo $rand?>" value="<?php $ticket_time[0]['registered_at']?>">
 
 					            				<?php 
-					            					$test = $connection->getConnection()->prepare("SELECT limit_time FROM ticket_module WHERE id = ?"); 
-					            					$test->execute(array($chat['id_module'])); 
-					            					$testt = $test->fetchAll(); 
+					            					$element_to_limit_time = $chat['id_module'];
+					            					$query = "SELECT limit_time FROM ticket_module WHERE id = ?";
+					            					$testt = $prepareInstance->prepare($query, $element_to_limit_time, "all"); 
 					            				?>
 
 					            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $testt[0]['limit_time']?>">
 																<progress id="pg" value="<?= (int)$minutos?>" max="<?= $testt[0]['limit_time']?>"></progress>
 															</div>
-
-															<!--?php 
-																$sql_horario = $connection->getConnection()->prepare("SELECT registered_at FROM ticket 
-																	WHERE id_chat = ? ORDER BY id DESC LIMIT 1");
-																$sql_horario->execute(array($chat_number[0]['id'])); 
-																$result_horario = $sql_horario->fetch();
-
-																$horario = date("H:i:s", strtotime($result_horario['registered_at']));
-															?>
-
-															<p><?= $horario ?></p-->
 														</div>
 					            		<?php endif; ?>
 				            		<?php endif; ?>
@@ -483,10 +462,9 @@
 			<h1>Atendimentos</h1>
 
 			<?php
-				$sql_attendants = $connection->getConnection()->prepare("SELECT id, name, on_chat FROM employee 
-					WHERE t_group = ? OR t_group = ? ORDER BY t_group, name");
-	      $sql_attendants->execute(array("nivel1", "nivel2")); 
-	      $attendants = $sql_attendants->fetchAll();
+				$elements_to_get_data_attendants = ["nivel1", "nivel2"];
+				$query = "SELECT id, name, on_chat FROM employee WHERE t_group = ? OR t_group = ? ORDER BY t_group, name";
+				$attendants = $prepareInstance->prepare($query, $elements_to_get_data_attendants, "all"); 
 			?>
 
 			<div class="row" id="internal-row">
@@ -512,15 +490,14 @@
 							<?php for ($j = 0; $j < 8; $j++) : ?> 
 								<?php 
 									$actual_date = date('Y-m-d', strtotime('-' .$j. ' days'));
-									$sql_total_calls = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket 
-										WHERE id_attendant = ? AND finalized_at LIKE ?");
-		        			$sql_total_calls->execute(array($attendant['id'], $actual_date."%")); 
-		        			$total_calls = $sql_total_calls->fetchAll();
 
-		        			$sql_total_pendant = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket 
-		        				WHERE id_attendant = ? AND t_status = ? AND registered_at LIKE ?");
-		        			$sql_total_pendant->execute(array($attendant['id'], "pendente", $actual_date."%")); 
-		        			$total_pendant = $sql_total_pendant->fetchAll();
+									$elements_to_total_calls = [$attendant['id'], $actual_date."%"];
+									$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND finalized_at LIKE ?";
+									$total_calls = $prepareInstance->prepare($query, $elements_to_total_calls, "all");
+
+									$elements_to_total_pendant = [$attendant['id'], "pendente", $actual_date."%"];
+									$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND t_status = ? AND registered_at LIKE ?";
+									$total_pendant = $prepareInstance->prepare($query, $elements_to_total_pendant, "all");
 
 		        			$total = $total_calls[0]['total'] + $total_pendant[0]['total'];
 	        			?>

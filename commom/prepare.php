@@ -8,7 +8,7 @@
 		private $connectionToDatabase;
 
 		function __construct(){
-			$this->connectionToDatabase = new ConfigDatabase();
+			$this->connectionToDatabase = ConfigDatabase::getInstance();
 		}
 
 		public function getConnToDatabase() {
@@ -18,10 +18,11 @@
 		function prepare($query, $elements, $typeReturn){
 	    $open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
 	    
-	    if(gettype($elements) == "string")
+	    if(gettype($elements) == "string") {
 	      $open_connection->execute(array($elements)); 
-	    else 
+	    } else { 
 	      $open_connection->execute($elements);
+	    }
 
 	    if($typeReturn == "all")
 	    	return $open_connection->fetchAll();

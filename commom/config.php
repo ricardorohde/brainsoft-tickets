@@ -2,14 +2,16 @@
 
 class ConfigDatabase{
 
-	public function getConnection(){
-		try {
-			$host = "127.0.0.1"; // Hostname
-			$port = "3306"; // MySQL Port : Default : 3306
-			$user = "root"; // Username Here
-			$pass = "brain123"; //Password Here
-			$db   = "brain"; // Database Name
+	private static $instance;
 
+	public function getConnection(){
+		$host = "127.0.0.1"; // Hostname
+		$port = "3306"; // MySQL Port : Default : 3306
+		$user = "root"; // Username Here
+		$pass = "brain123"; //Password Here
+		$db   = "brain"; // Database Name
+
+		try {
 			$dbh  = new PDO('mysql:dbname='.$db.';host='.$host.';port='.$port,$user,$pass);
 
 			$dbh->query("SET NAMES 'utf8'");
@@ -23,8 +25,11 @@ class ConfigDatabase{
 		}
 	}
 
-	protected static function getDB() {
-		return self::getConnection();
+	public static function getInstance() {
+		if ( !self::$instance )
+      self::$instance = new ConfigDatabase();
+
+    return self::$instance;
 	}
 }
 
