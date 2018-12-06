@@ -177,13 +177,13 @@
 	      $limit_initialize_1 = (int) $qtd_attendant_1*2;
 	      $elements_to_initialize_queue_1 = ["aberto", "nivel1", $limit_initialize_1];
 	      $query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
-	      $row_initialized_queue_1 = $prepareInstance->prepare3Bind($query, $elements_to_initialize_queue_1, "all");
+	      $row_initialized_queue_1 = $prepareInstance->prepareBind($query, $elements_to_initialize_queue_1, "all");
 
 	      $limit_finalized_1 = (int) $qtd_attendant_1;
 	      $elements_to_finalized_queue_1 = ["aberto", "nivel1", "yes", $limit_finalized_1];
 	      $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
 					t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
-				$row_id_finalized_queue_1 = $prepareInstance->prepare4Bind($query, $elements_to_finalized_queue_1, "all");
+				$row_id_finalized_queue_1 = $prepareInstance->prepareBind($query, $elements_to_finalized_queue_1, "all");
 
 				/* QUANTIDADE DE FUNCIONÁRIOS CADASTRADOS GRUPO 2*/
 				$element_to_attendants_group_2 = "nivel2";
@@ -201,13 +201,13 @@
 				$limit_initialize_2 = (int) $qtd_attendant_2*2;
 				$elements_to_initialize_queue_2 = ["aberto", "nivel2", $limit_initialize_2];
 				$query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
-				$row_initialized_queue_2 = $prepareInstance->prepare3Bind($query, $elements_to_initialize_queue_2, "all");
+				$row_initialized_queue_2 = $prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all");
 
 				$limit_finalized_2 = (int) $qtd_attendant_2;
 				$elements_to_finalized_queue_2 = ["aberto", "nivel2", "yes", $limit_finalized_2];
 				$query = "SELECT DISTINCT id_attendant FROM ticket, employee 
 					WHERE t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
-				$row_id_finalized_queue_2 = $prepareInstance->prepare4Bind($query, $elements_to_finalized_queue_2, "all");
+				$row_id_finalized_queue_2 = $prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all");
 			?>
 
 	    <section class="forms">

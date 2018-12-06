@@ -30,27 +30,20 @@
 	    	return $open_connection->fetch();
   	}
 
-  	function prepare3Bind($query, $elements, $typeReturn){
+  	function prepareBind($query, $elements, $typeReturn){
   		$open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
 
-  		$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
-      $open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
-      $open_connection->bindValue(':count', $elements[2], PDO::PARAM_INT);
-      $open_connection->execute();
+  		if (count($elements) == 3) {
+  			$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
+      	$open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
+      	$open_connection->bindValue(':count', $elements[2], PDO::PARAM_INT);
+  		} else {
+  			$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
+     		$open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
+      	$open_connection->bindValue(':active', $elements[2], PDO::PARAM_STR);
+     		$open_connection->bindValue(':count', $elements[3], PDO::PARAM_INT);
+  		}
 
-      if($typeReturn == "all")
-	    	return $open_connection->fetchAll();
-	    else
-	    	return $open_connection->fetch();
-  	}
-
-  	function prepare4Bind($query, $elements, $typeReturn){
-  		$open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
-
-  		$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
-      $open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
-      $open_connection->bindValue(':active', $elements[2], PDO::PARAM_STR);
-      $open_connection->bindValue(':count', $elements[3], PDO::PARAM_INT);
       $open_connection->execute();
 
       if($typeReturn == "all")
