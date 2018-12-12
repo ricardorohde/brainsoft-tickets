@@ -56,9 +56,10 @@
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
 
-      <?php 
-        /*$sql_ticket = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source != ? ORDER BY id DESC LIMIT 5");
-        $sql_ticket->execute(array("telefone")); $tickets = $sql_ticket->fetchAll();*/
+      <?php
+        $elements = ["nivel1", "nivel2", "yes", "yes"];
+        $query = "SELECT id, name, id_credential FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
+        $attendants = $prepareInstance->prepare($query, $elements, "all");
 
         $sql_calls = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 5");
         $sql_calls->execute(array("telefone")); $calls = $sql_calls->fetchAll();
@@ -76,19 +77,30 @@
                   <h2 class="h5 display">Informe o código do Chat ou Ligação!</h2>
                 </div>
                 <div class="card-body">
-                  <form class="form-horizontal" action="ticket.php" method="GET">
-                    <div class="form-group row">
-                      <label class="col-sm-2 form-control-label mt-4">Código</label>
-                      <div class="col-sm-10 select ui-widget">
-                        <input type="text" name="id_chat" id="id_chat" class="justNumbers form-control" maxlength="7" autofocus="" autocomplete="off" required><span class="help-block-none">Informe o código do chat atendido.</span>
-                      </div>
-                    </div>                  
-                    <div class="form-group row">
-                      <div class="col-sm-12 offset-sm-2">
-                        <button type="submit" class="btn col-sm-10 btn-primary">BUSCAR / REGISTRAR!</button>
-                      </div>
+                  <div class="row">
+                    <label class="col-sm-2 form-control-label mt-4">Código</label>
+                    <div class="col-sm-10 select ui-widget">
+                      <input type="text" name="id_chat" id="id_chat" class="justNumbers form-control" maxlength="7" autofocus="" autocomplete="off"><span class="help-block-none">Informe o código do chat atendido.</span>
                     </div>
-                  </form>
+                  </div> 
+                  <div class="row" style="margin-left: 0px!important;">
+                    <label class="col-sm-2 form-control-label mt-4" style="padding-left: 0px!important;">Atendente</label>
+                      <div class="col-sm-10 mt-3" style="padding-left: 0px!important;">
+                        <?php foreach ($attendants as $attendant) : ?>
+                          <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="attendant<?= $attendant['id'] ?>" name="id_attendant" value="<?= $attendant['id'] ?>" 
+                            class="custom-control-input" <?= $attendant['id_credential'] == $id ? "checked" : "" ?>>
+                            <label class="custom-control-label" for="attendant<?= $attendant['id'] ?>"><?= $attendant['name'] ?></label>
+                          </div>
+                        <?php endforeach; ?>
+                      </div>
+                      <span class="offset-sm-2 mb-4" style="margin-top: -12px;">(Caso o atendente esteja com 2 atendimentos ou Offline ele não aparecerá aqui.)</span>
+                  </div>            
+                  <div class="row">
+                    <div class="col-sm-12 offset-sm-2">
+                      <button id="submit-search-register" class="btn col-sm-10 btn-primary">BUSCAR / REGISTRAR!</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -19,40 +19,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
     <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../vendor/font-awesome/css/font-awesome.min.css">
     <!-- Custom icon font-->
-    <link rel="stylesheet" href="../css/fontastic.css">
+    <link rel="stylesheet" href="../../css/fontastic.css">
     <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <!-- jQuery Circle-->
-    <link rel="stylesheet" href="../css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="../../css/grasp_mobile_progress_circle-1.0.0.min.css">
     <!-- Custom Scrollbar-->
-    <link rel="stylesheet" href="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
     <!-- theme stylesheet-->
-    <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../../css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 
-    <link type="text/css" href="../css/jquery-ui.css" rel="stylesheet"/>
+    <link type="text/css" href="../../css/jquery-ui.css" rel="stylesheet"/>
 
     <link rel="shortcut icon" href="favicon.png">
   </head>
   
   <?php 
+    $root = "http://localhost/dashboard/";
     $targets = array(
-      "Billet" => "../administrativo Administrativo fa-files-o",
-      "Ticket" => "../tickets Tickets fa-ticket",
-      "User" => "../usuarios Usuários fa-user-circle",
-      "Registry" => "../cartorios Cartórios fa-home",
-      "Module" => "../cadastros Módulos fa-caret-square-o-right",
-      "Queue" => "../fila-interna Fila fa-sort-amount-asc",
-      "Authorization" => "../autorizacoes Autorizações fa-caret-square-o-right",
-      "Report" => "../relatorios Relatórios fa-caret-square-o-right",
-      "Logout" => "../logout"
+      "Billet" => $root . "administrativo Administrativo fa-files-o",
+      "Ticket" => $root . "tickets Tickets fa-ticket",
+      "User" => $root . "usuarios Usuários fa-user-circle",
+      "Registry" => $root . "cartorios Cartórios fa-home",
+      "Module" => $root . "cadastros Módulos fa-caret-square-o-right",
+      "Queue" => $root . "fila-interna Fila fa-sort-amount-asc",
+      "Authorization" => $root . "autorizacoes Autorizações fa-caret-square-o-right",
+      "Report" => $root . "relatorios Relatórios fa-caret-square-o-right",
+      "Logout" => $root . "logout"
     );
   ?>
   <body>
@@ -61,8 +62,8 @@
       <?php include ("../navs/header.php");?>
 
       <?php 
-        $sql_id_chat = $connection->getConnection()->prepare("SELECT id FROM chat WHERE id_chat = ?");
-        $sql_id_chat->execute(array($_GET["id_chat"])); $row_id_chat = $sql_id_chat->fetch();
+        $sql_id_chat = $connection->getConnection()->prepare("SELECT chat.id FROM chat, ticket WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat");
+        $sql_id_chat->execute(array($_GET["id_chat"], $_GET["id_attendant"])); $row_id_chat = $sql_id_chat->fetch();
 
         $sql_ticket = $connection->getConnection()->prepare("SELECT id, id_registry, id_client, priority, t_status, source, type, t_group, id_module, id_attendant, resolution, id_who_closed, is_repeated FROM ticket WHERE id_chat = ?");
         $sql_ticket->execute(array($row_id_chat['id'])); $row_ticket = $sql_ticket->fetch();
@@ -77,7 +78,12 @@
         $sql_m_ticket->execute(array($row_ticket['id_module'])); $row_m_ticket = $sql_m_ticket->fetch();
 
         $sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?");
-        $sql_attendant->execute(array($row_ticket['id_attendant'])); $row_attendant = $sql_attendant->fetch();
+        if($row_ticket['id_attendant'] != NULL) {
+          $sql_attendant->execute(array($row_ticket['id_attendant'])); $row_attendant = $sql_attendant->fetch();
+        } else {
+          $sql_attendant->execute(array($_GET['id_attendant'])); $targetAttendant = $sql_attendant->fetch();
+        }
+        
       ?>
 
       <?php 
@@ -121,7 +127,13 @@
                   </div>
                 <?php } ?>
                 <div class="card-body">
-                  <form id="ticket-form" class="form-horizontal" action="../../utils/controller/ctrl_ticket.php" method="POST">
+                  <?php if($row_id_chat == NULL) : ?>
+                  <div class="alert alert-warning text-center" role="alert">
+                    Alerta! Este ticket está sendo criado para o atendente <strong><?= $targetAttendant['name'] ?></strong>.
+                  </div>
+                  <?php endif; ?>
+                  <input type="hidden" id="target-attendant" value="<?= isset($targetAttendant) ? $targetAttendant['name'] : $row_attendant['name'] ?>">
+                  <form id="ticket-form" class="form-horizontal" action="../../../utils/controller/ctrl_ticket.php" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Reincidente</label>
                       <div class="col-sm-1 select ui-widget">
@@ -416,11 +428,10 @@
                           <?php else: ?>
                             <option value="">Selecione um atendente...</option>
                           <?php endif; ?>
-
-                          <!--?php while($row = $sql_all_attendant->fetch()) { ?>
-                            <option value="<?php //echo $row['id'] ?>"><?php //echo $row['name'] ?></option>
-                          <?php //} ?><-->
                         </select>
+                        <?php if($row_id_chat == NULL) : ?>
+                        <span id="span-attendant">Selecione o atendente <strong><?= $targetAttendant['name'] ?>.</strong></span>
+                        <?php endif; ?>
                       </div>
                     </div>
 
@@ -564,7 +575,7 @@
                           if($client_ip != NULL || $_GET['id_chat'] < 100000) {
                             echo '<button type="reset" class="btn btn-secondary">Limpar</button>';
 
-                            if($row_attendant['name'] != NULL){
+                            if(@$row_attendant['name'] != NULL){
                               echo '<button type="submit" name="submit" class="btn btn-primary btnAction">Salvar Alterações!</button>';
                               if(!($row_ticket['id_who_closed'] != NULL)){
                                 echo '<button type="submit" name="finishTicket" class="btn btn-danger btnAction">Finalizar Ticket!</button>';
@@ -601,9 +612,7 @@
     </div>
     <!-- Javascript files-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
-    <script src="../js/jquery-3.2.1.min.js"></script>
-    <!--script src="http://www.easyjstree.com/bundles/jquery?v=5r0dFjH__tJcUIAQyQUG4tMptq0H5PoqgaCRzuzpfIs1"></script>
-    <script src="http://www.easyjstree.com/Scripts/jquery.easytree.min.js"></script-->
+    <script src="../../js/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
     <script>
       $(function(){
@@ -630,15 +639,15 @@
         });
       });
     </script>
-    <script src="../jquery-ui.js"></script>
-    <script src="../../js/jquery.mask.js"></script>
-    <script src="../js/front.js"></script>
-    <script src="../js/ticket.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="../js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
-    <script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../../jquery-ui.js"></script>
+    <script src="../../../js/jquery.mask.js"></script>
+    <script src="../../js/front.js"></script>
+    <script src="../../js/ticket.js"></script>
+    <script src="../../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="../../js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
+    <script src="../../vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 

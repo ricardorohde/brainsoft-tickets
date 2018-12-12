@@ -6,7 +6,7 @@ $(document).ready(function () {
 	    }
 	});
 
-	$("#status").change(function(){
+	$("#status").change(function() {
 		var statusSelected = $("#status option:selected").val();
 		if(statusSelected != "aberto"){
 			$("button[name='finishTicket']").hide();
@@ -15,7 +15,7 @@ $(document).ready(function () {
 		}
 	});
 
-	$("button[type=submit]").click(function(){
+	$("button[type=submit]").click(function() {
 		var error = false;
 
 		if(!error){
@@ -23,16 +23,36 @@ $(document).ready(function () {
 			if(val.indexOf("/") == -1){
 				$("#module").addClass("border-danger");
 				error = true;
+			} else {
+				$("#module").removeClass("border-danger");
 			}
 		}
 
-		if(!error){
+		if(!error) {
 			$('select').each(function() {
-				if( $(this).val() == ""){
+				if($(this).val() == ""){
 					$(this).addClass("border-danger");
 					error = true;
+				} else {
+					$(this).removeClass("border-danger");
 				}
 			});
+		}
+
+		if(!error) {
+			var selectedAttendant = $("#attendant option:selected").html();
+			var targetAttendant = $("#target-attendant").val();
+		
+			if(selectedAttendant != targetAttendant) {
+				$("#attendant").addClass("border-danger");
+				$("#span-attendant").addClass("text-danger");
+				$("#span-attendant").html("Alerta! Selecione o atendente correto (neste caso, o " + targetAttendant + ").");
+				error = true;
+			} else {
+				$("#attendant").removeClass("border-danger");
+				$("#span-attendant").removeClass("text-danger");
+				$("#span-attendant").html("");
+			}
 		}
 
 		if(error){ 

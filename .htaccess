@@ -8,7 +8,9 @@
 
 	  RewriteRule ^dashboard/tickets/?$ dashboard/ticket/view-all-ticket.php [NC,L]
 
-	  RewriteRule ^dashboard/([a-z0-9-]+)/([0-9]+)/?$ dashboard/$1/ticket.php?id_chat=$2 [NC]
+	  RewriteRule ^dashboard/([a-z0-9-]+)/([0-9]+)?$ dashboard/$1/ticket.php?id_chat=$2 [NC]
+
+	  RewriteRule ^dashboard/([a-z0-9-]+)/([0-9]+)/([0-9]+)?$ dashboard/$1/ticket.php?id_chat=$2&id_attendant=$3 [NC]
 
 	  RewriteRule ^dashboard/ticket/novo-busca/?$ dashboard/ticket/view-new-find-ticket.php [NC]
 

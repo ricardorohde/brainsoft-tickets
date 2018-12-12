@@ -47,7 +47,7 @@
 	width: 200px;
 }
 
-#wrongIdChat {
+#wrongIdChat, .text-danger {
 	color: red;
 }
 
@@ -223,4 +223,8 @@ a:link {
 
 #qtd-tickets {
 	margin-top: -15px;
+}
+
+.card {
+	border-radius: .25rem 0px 0px .25rem!important;
 }

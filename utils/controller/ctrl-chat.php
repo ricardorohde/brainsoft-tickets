@@ -12,10 +12,10 @@
          return $chat->register($id, $opening_time, $final_time, $duration_in_minutes);
       }
 
-      function searchIdCtrl($chat_id){
+      function searchIdCtrl($chat_id, $attendant_id){
          $chat = new Chat($this->getInstance());
 
-         return $chat->searchId($chat_id);
+         return $chat->searchId($chat_id, $attendant_id);
       }
 
       function searchChatIdCtrl($id){

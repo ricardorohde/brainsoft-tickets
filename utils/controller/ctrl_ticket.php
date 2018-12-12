@@ -78,7 +78,7 @@
 
 			$id_registry = $this->clientController->findIdRegistryByIdClient($data['client']);
 
-			$id_chat_found = $this->chatController->searchIdCtrl($data['id_chat']);
+			$id_chat_found = $this->chatController->searchIdCtrl($data['id_chat'], $data['attendant']);
 
 			$id_category = $this->categoryModuleController->findIdByName($data['selected_category']);
 

@@ -136,7 +136,7 @@
 						            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
 															   	<p><strong>Ticket: </strong><?= $chat_number[0]['id_chat'];?></p>
 															   	<p><strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($ticket_time[0]['registered_at']));?></p>
-															   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat_number[0]['id_chat'];?>' onClick='redirectToTicket(this.value)'>Visualizar Ticket</button>
+															   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat_number[0]['id_chat'];?>' onClick='redirectToTicket(this.value, <?= $new_queue ?>)'>Visualizar Ticket</button>
 																	</div>"><?php echo $chat_number[0]['id_chat'];?></button>
 
 							            			<a href="#"></a>
@@ -209,7 +209,7 @@
 					            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
 																<p><strong>Chat / Ticket: </strong><?= $chat_number[0]['id_chat'];?></p>
 												   			<p><strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($ticket_time[0]['registered_at']));?></p>
-												   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat_number[0]['id_chat'];?>' onClick='redirectToTicket(this.value)'>Visualizar Ticket</button>
+												   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat_number[0]['id_chat'];?>' onClick='redirectToTicket(this.value, <?= $new_queue ?>)'>Visualizar Ticket</button>
 																</div>"><?php echo $chat_number[0]['id_chat'];?></button>
 
 						            			<a href="#"></a>

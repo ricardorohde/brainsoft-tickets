@@ -1,6 +1,31 @@
 /*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function () {
 
+    $("#submit-search-register").click(function(){
+        var idChat = $("#id_chat").val();
+        var idAttendant = $("input[name='id_attendant']:checked").val();
+        var error = false;
+
+        if(!error) {
+            if(idChat == "" || idChat == null) {
+                $("#id_chat").addClass("border-danger");
+                error = true;
+            }
+        }
+
+        if(!error) {
+            if(idAttendant == "" || idAttendant == null) {
+                error = true;
+            }
+        }
+
+        if(error){
+            return false;
+        }
+
+        redirectoToTicketRemovingTextTicket(idChat, idAttendant);
+    });
+
     var hrefRaw = window.location.pathname;
     var href = hrefRaw.toString().split('/');
     $('#side-admin-menu > li > a[href="' + href[2] + '"]').parent().addClass('active');
@@ -211,12 +236,12 @@ $(document).ready(function () {
     $(function() {
         $("#registry").autocomplete({
             highlightClass: "bold-text",
-            source: '../../utils/buscaDados.php',
+            source: '../../../utils/buscaDados.php',
         });
         
         $("#registryListToAdm").autocomplete({
             highlightClass: "bold-text",
-            source: '../utils/buscaDados.php'
+            source: '../../utils/buscaDados.php'
         });
 
         $("#category").autocomplete({
@@ -245,7 +270,7 @@ $(document).ready(function () {
 
     $("select[name=group]").change(function(){
         $("select[name=attendant]").html('<option value="">Selecione um atendente</option>');
-        $.post("../../utils/controller/ctrl_employee.php", {valor:$(this).val()},
+        $.post("../../../utils/controller/ctrl_employee.php", {valor:$(this).val()},
           function(valor){
             $("select[name=attendant]").append(valor);
           }
@@ -278,7 +303,7 @@ $(document).ready(function () {
 
     $("input[name=registry]").blur(function(){
         $("select[name=client]").html('<option value="">Selecione o cliente requerente</option>');
-        $.post("../../utils/controller/ctrl_client.php", {registry:$(this).val()},
+        $.post("../../../utils/controller/ctrl_client.php", {registry:$(this).val()},
           function(client){
             $("select[name=client]").append(client);
           }
@@ -571,8 +596,16 @@ function verifyActualDate(iNeed){
     return actual_date;
 }
 
-function redirectToTicket(idChat){
-    var url = 'ticket/' + idChat;
+function redirectToTicket(idChat, idAttendant){
+    var url = 'ticket/' + idChat + '/' + idAttendant;
 
     window.open(url, '_blank');
 }
+
+function redirectoToTicketRemovingTextTicket(idChat, idAttendant){
+    var url = idChat + '/' + idAttendant;
+
+    window.open(url);
+}
+
+

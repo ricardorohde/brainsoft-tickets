@@ -31,11 +31,11 @@
         	return $sql->fetchAll();
 	    }
 
-	    function searchId($id_chat){
+	    function searchId($id_chat, $id_attendant){
 	    	$id = 0;
 
-	    	$sql = $this->connection->getConnection()->prepare("SELECT id FROM chat WHERE id_chat = ?");
-	    	$sql->execute(array($id_chat));
+	    	$sql = $this->connection->getConnection()->prepare("SELECT chat.id FROM chat, ticket WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat");
+	    	$sql->execute(array($id_chat, $id_attendant));
 
 	   		while($row = $sql->fetch()){
   				$id = $row['id'];

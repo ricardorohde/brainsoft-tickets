@@ -160,6 +160,12 @@
           <div class="row">
             <div id="conteudo" class="col-md-12">
               <?php if (!empty($tickets)) : ?>
+                <?php
+                  $elements = ["nivel1", "nivel2", "yes", "yes"];
+                  $query = "SELECT id, name FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
+                  $attendants = $prepareInstance->prepare($query, $elements, "all");
+                ?>
+
                 <?php foreach ($tickets as $ticket) : ?>
                   <?php 
                     $sql_module = $connection->getConnection()->prepare("SELECT description, id_category FROM ticket_module WHERE id = ?"); 
@@ -178,7 +184,7 @@
                     $sql_client->execute(array($ticket['id_client'])); 
                     $client = $sql_client->fetch();
 
-                    $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); 
+                    $sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?"); 
                     $sql_attendant->execute(array($ticket['id_attendant'])); 
                     $attendant = $sql_attendant->fetch();
 
@@ -200,8 +206,8 @@
                   ?>
 
                   <div class="row">
-                    <myElement class="col-md-12">
-                      <a class="col-md-12" href="ticket/<?= $id_chat[0]; ?>">
+                    <div class="col-11" style="padding-right: 0px;">    
+                      <a href="ticket/<?= $id_chat[0]; ?>/<?= $attendant['id']; ?>" target="_blank" style="padding: 0px!important; width: 100%;">
                         <div class="card <?= $status_background?> mb-3">
                           <div class="card-header">
                             <?= $category_module['description']. " / " .$module['description']; ?> | 
@@ -233,7 +239,22 @@
                           </div>
                         </div>      
                       </a>
-                    </myElement>
+                    </div>
+                    <div class="col-1" style="padding-left: 0px; text-align: left;">
+                      <div class="btn-group dropleft" style="height: 83%;">
+                        <button type="button" class="btn btn-info dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 0px .25rem .25rem 0px;">
+                          <i class="material-icons" style="padding-top: 10px;">forward</i>
+                        </button>
+                        <div class="dropdown-menu">
+                          <?php foreach ($attendants as $at) : ?>
+                            <?php if($attendant['name'] != $at['name']) : ?>
+                              <a class="dropdown-item" href="ticket/<?= $id_chat[0] ?>/<?= $at['id'] ?>" target="_blank"><?= $at['name'] ?></a>
+                              <div class="dropdown-divider"></div> 
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 <?php endforeach; ?>
               <?php else : ?>
@@ -241,6 +262,25 @@
                   <td colspan="6">Nenhum ticket registrado até o momento.</td>
                 </tr>
               <?php endif; ?>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Selecione o atendente de destino</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="row">
