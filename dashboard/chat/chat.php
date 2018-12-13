@@ -36,18 +36,6 @@ if (!isset($_SESSION['ticket_page_'.$_SESSION['login']])) {
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
 </head>
-<?php
-$target_adm = "../administrativo";
-$target_ticket = "../tickets";
-$target_user = "../usuarios";
-$target_registry = "../cartorios";
-$target_registration_forms = "../cadastros";
-$target_internal_queue = "../fila-interna";
-$target_authorization = "../autorizacoes";
-$target_report = "../relatorios";
-
-$target_logout = "../logout";
-?>
 <body>
 <?php include ("../navs/navbar.php");?>
 <div class="root-page forms-page">

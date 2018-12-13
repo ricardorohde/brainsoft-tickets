@@ -62,7 +62,7 @@
 			};
 		</script>
 	</head>
-	<?php $targets = $queueController->getTargets(); ?>
+
 	<body>
 	  <?php include ("../navs/navbar.php");?>
 	  <div class="root-page forms-page">

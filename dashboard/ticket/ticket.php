@@ -42,20 +42,6 @@
     <link rel="shortcut icon" href="favicon.png">
   </head>
   
-  <?php 
-    $root = "http://localhost/dashboard/";
-    $targets = array(
-      "Billet" => $root . "administrativo Administrativo fa-files-o",
-      "Ticket" => $root . "tickets Tickets fa-ticket",
-      "User" => $root . "usuarios Usuários fa-user-circle",
-      "Registry" => $root . "cartorios Cartórios fa-home",
-      "Module" => $root . "cadastros Módulos fa-caret-square-o-right",
-      "Queue" => $root . "fila-interna Fila fa-sort-amount-asc",
-      "Authorization" => $root . "autorizacoes Autorizações fa-caret-square-o-right",
-      "Report" => $root . "relatorios Relatórios fa-caret-square-o-right",
-      "Logout" => $root . "logout"
-    );
-  ?>
   <body>
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
@@ -127,11 +113,6 @@
                   </div>
                 <?php } ?>
                 <div class="card-body">
-                  <?php if($row_id_chat == NULL) : ?>
-                  <div class="alert alert-warning text-center" role="alert">
-                    Alerta! Este ticket está sendo criado para o atendente <strong><?= $targetAttendant['name'] ?></strong>.
-                  </div>
-                  <?php endif; ?>
                   <input type="hidden" id="target-attendant" value="<?= isset($targetAttendant) ? $targetAttendant['name'] : $row_attendant['name'] ?>">
                   <form id="ticket-form" class="form-horizontal" action="../../../utils/controller/ctrl_ticket.php" method="POST">
                     <div class="form-group row">

@@ -26,6 +26,20 @@
         </div>
         <div class="main-menu">
           <ul id="side-admin-menu" class="side-menu list-unstyled"> 
+            <?php 
+              $root = "http://localhost/dashboard/";
+              $targets = array(
+                "Billet" => $root . "administrativo Administrativo fa-files-o",
+                "Authorization" => $root . "autorizacoes Autorizações fa-caret-square-o-right",
+                "Registry" => $root . "cartorios Cartórios fa-home",
+                "Queue" => $root . "fila-interna Fila fa-sort-amount-asc",
+                "Module" => $root . "cadastros Módulos fa-caret-square-o-right",
+                "Report" => $root . "relatorios Relatórios fa-caret-square-o-right",
+                "Ticket" => $root . "tickets Tickets fa-ticket",
+                "User" => $root . "usuarios Usuários fa-user-circle",             
+                "Logout" => $root . "logout"
+              );
+            ?>
             <?= $controller->makeMenu($targets); ?>
           </ul>
         </div>  

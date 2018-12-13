@@ -36,19 +36,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
   </head>
-  <?php 
-    $targets = array(
-      "Billet" => "administrativo Administrativo fa-files-o",
-      "Ticket" => "tickets Tickets fa-ticket",
-      "User" => "usuarios Usuários fa-user-circle",
-      "Registry" => "cartorios Cartórios fa-home",
-      "Module" => "cadastros Módulos fa-caret-square-o-right",
-      "Queue" => "fila-interna Fila fa-sort-amount-asc",
-      "Authorization" => "autorizacoes Autorizações fa-caret-square-o-right",
-      "Report" => "relatorios Relatórios fa-caret-square-o-right",
-      "Logout" => "logout"
-    );
-  ?>
+
   <body>
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">

@@ -1,8 +1,6 @@
 <?php 
 
-include_once __DIR__.'/../../utils/controller/ctrl-target.php';
-
-class QueueController extends TargetController {
+class QueueController {
 
 	private static $instance;
 	private $prepareInstance;
@@ -218,10 +216,6 @@ class QueueController extends TargetController {
   	if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
     	header("Location:../dashboard");
   	}
-	}
-
-	function getTargets(){
-		return $this->targetRoot();
 	}
 
 	public static function getInstance() {
