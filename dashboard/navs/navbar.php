@@ -27,7 +27,7 @@
         <div class="main-menu">
           <ul id="side-admin-menu" class="side-menu list-unstyled"> 
             <?php 
-              $root = "http://localhost/dashboard/";
+              $root = "http://" . $_SERVER["HTTP_HOST"] . "/dashboard/";
               $targets = array(
                 "Billet" => $root . "administrativo Administrativo fa-files-o",
                 "Authorization" => $root . "autorizacoes Autorizações fa-caret-square-o-right",
