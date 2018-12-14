@@ -6,12 +6,10 @@ class QueueController {
 	private $prepareInstance;
 	private $allOpenChats;                //chats
 
-	private $allAttendantsOnGroup1;       //qtd_attendant_1
 	private $allAttendantsOfGroup1OnChat; //qtd_attendant_1_on_chat
 	private $initializedQueueOfGroup1;    //row_initialized_queue_1
 	private $finalizedQueueOfGroup1;      //row_id_finalized_queue_1
 
-	private $allAttendantsOnGroup2;       //$qtd_attendant_2
 	private $allAttendantsOfGroup2OnChat; //qtd_attendant_2_on_chat
 	private $initializedQueueOfGroup2;    //row_initialized_queue_2
 	private $finalizedQueueOfGroup2;      //row_id_finalized_queue_2
@@ -100,13 +98,6 @@ class QueueController {
     $this->allOpenChats = $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
-	function attendantsOnGroup1(){
-    $elements = "nivel1";
-    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ?";
-    $row_attendants_1 = $this->prepareInstance->prepare($query, $elements, "all");
-    $this->allAttendantsOnGroup1 = (int) $row_attendants_1[0]['total'];
-	}
-
 	function attendantsAbleOnGroup1() {
     $elements = ["nivel1", "yes"];
     $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
@@ -115,23 +106,16 @@ class QueueController {
 	}
 
 	function makeQueueToGroup1() {
-    $limit_initialize_1 = $this->allAttendantsOnGroup1 * 2;
+    $limit_initialize_1 = $this->allAttendantsOfGroup1OnChat * 2;
     $elements = ["aberto", "nivel1", $limit_initialize_1];
     $query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
     $this->initializedQueueOfGroup1 = $this->prepareInstance->prepareBind($query, $elements, "all");
 
-    $limit_finalized_1 = $this->allAttendantsOnGroup1;
+    $limit_finalized_1 = $this->allAttendantsOfGroup1OnChat;
     $elements = ["aberto", "nivel1", "yes", $limit_finalized_1];
     $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
 			t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
 		$this->finalizedQueueOfGroup1 = $this->prepareInstance->prepareBind($query, $elements, "all");
-	}
-
-	function attendantsOnGroup2() {
-    $elements = "nivel2";
-		$query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ?";
-		$row_attendants_2 = $this->prepareInstance->prepare($query, $elements, "all");
-		$this->allAttendantsOnGroup2 = (int) $row_attendants_2[0]['total'];
 	}
 
 	function attendantsAbleOnGroup2() {
@@ -142,15 +126,15 @@ class QueueController {
 	}
 
 	function makeQueueToGroup2() {
-		$limit_initialize_2 = $this->allAttendantsOnGroup2 * 2;
+		$limit_initialize_2 = $this->allAttendantsOfGroup2OnChat * 2;
 		$elements_to_initialize_queue_2 = ["aberto", "nivel2", $limit_initialize_2];
 		$query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
 		$this->initializedQueueOfGroup2 = $this->prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all");
 
-		$limit_finalized_2 = $this->allAttendantsOnGroup2;
+		$limit_finalized_2 = $this->allAttendantsOfGroup2OnChat;
 		$elements_to_finalized_queue_2 = ["aberto", "nivel2", "yes", $limit_finalized_2];
-		$query = "SELECT DISTINCT id_attendant FROM ticket, employee 
-			WHERE t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
+		$query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
+			t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
 		$this->finalizedQueueOfGroup2 = $this->prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all");
 	}
 
@@ -209,6 +193,20 @@ class QueueController {
 		$query = "SELECT limit_time FROM ticket_module WHERE id = ?";
 
 		return $this->prepareInstance->prepare($query, $element, "all"); 
+	}
+
+	function attendantsOnGroup($group){
+		$element = $group;
+		$query = "SELECT id, name FROM employee WHERE t_group = ?";
+		$data = $this->prepareInstance->prepare($query, $element, "all"); 
+	
+		$group = array();
+		foreach ($data as $g) {
+			$name = explode(" ", $g['name']);
+			$group[$g['id']] = $name[0];
+		}
+
+		return $group;
 	}
 
 	function verifyPermission() {

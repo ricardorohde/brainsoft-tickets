@@ -37,7 +37,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
     <script type="text/javascript">
-			var contador = '40';
+			var contador = '60';
 
 			function startTimer(duration, display) {
 			  var timer = duration, minutes, seconds;
@@ -71,11 +71,9 @@
 	  		$queueController->setPrepareInstance($prepareInstance); 
 	  		$queueController->openChats();
 
-	  		$queueController->attendantsOnGroup1();
 	  		$queueController->attendantsAbleOnGroup1();
 	  		$queueController->makeQueueToGroup1();
 
-	  		$queueController->attendantsOnGroup2();
 	  		$queueController->attendantsAbleOnGroup2();
 	  		$queueController->makeQueueToGroup2();
 
@@ -102,10 +100,8 @@
 					<!-- |INÍCIO| EXIBIÇÃO FILA GRUPO 1 -->
 					<?php if($queueGroup1 != null) : ?>
 						<?php 
-							$group_one = $array = [
-							    "4" => "Alex",
-							    "2" => "Rodrigo"
-							];
+							$group_one = $queueController->attendantsOnGroup("nivel1");
+
 							$place_in_line_1 = 1;
 						?>
 						<table align="center">
@@ -172,12 +168,8 @@
 				<!-- |INÍCIO| EXIBIÇÃO FILA GRUPO 2 -->
 				<?php if($queueGroup2 != null) : ?>
 					<?php 
-						$group_two = $array = [
-						    "5" => "Fernando",
-						    "6" => "Eduardo",
-						    "7" => "Filipe",
-						    "8" => "Rafael"
-						];
+						$group_two = $queueController->attendantsOnGroup("nivel2");
+
 						$place_in_line_2 = 1;
 					?>
 					<table align="center">
@@ -273,17 +265,13 @@
 								<?php 
 									$actual_date = date('Y-m-d', strtotime('-' .$j. ' days'));
 
-									$elements_to_total_calls = [$attendant['id'], $actual_date."%"];
-									$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND finalized_at LIKE ?";
-									$total_calls = $prepareInstance->prepare($query, $elements_to_total_calls, "all");
+									$elements_to_total_calls = [$attendant['id'], $actual_date."%", "pendente", $actual_date."%"];
+									$query = "SELECT COUNT(*) as total FROM ticket WHERE 
+										id_attendant = ? AND (finalized_at LIKE ? OR (t_status = ? AND registered_at LIKE ?))";
 
-									$elements_to_total_pendant = [$attendant['id'], "pendente", $actual_date."%"];
-									$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND t_status = ? AND registered_at LIKE ?";
-									$total_pendant = $prepareInstance->prepare($query, $elements_to_total_pendant, "all");
-
-		        			$total = $total_calls[0]['total'] + $total_pendant[0]['total'];
+									$total_calls = $prepareInstance->prepare($query, $elements_to_total_calls, "");
 	        			?>
-	      				<td><?= $total; ?></td>
+	      				<td><?= $total_calls['total']; ?></td>
 							<?php endfor; ?>
 						</tr>
 					<?php endforeach ?>
