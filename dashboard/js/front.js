@@ -43,7 +43,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#final_date").blur(function(){
+    $("#final-date").blur(function(){
         var final_date = $(this).val().split('-');
 
         actual_year = verifyActualDate("actual_year");
@@ -57,12 +57,12 @@ $(document).ready(function () {
             $(this).val(verifyActualDate(""));
         }
 
-        if ($(this).val() < $("#initial_date").val()){
-            $(this).val($("#initial_date").val());
+        if ($(this).val() < $("#initial-date").val()){
+            $(this).val($("#initial-date").val());
         }
     });
 
-    $("#final_date").change(function(){
+    $("#final-date").change(function(){
         $("#btn-generate-report").prop("disabled", false);
     });
 
@@ -77,18 +77,20 @@ $(document).ready(function () {
     $(document).keydown(function (e) { 
         if(e.which == 17) pressedCtrl = true; 
         if((e.which == 80 || e.keyCode == 80) && pressedCtrl == true) { 
-            $("#initial_date").addClass("to-print");
-            $("#final_date").addClass("to-print");
-            $(".span_date").addClass("to-print");
+            $("#label-initial-date").addClass("to-print");
+            $("#initial-date").addClass("to-print");
+            $("#label-final-date").addClass("to-print");
+            $("#final-date").addClass("to-print");
             $(".generate-report").addClass("to-print");
             $(".title-report").hide();
         }
 
         setTimeout(function(){ 
             $(".generate-report").removeClass("to-print");
-            $("#initial_date").removeClass("to-print");
-            $("#final_date").removeClass("to-print");
-            $(".span_date").removeClass("to-print");
+            $("#label-initial-date").removeClass("to-print");
+            $("#initial-date").removeClass("to-print");
+            $("#label-final-date").removeClass("to-print");
+            $("#final-date").removeClass("to-print");
             $(".title-report").show();
         }, 3000); 
     });

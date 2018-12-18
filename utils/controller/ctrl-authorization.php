@@ -29,7 +29,7 @@ class AuthorizationController{
 
 	function authorizePage($authorizations){
 		foreach ($authorizations as $auth) {
-			$this->session->authorize($auth['name'] . "_page_" . $this->idInSession);	
+			$this->session->authorize(trim($auth['name']) . "_page_" . $this->idInSession);	
 		}
 	}
 

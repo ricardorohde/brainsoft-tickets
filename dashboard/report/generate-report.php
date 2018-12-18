@@ -1,10 +1,9 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Report'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
-
   date_default_timezone_set('America/Sao_Paulo');
+
+  include_once __DIR__.'/../../utils/controller/ctrl-report.php';
+  $reportController = ReportController::getInstance();  
+  $reportController->verifyPermission();
 ?>
 
 <!DOCTYPE html>
@@ -32,10 +31,6 @@
     <link rel="stylesheet" href="css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
-
-    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
   </head>
 
   <body>
@@ -51,27 +46,141 @@
               </div>
             </div>
           </header>
-           
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="col-lg-4" style="display: flex;">
-                <div id="div-initial-date">
-                  <input type="date" name="initial_date" id="initial_date" class="form-control" min="2018-01-01">
-                  <span class="span_date">Data inicial</span>
+          
+          <form method="POST">
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label id="label-initial-date" for="initial-date">Data Inicial</label>
+                <input type="date" name="initial-date" id="initial-date" class="form-control" min="2018-10-10">
+              </div>
+              <div class="form-group col-md-4">
+                <label id="label-final-date" for="final-date">Data Final</label>
+                <input type="date" name="final-date" id="final-date" class="form-control" max="<?php echo date("Y-m-d");?>">
+              </div>
+            </div>
+            <button type="submit" id="btn-generate-report" class="btn btn-primary generate-report" disabled>Gerar Relatório</button>
+          </form>
+
+          <?php if (isset($_POST['initial-date']) AND isset($_POST['final-date'])) : ?>
+            <?php 
+              $initialDate = $_POST['initial-date'];
+              $finalDate   = $_POST['final-date'];
+
+              $reportController->setPrepareInstance($prepareInstance); 
+              $reportController->setIdClient($id);
+              $reportController->setInitialDate($initialDate . " 00:00:01");
+              $reportController->setFinalDate($finalDate . " 23:59:59");
+
+              @$reportController->make();
+            ?>
+            <div class="report">
+              <br>
+              <br>
+              <h1 id="title_of_report">Relatório de Atentimentos - <?= $reportController->getRegistryName() ?></h1>
+              <span id='filter_period'>Período: <?= date('d/m/Y', strtotime($initialDate)) ?> à <?= date('d/m/Y', strtotime($finalDate)) ?></span>
+              <span id='requester_of_report'>Solicitante: <?= $reportController->getClientName() ?></span>
+              <span id='date_of_report'>Formalizado em: <?= date('d/m/Y H:i:s') ?></span>
+
+              <br>
+
+              <?php if ($reportController->getTotalOfTickets() >= 1) : ?>
+              <div class='table-responsive'>
+                <table id='example' class='table'>
+                  <tbody>
+                    <tr>
+                      <th scope='row'>Total de chats realizados</th>
+                      <td><?= $reportController->getTotalOfTickets() ?></td>
+                    </tr>
+                    <tr>
+                      <th scope='row'>Maior tempo em conversação</th>
+                      <td><?= $reportController->convertData($reportController->getBiggestTime()) ?></td>
+                    </tr>
+                    <tr>
+                      <th scope='row'>Tempo total em conversação</th>
+                      <td><?= $reportController->convertData($reportController->getTotalMin()) ?></td>
+                    </tr>
+                    <tr>
+                      <th scope='row'>Módulo com maior incidência</th>
+                      <td><?= $reportController->getModule() ?></td>
+                    </tr>
+                    <tr>
+                      <th scope='row'>Funcionários requerentes (Top 10)</th>
+                      <td>
+                        <?php foreach ($reportController->getTopClients() as $key => $value) : ?>
+                          <?= $value ?>
+                        <?php endforeach ?>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <br><br>
+              <div>
+                <h4>Detalhamento</h4><br>
+                <div class='table-responsive'>
+                  <table id='details' class='table'>
+                    <tbody>
+                      <tr>
+                        <th>Funcionário</th>
+                        <th>Número de chats requisitados</th>
+                      </tr>
+                      <?php foreach ($reportController->getTopClients() as $key => $value) : ?>
+                        <?php if($value != "") : ?>
+                          <tr>
+                            <?php if(strstr($value, ',')) : ?>
+                              <td scope='row'><?= substr($value, 6) ?></td>
+                            <?php else : ?>
+                              <td scope='row'><?= substr($value, 3) ?></td>
+                            <?php endif ?>
+                              <td><?= $reportController->getTopTicketOfClient()[$key] ?></td>
+                          </tr>
+                        <?php endif ?>
+                      <?php endforeach ?>
+                    </tbody>
+                  </table>
                 </div>
-                <div id="div-final-date">
-                  <input type="date" name="final_date" id="final_date" class="form-control" max="<?php echo date("Y-m-d");?>">
-                  <span class="span_date">Data final</span>
+                <br>
+                <hr style="margin-top: -10px;">
+                <br>
+                <div class='table-responsive'>
+                  <table id='tickets-details' class='table'>
+                    <tbody>
+                      <tr>
+                        <th>Data</th>
+                        <th>Ticket / Chat</th>
+                        <th>Funcionário</th>
+                        <th>Categoria / Módulo</th>
+                        <th>Atendente</th>
+                        <th>Duração</th>
+                      </tr>
+                      <?php foreach ($reportController->makeDetailTicketTable() as $key => $value) : ?>
+                        <tr>
+                          <td scope="row"><?= date('d/m/Y', strtotime($value['registered_at'])); ?></td>
+                          <td scope="row"><?= $value['id'] ?> / <?= $reportController->getChat($value['id_chat']) ?></td>
+                          <td scope="row"><?= $reportController->getClient($value['id_client']) ?></td>
+                          <?php $module = $reportController->getModuleById($value['id_module']) ?>
+                          <td scope="row"><?= $reportController->getCategoryById($module['id_category']) ?> / <?= $module['description'] ?></td>
+                          <td scope="row"><?= $reportController->getAttendantById($value['id_attendant']) ?></td>
+                          <td scope="row"><?= $reportController->getDurationOfChat($value['id_chat']) ?></td>
+                        </tr>
+                      <?php endforeach ?>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <button id="btn-generate-report" class="btn btn-primary generate-report" value="<?php echo $id?>" disabled>Gerar Relatório</button>
+              <?php else : ?>
+              <div class='table-responsive'>
+                <table id='example' class='table'>
+                  <tbody>
+                    <tr>
+                      <th scope='row'>Não há dados para o período selecionado</th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <?php endif; ?>
             </div>
-          </div>
-          
-          <div class="row rowForm">    
-            <div class="col-lg-8 report">
-            </div>
-          </div>
+          <?php endif; ?>
       </section>
       <footer class="main-footer">
         <div class="container-fluid">

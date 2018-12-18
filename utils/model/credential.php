@@ -60,7 +60,7 @@
     		$sql->execute();
 
     		while($row = $sql->fetch()){
-      			$id = $row['id'];
+      		$id = $row['id'];
 		    	$passwd = $row['password'];
 		    	$b_salt = $row['b_salt'];
     		}
