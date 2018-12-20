@@ -2,7 +2,7 @@
 
 	include __DIR__.'/../../commom/config.php';
 
-	class Chat{
+	class Chat {
 
 		protected $id;
 		protected $id_chat;

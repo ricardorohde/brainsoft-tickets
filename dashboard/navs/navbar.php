@@ -29,15 +29,16 @@
             <?php 
               $root = "http://" . $_SERVER["HTTP_HOST"] . "/dashboard/";
               $targets = array(
-                "Billet" => $root . "administrativo Administrativo fa-files-o",
+                "Account"       => $root . "conta Conta fa-user",
+                "Billet"        => $root . "administrativo Administrativo fa-files-o",
                 "Authorization" => $root . "autorizacoes Autorizações fa-caret-square-o-right",
-                "Registry" => $root . "cartorios Cartórios fa-home",
-                "Queue" => $root . "fila-interna Fila fa-sort-amount-asc",
-                "Module" => $root . "cadastros Módulos fa-caret-square-o-right",
-                "Report" => $root . "relatorios Relatórios fa-caret-square-o-right",
-                "Ticket" => $root . "tickets Tickets fa-ticket",
-                "User" => $root . "usuarios Usuários fa-user-circle",             
-                "Logout" => $root . "logout"
+                "Registry"      => $root . "cartorios Cartórios fa-home",
+                "Queue"         => $root . "fila-interna Fila fa-sort-amount-asc",
+                "Module"        => $root . "cadastros Módulos fa-caret-square-o-right",
+                "Report"        => $root . "relatorios Relatórios fa-caret-square-o-right",
+                "Ticket"        => $root . "tickets Tickets fa-ticket",
+                "User"          => $root . "usuarios Usuários fa-user-circle",             
+                "Logout"        => $root . "logout"
               );
             ?>
             <?= $controller->makeMenu($targets); ?>

@@ -1,8 +1,10 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  	  RewriteRule ^dashboard/?$ dashboard/index.php [NC,L]
+  	RewriteRule ^dashboard/conta?$ dashboard/account/account.php [NC]
 
+
+  	RewriteRule ^dashboard/?$ dashboard/index.php [NC,L]
 
 	  RewriteRule ^dashboard/administrativo/?$ dashboard/administrative.php [NC,L]
 

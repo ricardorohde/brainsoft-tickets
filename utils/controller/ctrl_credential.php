@@ -98,11 +98,7 @@
 
 					$controllerAuthorization = new AuthorizationController();
 					$authorizations          = $controllerAuthorization->findAuthorizationsById();
-					$controllerAuthorization->authorizePage($authorizations);
-
-					if ($password == "sistemabrain"){
-						$_SESSION['passDefault'] = "true";
-					} 		
+					$controllerAuthorization->authorizePage($authorizations);		
 
       		unset($_SESSION['withoutLogin']);
       		unset($_SESSION['errorLogin']);

@@ -58,6 +58,11 @@
 
 			foreach ($targets as $name => $target) {
 				$target = explode(" ", $target);
+
+				if (@$target[1] == "Conta") {
+					$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span> Minha " . $target[1] . "</span></a></li><hr>";
+				}
+  
 				if (isset($_SESSION[$name.'_page_'.$id])) {
 					$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>";
 				}

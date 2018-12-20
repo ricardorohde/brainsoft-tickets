@@ -77,40 +77,40 @@
 
 	    public function changePassword(){
 	    	//GERANDO A SENHA DO USUÁRIO COM O SALT 
-	        $b_salt = $this->rand_string(20); 
-	        $site_salt="ftosniarbsistemas"; 
-	        $salted_hash = hash('sha256', $this->getPassword().$site_salt.$b_salt);
+        $b_salt      = $this->rand_string(20); 
+        $site_salt   = "ftosniarbsistemas"; 
+        $salted_hash = hash('sha256', $this->getPassword().$site_salt.$b_salt);
 
-	        echo $this->getId();
+        echo $this->getId();
 
-	        //ATUALIZANDO O ACESSO DO USUÁRIO
-	        $sql = $this->getConn()->getConnection()->prepare("UPDATE credential SET password = ?, b_salt = ? WHERE id = ?");
-	        $sql->bindValue(1, $salted_hash);
-	        $sql->bindValue(2, $b_salt);
-	        $sql->bindValue(3, $this->getId());
-	        $result = $sql->execute();
+        //ATUALIZANDO O ACESSO DO USUÁRIO
+        $sql = $this->getConn()->getConnection()->prepare("UPDATE credential SET password = ?, b_salt = ? WHERE id = ?");
+        $sql->bindValue(1, $salted_hash);
+        $sql->bindValue(2, $b_salt);
+        $sql->bindValue(3, $this->getId());
+        $result = $sql->execute();
 
-	        $this->getController()->verifyChangePass($result);
+        $this->getController()->verifyChangePass($result);
 	    }
 
 	    public function register(){
-	        //GERANDO A SENHA DO USUÁRIO COM O SALT 
-	        $b_salt = $this->rand_string(20);
-	        $site_salt= "ftosniarbsistemas";
-	        $salted_hash = hash('sha256', $this->getPassword().$site_salt.$b_salt);
+        //GERANDO A SENHA DO USUÁRIO COM O SALT 
+        $b_salt      = $this->rand_string(20);
+        $site_salt   = "ftosniarbsistemas";
+        $salted_hash = hash('sha256', $this->getPassword().$site_salt.$b_salt);
 
-	        //REGISTRANDO O ACESSO DO USUÁRIO
-	        $sql = $this->getConn()->getConnection()->prepare("INSERT INTO credential (`id`, `login`, `password`, `b_salt`) VALUES (NULL, ?, ?, ?)");
-	        $sql->bindValue(1, $this->getLogin());
-	        $sql->bindValue(2, $salted_hash);
-	        $sql->bindValue(3, $b_salt);
-	        $sql->execute();
+        //REGISTRANDO O ACESSO DO USUÁRIO
+        $sql = $this->getConn()->getConnection()->prepare("INSERT INTO credential (`id`, `login`, `password`, `b_salt`) VALUES (NULL, ?, ?, ?)");
+        $sql->bindValue(1, $this->getLogin());
+        $sql->bindValue(2, $salted_hash);
+        $sql->bindValue(3, $b_salt);
+        $sql->execute();
 
-	        //RECEBENDO O ID DO ULTIMO REGISTRO FEITO EM 'CREDENTIAL'
-        	$sql = $this->getConn()->getConnection()->prepare("SELECT MAX(ID) as last FROM credential");
-        	$sql->execute();
+        //RECEBENDO O ID DO ULTIMO REGISTRO FEITO EM 'CREDENTIAL'
+      	$sql = $this->getConn()->getConnection()->prepare("SELECT MAX(ID) as last FROM credential");
+      	$sql->execute();
 
-        	return $sql->fetchAll();
+      	return $sql->fetchAll();
 	    }
 
 	    public function verifyIfExists(){

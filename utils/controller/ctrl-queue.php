@@ -217,7 +217,7 @@ class QueueController {
 	}
 
 	public static function getInstance() {
-		if ( !self::$instance )
+		if (!self::$instance)
       self::$instance = new QueueController();
 
     return self::$instance;

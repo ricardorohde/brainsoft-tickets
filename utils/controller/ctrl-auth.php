@@ -1,6 +1,5 @@
 <?php
 
-   //include_once __DIR__.'/../../utils/model/module.php';
    include_once("../../commom/config.php");
 
    $authController = new AuthController();
