@@ -1,10 +1,12 @@
 <?php
   session_start();
   if(!isset($_SESSION['login'])){
-    if(isset($_SESSION['errorLogin'])){unset($_SESSION['errorLogin']);};
+    if(isset($_SESSION['errorLogin'])){
+      unset($_SESSION['errorLogin']);
+    };
     $_SESSION['withoutLogin'] = "<strong>Informação!</strong> Informe seus dados para acessar o sistema.";
     header("Location:../utils/do-login.php");
-  }else{}
+  }
 ?>
 
 <!DOCTYPE html>
@@ -16,87 +18,32 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
+
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
     <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
-    <!-- Custom icon font-->
     <link rel="stylesheet" href="css/fontastic.css">
-    <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- jQuery Circle-->
     <link rel="stylesheet" href="css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <!-- Custom Scrollbar-->
-    <link rel="stylesheet" href="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">>
     <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="css/custom.css">
-    <!-- Favicon-->
+
     <link rel="shortcut icon" href="favicon.png">
   </head>
-
-  <?php 
-    $targets = array(
-      "Billet" => "administrativo Administrativo fa-files-o",
-      "Ticket" => "tickets Tickets fa-ticket",
-      "User" => "usuarios Usuários fa-user-circle",
-      "Registry" => "cartorios Cartórios fa-home",
-      "Module" => "cadastros Módulos fa-caret-square-o-right",
-      "Queue" => "fila-interna Fila fa-sort-amount-asc",
-      "Authorization" => "autorizacoes Autorizações fa-caret-square-o-right",
-      "Report" => "relatorios Relatórios fa-caret-square-o-right",
-      "Logout" => "logout"
-    );
-  ?>
 
   <body>
 
     <?php include ("navs/navbar.php");?>
+    <?php if(isset($_SESSION["Index"."_page_".$_SESSION['login']])) : ?>
     <div class="root-page home-page">
-      <?php include ("navs/header.php");?>
+      <?php include ("navs/header.php") ?>
       <?php 
         $total_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket", "", "");
         $open_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?", "aberto", "");
         $pending_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?", "pendente", "");
         $tickets_solved = $total_tickets['total'] - $pending_tickets['total'];
       ?>
-
-      <div id="statusLogin" class="alert alert-success" 
-        <?php echo (isset($_SESSION['passChanged'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-        <?php echo $_SESSION['passChanged']; unset($_SESSION['passChanged']);?>
-      </div>
       
-      <div class="modal fade" id="change-pass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-sm" role="document">
-          <div class="modal-content modal-confirmation">
-            <div class="modal-header">
-              <h4 class="modal-title" id="myModalLabel">Altere sua senha!</h4>
-            </div>
-            <div id="statusLogin" class="alert alert-danger" 
-              <?php echo (isset($_SESSION['needSamePass'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-              <?php echo $_SESSION['needSamePass']; unset($_SESSION['needSamePass']);?>
-            </div>
-            <div class="modal-body">
-              <form id="login-form" method="POST" action="../utils/controller/ctrl_credential.php">
-                <div class="form-group">
-                  <label for="newPass" class="label-custom">Nova Senha</label>
-                  <input id="newPass" type="password" name="newPass" required="" autofocus="">
-                </div>
-                <div class="form-group">
-                  <label for="confirmPass" class="label-custom">Confirmar Senha</label>
-                  <input id="confirmPass" type="password" name="confirmPass" required="">
-                </div>
-                <button type="submit" id="submit" name="submit" class="btn btn-primary" value="submitFromChangePass">Alterar!</button>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Agora não</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Counts Section -->
       <section class="dashboard-counts section-padding">
         <div class="container-fluid">
           <div class="row">
@@ -135,23 +82,19 @@
           </div>
         </div>
       </section>
-      <!-- Header Section-->
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
           <div class="row d-flex align-items-md-stretch">
-            <!-- To Do List-->
             <div class="col-lg-12 col-md-12 col-sm-6" style="text-align: center; width: 100%;">
               <div id="chart-container" style="display: inline-block;">FusionCharts will render here</div>
             </div>
           </div>
         </div>
       </section>
-      <!-- Statistics Section-->
       <section class="statistics section-padding section-no-padding-bottom">
         <div class="container-fluid">
           <div class="row d-flex align-items-stretch">
             <div class="col-lg-4">
-              <!-- Income-->
               <div class="wrapper income text-center">
                 <div class="icon"><i class="icon-line-chart"></i></div>
                 <div class="number">126,418</div><strong class="text-primary">All Income</strong>
@@ -159,7 +102,6 @@
               </div>
             </div>
             <div class="col-lg-4">
-              <!-- Monthly Usage-->
               <div class="wrapper data-usage">
                 <h2 class="display h4">Monthly Usage</h2>
                 <div class="row d-flex align-items-center">
@@ -172,7 +114,6 @@
               </div>
             </div>
             <div class="col-lg-4">
-              <!-- User Actibity-->
               <div class="wrapper user-activity">
                 <h2 class="display h4">User Activity</h2>
                 <div class="number">210</div>
@@ -189,7 +130,6 @@
           </div>
         </div>
       </section>
-      <!-- Updates Section -->
       <section class="updates section-padding">
         <div class="container-fluid">
           <div class="row">
@@ -205,21 +145,30 @@
             </div>
             <div class="col-sm-6 text-right">
               <p style="font-size: 12px;">Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
-              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
             </div>
           </div>
         </div>
       </footer>
     </div>
-    <!-- Javascript files-->
+    <?php else : ?>
+    <div class="root-page home-page">
+      <?php include ("navs/header.php") ?>
+      <footer class="main-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Brainsoft Sistemas &copy; 2018</p>
+            </div>
+            <div class="col-sm-6 text-right">
+              <p style="font-size: 12px;">Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
+              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>  
+    <?php endif; ?>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <?php if ($_SESSION['passDefault'] == "true") { ?>
-      <script type="text/javascript">
-        $(document).ready(function () {
-          $('#change-pass').modal('show');
-        })
-      </script>
-    <?php } ?>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -281,7 +230,5 @@
           }).render();
       });
     </script>
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
-    <!---->
   </body>
 </html>
