@@ -314,7 +314,7 @@
 	  <script src="./js/jquery-3.2.1.min.js"></script>
 	  <script src="./../js/jquery.mask.js"></script>
 	  <script src="./js/front.js"></script>
-	  <script src="./js/internal-queue.js"></script>
+	  <script src="./js/queue.js"></script>
 	  <script src="./jquery-ui.js"></script>
 	  <script src="./vendor/bootstrap/js/bootstrap.min.js"></script>
 	  <script src="./vendor/jquery.cookie/jquery.cookie.js"> </script>

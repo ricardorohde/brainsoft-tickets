@@ -57,14 +57,14 @@
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
       <?php 
-        if(!isset($_POST['filter-by-period'])){
+        if (!isset($_POST['filter-by-period'])) {
           $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
             WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC");
           $sql_ticket->execute(array($actual_date_to_find."%")); 
           $tickets = $sql_ticket->fetchAll();
 
           $filter = date('d/m/Y', strtotime($actual_date_to_find));
-        } else{
+        } else {
           $initial_date_to_find = date('Y-m-d', strtotime($_POST['initial-date-filter']));
           $actual_date_to_find = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
 
@@ -194,7 +194,7 @@
 
                   <div class="row">
                     <div class="col-11" style="padding-right: 0px;">    
-                      <a href="ticket/<?= $id_chat[0]; ?>/<?= $attendant['id']; ?>" target="_blank" style="padding: 0px!important; width: 100%;">
+                      <a href="ticket/<?= $id_chat[0]; ?>/<?= $attendant['id']; ?>" style="padding: 0px!important; width: 100%;">
                         <div class="card <?= $status_background?> mb-3">
                           <div class="card-header">
                             <?= $category_module['description']. " / " .$module['description']; ?> | 
@@ -235,7 +235,7 @@
                         <div class="dropdown-menu">
                           <?php foreach ($attendants as $at) : ?>
                             <?php if($attendant['name'] != $at['name']) : ?>
-                              <a class="dropdown-item" href="ticket/<?= $id_chat[0] ?>/<?= $at['id'] ?>" target="_blank"><?= $at['name'] ?></a>
+                              <a class="dropdown-item" href="ticket/<?= $id_chat[0] ?>/<?= $at['id'] ?>"><?= $at['name'] ?></a>
                               <div class="dropdown-divider"></div> 
                             <?php endif; ?>
                           <?php endforeach; ?>

@@ -598,16 +598,14 @@ function verifyActualDate(iNeed){
     return actual_date;
 }
 
-function redirectToTicket(idChat, idAttendant){
-    var url = 'ticket/' + idChat + '/' + idAttendant;
-
-    window.open(url, '_blank');
-}
-
 function redirectoToTicketRemovingTextTicket(idChat, idAttendant){
-    var url = idChat + '/' + idAttendant;
+  var url = idChat + '/' + idAttendant;
 
-    window.open(url);
+  window.open(url, "_self");
 }
 
+function redirectToTicket(idChat, idAttendant){
+  var url = 'ticket/' + idChat + '/' + idAttendant;
 
+  window.open(url, "_self");
+}
