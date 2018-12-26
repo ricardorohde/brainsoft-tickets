@@ -33,7 +33,7 @@ $(document).ready(function () {
 function countElements(){
 	var count = 0;
 
-	$("myElement").each(function(){
+	$(".card-in-ticket-list").each(function(){
 		count++;
 	});
 

@@ -31,7 +31,7 @@
     <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <!-- Custom icon font-->
     <link rel="stylesheet" href="./css/fontastic.css">
     <!-- Google fonts - Roboto -->
@@ -77,10 +77,6 @@
 
           $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
         }
-
-        $sql_count_ticket = $connection->getConnection()->prepare("SELECT COUNT(*) as total FROM ticket");
-        $sql_count_ticket->execute(); 
-        $row_count_ticket = $sql_count_ticket->fetchAll();
       ?>
       <section class="forms">
         <div class="container-fluid">
@@ -195,7 +191,7 @@
                   <div class="row">
                     <div class="col-11" style="padding-right: 0px;">    
                       <a href="ticket/<?= $id_chat[0]; ?>/<?= $attendant['id']; ?>" style="padding: 0px!important; width: 100%;">
-                        <div class="card <?= $status_background?> mb-3">
+                        <div class="card-in-ticket-list card <?= $status_background?> mb-3">
                           <div class="card-header">
                             <?= $category_module['description']. " / " .$module['description']; ?> | 
                             <span><?= $client['name'] ?> do <?= $registry['name'] ?></span>

@@ -30,14 +30,14 @@
               $root = "http://" . $_SERVER["HTTP_HOST"] . "/dashboard/";
               $targets = array(
                 "Account"       => $root . "conta Conta fa-user",
-                "Billet"        => $root . "administrativo Administrativo fa-files-o",
-                "Authorization" => $root . "autorizacoes Autorizações fa-caret-square-o-right",
+                "Billet"        => $root . "administrativo Administrativo fa-file-alt",
+                "Authorization" => $root . "autorizacoes Autorizações fa-key",
                 "Registry"      => $root . "cartorios Cartórios fa-home",
-                "Queue"         => $root . "fila-interna Fila fa-sort-amount-asc",
-                "Module"        => $root . "cadastros Módulos fa-caret-square-o-right",
-                "Report"        => $root . "relatorios Relatórios fa-caret-square-o-right",
-                "Ticket"        => $root . "tickets Tickets fa-ticket",
-                "User"          => $root . "usuarios Usuários fa-user-circle",             
+                "Queue"         => $root . "fila-interna Fila fa-sort-amount-down",
+                "Module"        => $root . "cadastros Módulos fa-plus-square",
+                "Report"        => $root . "relatorios Relatórios fa-chart-pie",
+                "Ticket"        => $root . "tickets Tickets fa-ticket-alt",
+                "User"          => $root . "usuarios Usuários fa-users",             
                 "Logout"        => $root . "logout"
               );
             ?>

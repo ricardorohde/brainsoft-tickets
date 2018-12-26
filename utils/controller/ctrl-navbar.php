@@ -64,7 +64,7 @@
 				}
   
 				if (isset($_SESSION[$name.'_page_'.$id])) {
-					$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>";
+					$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fas " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>";
 				}
 			}
 

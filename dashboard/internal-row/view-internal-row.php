@@ -15,26 +15,18 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
-    <!-- Custom icon font-->
-    <link rel="stylesheet" href="./css/fontastic.css">
-    <!-- Google fonts - Roboto -->
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- jQuery Circle-->
-    <link rel="stylesheet" href="./css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <!-- Custom Scrollbar-->
-    <link rel="stylesheet" href="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <!-- theme stylesheet-->
-    <link rel="stylesheet" href="./css/style.default.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="./css/custom.css">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
 
+    <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="./css/fontastic.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="./css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="./css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="./css/custom.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+
+    <link rel="shortcut icon" href="favicon.png">
 
     <script type="text/javascript">
 			var contador = '60';
@@ -96,12 +88,9 @@
 	        	<h1>Disponibilidade Grupo 1</h1>  	
 		    		<div class="row" id="internal-row">
 		    		
-
-					<!-- |INÍCIO| EXIBIÇÃO FILA GRUPO 1 -->
 					<?php if($queueGroup1 != null) : ?>
 						<?php 
-							$group_one = $queueController->attendantsOnGroup("nivel1");
-
+							$group_one       = $queueController->attendantsOnGroup("nivel1");
 							$place_in_line_1 = 1;
 						?>
 						<table align="center">
@@ -130,13 +119,13 @@
 						            				<?php $minutos = $queueController->progressBar($ticket_time[0]['registered_at']); ?>
 
 						            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-															   	<p><strong>Ticket: </strong><?= $chat_number[0]['id_chat'];?></p>
-															   	<p><strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($ticket_time[0]['registered_at']));?></p>
+															   	<p><strong>Ticket: </strong><?= $chat_number[0]['id_chat'] ?></p>
+															   	<p><strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($ticket_time[0]['registered_at'])) ?></p>
 															   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat_number[0]['id_chat'];?>' onClick='redirectToTicket(this.value, <?= $new_queue ?>)'>Visualizar Ticket</button>
-																	</div>"><?php echo $chat_number[0]['id_chat'];?></button>
+																	</div>"><?= $chat_number[0]['id_chat'];?></button>
 
 							            			<a href="#"></a>
-							            			<input type="hidden" name="startedTime<?php echo $rand?>" value="<?php $ticket_time[0]['registered_at']?>">
+							            			<input type="hidden" name="startedTime<?= $rand ?>" value="<?php $ticket_time[0]['registered_at']?>">
 
 						            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
@@ -159,17 +148,13 @@
 							<span>Atenção! Fila não iniciada (Atendentes Off ou nenhum ticket atribuído).</span>
 						</div>
 					<?php endif; ?>
-					<!-- |FIM| EXIBIÇÃO FILA GRUPO 1 -->
 				</div>
 			<hr>
-
 			<h1>Disponibilidade Grupo 2</h1>
 			<div class="row" id="internal-row">
-				<!-- |INÍCIO| EXIBIÇÃO FILA GRUPO 2 -->
 				<?php if($queueGroup2 != null) : ?>
 					<?php 
-						$group_two = $queueController->attendantsOnGroup("nivel2");
-
+						$group_two       = $queueController->attendantsOnGroup("nivel2");
 						$place_in_line_2 = 1;
 					?>
 					<table align="center">
@@ -202,10 +187,10 @@
 																<p><strong>Chat / Ticket: </strong><?= $chat_number[0]['id_chat'];?></p>
 												   			<p><strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($ticket_time[0]['registered_at']));?></p>
 												   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat_number[0]['id_chat'];?>' onClick='redirectToTicket(this.value, <?= $new_queue ?>)'>Visualizar Ticket</button>
-																</div>"><?php echo $chat_number[0]['id_chat'];?></button>
+																</div>"><?= $chat_number[0]['id_chat'] ?></button>
 
 						            			<a href="#"></a>
-						            			<input type="hidden" name="startedTime<?php echo $rand?>" value="<?php $ticket_time[0]['registered_at']?>">
+						            			<input type="hidden" name="startedTime<?= $rand ?>" value="<?php $ticket_time[0]['registered_at']?>">
 
 					            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
@@ -228,19 +213,14 @@
 						<span>Atenção! Fila não iniciada (Atendentes Off ou nenhum ticket atribuído).</span>
 					</div>
 				<?php endif; ?>
-				<!-- |FIM| EXIBIÇÃO FILA GRUPO 2 -->
 			</div>
-
 			<br>
-
 			<h1>Atendimentos</h1>
-
 			<?php
 				$elements_to_get_data_attendants = ["nivel1", "nivel2"];
 				$query = "SELECT id, name, on_chat FROM employee WHERE t_group = ? OR t_group = ? ORDER BY t_group, name";
 				$attendants = $prepareInstance->prepare($query, $elements_to_get_data_attendants, "all"); 
 			?>
-
 			<div class="row" id="internal-row">
 				<table id="report" class="table table-sm table-bordered" align="center">
 					<tr>
@@ -252,7 +232,7 @@
 							<?php elseif($i == 1) : ?>
 								<td>Ontem</td>
 							<?php else : ?>
-								<td><?php echo date('d/m', strtotime('-' .$i. ' days'));?></td>
+								<td><?= date('d/m', strtotime('-' .$i. ' days'));?></td>
 							<?php endif;?>
 						<?php endfor; ?>
 					</tr>
@@ -309,10 +289,8 @@
 	      </div>
 	    </footer>
 	  </div>
-	  <!-- Javascript files-->  
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
 	  <script src="./js/jquery-3.2.1.min.js"></script>
-	  <script src="./../js/jquery.mask.js"></script>
 	  <script src="./js/front.js"></script>
 	  <script src="./js/queue.js"></script>
 	  <script src="./jquery-ui.js"></script>
