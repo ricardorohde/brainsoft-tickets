@@ -83,7 +83,7 @@
 	        </header>
 	        <hr>
 	        <div id="conteudo">
-	        	<iframe class="iframe-queue" width='300px' height='23px' frameborder='0' src='/dashboard/test.php' SCROLLING="NO"></iframe>
+	        	<iframe class="iframe-queue" width='300px' height='23px' frameborder='0' src='/dashboard/attendance/status.php' SCROLLING="NO"></iframe>
 	        	<hr>
 	        	<h1>Disponibilidade Grupo 1</h1>  	
 		    		<div class="row" id="internal-row">
