@@ -61,26 +61,32 @@
           $actual_date_to_find = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
           
           if (isset($_POST['filter-by-period'])) {
-            $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
-              WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC");
-            $sql_ticket->execute(array($initial_date_to_find."%", $actual_date_to_find."%")); 
-            $tickets = $sql_ticket->fetchAll();
+            $elements = [$initial_date_to_find."%", $actual_date_to_find."%"];
+            $query    = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+              WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC";
+            $tickets  = $prepareInstance->prepare($query, $elements, "all");
 
             $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
-
-            $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
+            $filter              = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
           } else if (isset($_POST['filter-by-attendant'])) {
             $attedantId = $_POST['attendant'];
             $status     = $_POST['status'];
 
-            $elements    = [$initial_date_to_find."%", $actual_date_to_find."%", $attedantId, $status];
-            $query       = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            $elements = [$initial_date_to_find."%", $actual_date_to_find."%", $attedantId, $status];
+            $query    = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
               WHERE (registered_at BETWEEN ? AND ?) AND id_attendant = ? AND t_status = ? ORDER BY id DESC";
-            $tickets     = $prepareInstance->prepare($query, $elements, "all");
+            $tickets  = $prepareInstance->prepare($query, $elements, "all");
 
             $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
-            $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
+            $filter              = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
           }
+        } else {
+          $element = $actual_date_to_find."%";
+          $query   = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC";
+          $tickets = $prepareInstance->prepare($query, $element, "all");
+
+          $filter = date('d/m/Y', strtotime($actual_date_to_find));
         }
 
         $element    = ["nivel1", "nivel2"];
