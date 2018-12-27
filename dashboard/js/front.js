@@ -607,5 +607,5 @@ function redirectoToTicketRemovingTextTicket(idChat, idAttendant){
 function redirectToTicket(idChat, idAttendant){
   var url = 'ticket/' + idChat + '/' + idAttendant;
 
-  window.open(url, "_self");
+  window.open(url, "_blank");
 }

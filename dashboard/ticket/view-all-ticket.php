@@ -6,13 +6,13 @@
 ?>
 
 <?php
-  if(isset($_COOKIE['date_to_filter'])){
+  if (isset($_COOKIE['date_to_filter'])) {
     $actual_date_to_find = $_COOKIE['date_to_filter'];
   } else {
     date_default_timezone_set('America/Sao_Paulo');
-    $day = date('d');
+    $day   = date('d');
     $month = date('m');
-    $year = date('Y');
+    $year  = date('Y');
     $actual_date_to_find = $year . "-" . $month . "-" . $day; 
   }
 
@@ -50,33 +50,42 @@
     <link rel="shortcut icon" href="favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
-
   </head>
   <body>
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
       <?php 
-        if (!isset($_POST['filter-by-period'])) {
-          $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
-            WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC");
-          $sql_ticket->execute(array($actual_date_to_find."%")); 
-          $tickets = $sql_ticket->fetchAll();
-
-          $filter = date('d/m/Y', strtotime($actual_date_to_find));
-        } else {
+        if (isset($_POST['initial-date-filter'])) {
           $initial_date_to_find = date('Y-m-d', strtotime($_POST['initial-date-filter']));
           $actual_date_to_find = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
+          
+          if (isset($_POST['filter-by-period'])) {
+            $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+              WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC");
+            $sql_ticket->execute(array($initial_date_to_find."%", $actual_date_to_find."%")); 
+            $tickets = $sql_ticket->fetchAll();
 
-          $sql_ticket = $connection->getConnection()->prepare("SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
-            WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC");
-          $sql_ticket->execute(array($initial_date_to_find."%", $actual_date_to_find."%")); 
-          $tickets = $sql_ticket->fetchAll();
+            $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
 
-          $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
+            $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
+          } else if (isset($_POST['filter-by-attendant'])) {
+            $attedantId = $_POST['attendant'];
+            $status     = $_POST['status'];
 
-          $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
+            $elements    = [$initial_date_to_find."%", $actual_date_to_find."%", $attedantId, $status];
+            $query       = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+              WHERE (registered_at BETWEEN ? AND ?) AND id_attendant = ? AND t_status = ? ORDER BY id DESC";
+            $tickets     = $prepareInstance->prepare($query, $elements, "all");
+
+            $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
+            $filter = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
+          }
         }
+
+        $element    = ["nivel1", "nivel2"];
+        $query      = "SELECT id, name FROM employee WHERE t_group = ? OR t_group = ?";
+        $attendants = $prepareInstance->prepare($query, $element, "all");
       ?>
       <section class="forms">
         <div class="container-fluid">
@@ -103,43 +112,68 @@
               </div>
             <?php endif ?>
           </header>
-
           <hr>
-
-          <form id="form-filter-all-ticket" action="#" method="POST">
-            <div class="row">
-              <div class="col col-lg-3">
-                <input type="date" name="initial-date-filter" id="initial-date-filter" class="form-control" min="2018-09-20" value="<?= $initial_date_to_find?>">
-                <span>Data Inicial</span>
-              </div>
-              <div class="col col-lg-3">
-                <input type="date" name="final-actual-date-filter" id="final-actual-date-filter" class="form-control" min="2018-09-20" value="<?= $actual_date_to_find?>">
-                <span>Data Atual ou Final</span>
-              </div>
-              <div class="col col-lg-1">
-                 <button id="filter-by-period" name="filter-by-period" class="btn btn-primary">Filtrar</button>
-              </div>
-              <div class="col-lg-3 offset-md-2">
-                <input type="text" id="txtBusca" class="form-control" autofocus disabled>
-                <span>Pesquisa</span>
-              </div>
+          <div class="row">
+            <div class="col-sm-12 text-center">
+              <button id="show-hide-filters" class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#collapseExample" 
+                      aria-expanded="false" aria-controls="collapseExample">
+                Exibir Filtros
+              </button>
             </div>
-          </form>
-
-          <br>
-
-          <div id="divCarregando">
-            <p>Aguarde...</p>
           </div>
-
-          <div id="actual-filter" class="hide">
-            <p>Filtro: <?= $filter ?></p>
+          <div class="collapse" id="collapseExample">
+            <form id="form-filter-all-ticket" action="#" method="POST">
+              <div class="row mb-2">
+                <div class="col col-lg-3">
+                  <input type="date" name="initial-date-filter" id="initial-date-filter" class="form-control" min="2018-10-10" value="<?= $initial_date_to_find?>">
+                  <span>Data Inicial</span>
+                </div>
+                <div class="col col-lg-3">
+                  <input type="date" name="final-actual-date-filter" id="final-actual-date-filter" class="form-control" min="2018-10-10" value="<?= $actual_date_to_find?>">
+                  <span>Data Atual ou Final</span>
+                </div>
+                <div class="col col-lg-1">
+                  <button type="submit" id="filter-by-period" name="filter-by-period" class="btn btn-primary" title="Pela data inicial e final.">Filtrar</button>
+                </div>
+                <div class="col-lg-3 offset-md-2">
+                  <input type="text" id="txtBusca" class="form-control" autofocus disabled>
+                  <span>Pesquisa</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col col-lg-3">
+                  <select name="attendant" class="form-control" id="attendant" required>
+                    <option>Selecione o atendente...</option>
+                    <?php foreach ($attendants as $attendant) : ?>
+                    <option value="<?= $attendant['id'] ?>" <?= @$attedantId == $attendant['id'] ? "selected" : "" ?>><?= $attendant['name'] ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col col-lg-3">
+                  <select name="status" class="form-control" id="status" required>
+                    <option>Selecione o status...</option>
+                    <option value="aberto" <?= @$status == "aberto" ? "selected" : ""?>>Aberto</option>
+                    <option value="pendente" <?= @$status == "pendente" ? "selected" : ""?>>Pendente</option>
+                    <option value="solucionado" <?= @$status == "solucionado" ? "selected" : ""?>>Solucionado</option>
+                    <option value="fechado" <?= @$status == "fechado" ? "selected" : ""?>>Fechado</option>
+                  </select>
+                </div>
+                <div class="col col-lg-3">
+                   <button type="submit" id="filter-by-attendant" name="filter-by-attendant" class="btn btn-primary"  title="Pela data inicial, final, atendente e status.">Filtrar</button>
+                </div>
+              </div>
+            </form>
+            <br>
+            <div id="divCarregando">
+              <p>Aguarde...</p>
+            </div>
+            <div id="actual-filter" class="hide">
+              <p>Filtro: <?= $filter ?></p>
+            </div>
+            <div id="qtd-tickets" class="hide">
+              <p></p>
+            </div>
           </div>
-
-          <div id="qtd-tickets" class="hide">
-            <p></p>
-          </div>
-
           <div class="row">
             <div id="conteudo" class="col-md-12">
               <?php if (!empty($tickets)) : ?>
@@ -176,16 +210,17 @@
                     $id_chat = $sql_chat->fetch();
                   ?>
 
-                  <?php if ($ticket['t_status'] == "solucionado" || $ticket['t_status'] == "fechado" ){
-                          $status_background = "border-success border-left-success";
-                          $status_icon = "color: green; font-size: 1.5em; float: right;";
-                        } else if($ticket['t_status'] == "pendente"){
-                          $status_background = "border-warning border-left-warning";
-                          $status_icon = "font-size: 1.5em; float: right; opacity: 0.1;";
-                        } else{
-                          $status_background = "border-danger border-left-danger";
-                          $status_icon = "font-size: 1.5em; float: right; opacity: 0.1;";
-                        }
+                  <?php 
+                    if ($ticket['t_status'] == "solucionado" || $ticket['t_status'] == "fechado") {
+                      $status_background = "border-success border-left-success";
+                      $status_icon = "color: green; font-size: 1.5em; float: right;";
+                    } else if ($ticket['t_status'] == "pendente") {
+                      $status_background = "border-warning border-left-warning";
+                      $status_icon = "font-size: 1.5em; float: right; opacity: 0.1;";
+                    } else {
+                      $status_background = "border-danger border-left-danger";
+                      $status_icon = "font-size: 1.5em; float: right; opacity: 0.1;";
+                    }
                   ?>
 
                   <div class="row">
@@ -195,25 +230,25 @@
                           <div class="card-header">
                             <?= $category_module['description']. " / " .$module['description']; ?> | 
                             <span><?= $client['name'] ?> do <?= $registry['name'] ?></span>
-                            <?php if($id_chat[0] > 100000): ?>
+                            <?php if ($id_chat[0] > 100000) : ?>
                               <i class="material-icons" style="float: left; opacity: 0.4;">chat</i>
-                            <?php else: ?>
+                            <?php else : ?>
                               <i class="material-icons" style="float: left; opacity: 0.4;">phone</i>
                             <?php endif; ?> 
                           </div>
                           <div class="card-body" style="font-size: 0.8em;">
                             <p class="card-text" id="data-ticket-text">
-                              <?php if($id_chat[0] > 100000): ?>
+                              <?php if ($id_chat[0] > 100000) : ?>
                                 <strong>Chat:</strong>
-                              <?php else: ?>
+                              <?php else : ?>
                                 <strong>Ligação:</strong>
                               <?php endif; ?> 
                               <?= $id_chat[0]; ?> |
-                              <strong>Atendente:</strong> <?= $attendant['name']; ?> |
-                              <strong>Abertura:</strong> <?= date('d/m/Y H:i:s', strtotime($ticket['registered_at'])); ?> 
+                              <strong>Atendente:</strong> <?= $attendant['name'] ?> |
+                              <strong>Abertura:</strong> <?= date('d/m/Y H:i:s', strtotime($ticket['registered_at'])) ?> 
                               <?php
                                 $closure = date('d/m/Y H:i:s', strtotime($ticket['finalized_at']));
-                                if(strtotime($ticket['finalized_at']) > strtotime("01-01-2018 01:00:00")): ?>
+                                if (strtotime($ticket['finalized_at']) > strtotime("01-01-2018 01:00:00")) : ?>
                                   | <strong>Encerramento:</strong> <?= $closure ?>
                               <?php
                                 endif;
@@ -289,17 +324,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/jquery.easyPaginate.js"></script>
-    <script type="text/javascript">
-      /*$('#conteudo').easyPaginate({
-        paginateElement: 'myElement',
-        elementsPerPage: 70,
-        effect: 'climb',
-        firstButtonText: '<button type="button" class="btn btn-primary">&laquo; Primeiro</button>',
-        prevButtonText: '<button type="button" class="btn btn-primary">&lsaquo; Anterior</button>',
-        nextButtonText: '<button type="button" class="btn btn-primary">Próximo &rsaquo;</button>',
-        lastButtonText: '<button type="button" class="btn btn-primary">Último &raquo;</button>'
-      });*/
-    </script>
     <script src="./../js/jquery.mask.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="./js/front.js"></script>
