@@ -28,28 +28,19 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
+
     <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <!-- Custom icon font-->
     <link rel="stylesheet" href="./css/fontastic.css">
-    <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- jQuery Circle-->
     <link rel="stylesheet" href="./css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <!-- Custom Scrollbar-->
     <link rel="stylesheet" href="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <!-- theme stylesheet-->
     <link rel="stylesheet" href="./css/style.default.css" id="theme-stylesheet">
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="./css/custom.css">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
-
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+
+    <link rel="shortcut icon" href="favicon.png">
   </head>
   <body>
     <?php include ("../navs/navbar.php");?>
@@ -57,8 +48,9 @@
       <?php include ("../navs/header.php");?>
       <?php 
         if (isset($_POST['initial-date-filter'])) {
+          $hasFilter            = true;
           $initial_date_to_find = date('Y-m-d', strtotime($_POST['initial-date-filter']));
-          $actual_date_to_find = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
+          $actual_date_to_find  = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
           
           if (isset($_POST['filter-by-period'])) {
             $elements = [$initial_date_to_find."%", $actual_date_to_find."%"];
@@ -81,10 +73,11 @@
             $filter              = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
           }
         } else {
-          $element = $actual_date_to_find."%";
-          $query   = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+          $hasFilter = false;
+          $element   = $actual_date_to_find."%";
+          $query     = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
             WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC";
-          $tickets = $prepareInstance->prepare($query, $element, "all");
+          $tickets   = $prepareInstance->prepare($query, $element, "all");
 
           $filter = date('d/m/Y', strtotime($actual_date_to_find));
         }
@@ -123,11 +116,11 @@
             <div class="col-sm-12 text-center">
               <button id="show-hide-filters" class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#collapseExample" 
                       aria-expanded="false" aria-controls="collapseExample">
-                Exibir Filtros
+                <?= $hasFilter ? "Esconder Filtros" : "Exibir Filtros" ?>
               </button>
             </div>
           </div>
-          <div class="collapse" id="collapseExample">
+          <div class="collapse <?= $hasFilter ? "show" : "" ?>" id="collapseExample">
             <form id="form-filter-all-ticket" action="#" method="POST">
               <div class="row mb-2">
                 <div class="col col-lg-3">
