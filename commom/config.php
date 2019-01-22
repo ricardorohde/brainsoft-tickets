@@ -5,14 +5,14 @@ class ConfigDatabase{
 	private static $instance;
 
 	public function getConnection(){
-		$host = "127.0.0.1"; // Hostname
-		$port = "3306"; // MySQL Port : Default : 3306
-		$user = "root"; // Username Here
-		$pass = "brain123"; //Password Here
-		$db   = "brain"; // Database Name
+		$host = "127.0.0.1"; 
+		$port = "3306"; 
+		$user = "root"; 
+		$pass = "brain123"; 
+		$db   = "brain"; 
 
 		try {
-			$dbh  = new PDO('mysql:dbname='.$db.';host='.$host.';port='.$port,$user,$pass);
+			$dbh  = new PDO('mysql:host='.$host.';dbname='.$db.';port='.$port, $user, $pass);
 
 			$dbh->query("SET NAMES 'utf8'");
 			$dbh->query('SET character_set_connection=utf8');

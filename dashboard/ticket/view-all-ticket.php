@@ -259,7 +259,8 @@
                     </div>
                     <div class="col-1" style="padding-left: 0px; text-align: left;">
                       <div class="btn-group dropleft" style="height: 83%;">
-                        <button type="button" class="btn btn-info dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 0px .25rem .25rem 0px;">
+                        <button type="button" class="btn btn-info dropdown" data-toggle="dropdown" aria-haspopup="true" 
+                                aria-expanded="false" style="border-radius: 0px .25rem .25rem 0px;" title="Transferir">
                           <i class="material-icons" style="padding-top: 10px;">forward</i>
                         </button>
                         <div class="dropdown-menu">

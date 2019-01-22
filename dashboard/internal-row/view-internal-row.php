@@ -17,7 +17,7 @@
     <meta name="robots" content="all,follow">
 
     <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="./vendor/font-awesome/all.css">
     <link rel="stylesheet" href="./css/fontastic.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet" href="./css/grasp_mobile_progress_circle-1.0.0.min.css">
