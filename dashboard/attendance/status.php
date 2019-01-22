@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv='refresh' content='30;url=test.php'>
+	<meta http-equiv='refresh' content='30;url=status.php'>
 	<title></title>
 
 	<!-- Bootstrap CSS-->

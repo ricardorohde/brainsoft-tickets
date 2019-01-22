@@ -11,6 +11,7 @@
 	<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv='refresh' content='60;url=fila-interna'>
     <title>Brainsoft Sistemas - Fila Interna</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,7 +44,7 @@
 			    display.textContent = minutes + ":" + seconds;
 
 			    if (--timer < 1) {
-			      window.setTimeout('location.reload()');
+			      //window.setTimeout('location.reload()');
 			    }
 			  }, 1000);
 			}
