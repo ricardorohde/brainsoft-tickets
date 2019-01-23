@@ -4,50 +4,53 @@ class QueueController {
 
 	private static $instance;
 	private $prepareInstance;
-	private $allOpenChats;                //chats
+	private $allOpenChats;
 
-	private $allAttendantsOfGroup1OnChat; //qtd_attendant_1_on_chat
-	private $initializedQueueOfGroup1;    //row_initialized_queue_1
-	private $finalizedQueueOfGroup1;      //row_id_finalized_queue_1
+	private $allAttendantsOfGroup1OnChat;
+	private $initializedQueueOfGroup1;
+	private $finalizedQueueOfGroup1;
 
-	private $allAttendantsOfGroup2OnChat; //qtd_attendant_2_on_chat
-	private $initializedQueueOfGroup2;    //row_initialized_queue_2
-	private $finalizedQueueOfGroup2;      //row_id_finalized_queue_2
+	private $allAttendantsOfGroup2OnChat;
+	private $initializedQueueOfGroup2;
+	private $finalizedQueueOfGroup2;
 
-	function setPrepareInstance($prepareInstance) {
+	function setPrepareInstance($prepareInstance)
+	{
 		$this->prepareInstance = $prepareInstance;
 	}
 
-	function getAllOpenChats() {
+	function getAllOpenChats()
+	{
 		return $this->allOpenChats;
 	}
 
-	function orderByQuantity($contagem) {
+	function orderByQuantity($contagem)
+	{
 		$queue = array();
-		foreach($contagem as $numero => $vezes){
-			if($vezes == 2){
+		foreach ($contagem as $numero => $vezes) {
+			if ($vezes == 2) {
 				array_unshift($queue, $numero);
 			}
 		}
 
-		foreach($contagem as $numero => $vezes){
-			if($vezes == 1){
+		foreach ($contagem as $numero => $vezes) {
+			if ($vezes == 1) {
 				array_unshift($queue, $numero);
 			}
 		}
-
 		return $queue;
 	}
 
-	function orderByDate($id_finalized_queue) {
+	function orderByDate($id_finalized_queue)
+	{
 		$queue_according_data = array();
 		$dates = array();
 		$position = 0;
 
-		foreach ($id_finalized_queue as $id_attendant){
+		foreach ($id_finalized_queue as $id_attendant) {
 			$elements = $id_attendant['id_attendant'];
-    	$query = "SELECT registered_at FROM ticket WHERE id_attendant = ? ORDER BY id DESC LIMIT 1";
-    	$row_finalized_queue_2 = $this->prepareInstance->prepare($query, $elements, "");
+    		$query = "SELECT registered_at FROM ticket WHERE id_attendant = ? ORDER BY id DESC LIMIT 1";
+    		$row_finalized_queue_2 = $this->prepareInstance->prepare($query, $elements, "");
 
 			$last_date = $row_finalized_queue_2['registered_at'];
 			$final_date = strtotime($last_date);
@@ -61,25 +64,25 @@ class QueueController {
 			$dateString = date('Y-m-d H:i:s', $date);
 
 			$elements = $dateString;
-    	$query = "SELECT id_attendant FROM ticket WHERE registered_at = ? ORDER BY id DESC LIMIT 1";
-    	$row_finalized_queue_2 = $this->prepareInstance->prepare($query, $elements, "");
+    		$query = "SELECT id_attendant FROM ticket WHERE registered_at = ? ORDER BY id DESC LIMIT 1";
+    		$row_finalized_queue_2 = $this->prepareInstance->prepare($query, $elements, "");
 
 			$queue_according_data[$position] = $row_finalized_queue_2['id_attendant'];
 
 			$position++;
 		}
-		
 		return $queue_according_data;
 	}
 
-	function findUserInQueue($qtd_attendants, $new_queue_group, $queue_according_date, $plus) {
+	function findUserInQueue($qtd_attendants, $new_queue_group, $queue_according_date, $plus)
+	{
 		$finalized_queue_group_1 = array();
 
-		for ($i = 0; $i <= $qtd_attendants + 1; $i++){ 
+		for ($i = 0; $i <= $qtd_attendants + 1; $i++) { 
 			if (!in_array($i+$plus, $new_queue_group)) { 
 				$finded = 0;
-				foreach ($queue_according_date as $key => $value){
-					if($value[0] == $i+$plus && $finded == 0){
+				foreach ($queue_according_date as $key => $value) {
+					if ($value[0] == $i+$plus && $finded == 0) {
 						$finalized_queue_group_1[$key] = $i+$plus;
 						$finded = 1;
 					}
@@ -88,64 +91,69 @@ class QueueController {
 		}
 
 		ksort($finalized_queue_group_1);
-
 		return $finalized_queue_group_1;
 	}
 
-	function openChats(){
-    $elements = "aberto";
-    $query = "SELECT id_module, t_group, id_chat, id_attendant as id, registered_at FROM ticket WHERE t_status = ? ORDER BY id_chat desc";
-    $this->allOpenChats = $this->prepareInstance->prepare($query, $elements, "all");
+	function openChats()
+	{
+	    $elements = "aberto";
+	    $query = "SELECT id_module, t_group, id_chat, id_attendant as id, registered_at FROM ticket WHERE t_status = ? ORDER BY id_chat desc";
+	    $this->allOpenChats = $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
-	function attendantsAbleOnGroup1() {
-    $elements = ["nivel1", "yes"];
-    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
-    $row_attendants_1_on_chat = $this->prepareInstance->prepare($query, $elements, "all");
-    $this->allAttendantsOfGroup1OnChat = $row_attendants_1_on_chat[0]['total'];
+	function attendantsAbleOnGroup1()
+	{
+	    $elements = ["nivel1", "yes"];
+	    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
+	    $row_attendants_1_on_chat = $this->prepareInstance->prepare($query, $elements, "all");
+	    $this->allAttendantsOfGroup1OnChat = $row_attendants_1_on_chat[0]['total'];
 	}
 
-	function makeQueueToGroup1() {
-    $limit_initialize_1 = $this->allAttendantsOfGroup1OnChat * 2;
-    $elements = ["aberto", "nivel1", $limit_initialize_1];
-    $query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
-    $this->initializedQueueOfGroup1 = $this->prepareInstance->prepareBind($query, $elements, "all");
+	function makeQueueToGroup1()
+	{
+	    $limit_initialize_1 = $this->allAttendantsOfGroup1OnChat * 2;
+	    $elements = ["aberto", "nivel1", $limit_initialize_1];
+	    $query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
+	    $this->initializedQueueOfGroup1 = json_decode($this->prepareInstance->prepareBind($query, $elements, "all"), true);
 
-    $limit_finalized_1 = $this->allAttendantsOfGroup1OnChat;
-    $elements = ["aberto", "nivel1", "yes", $limit_finalized_1];
-    $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
+	    $limit_finalized_1 = $this->allAttendantsOfGroup1OnChat;
+	    $elements = ["aberto", "nivel1", "yes", $limit_finalized_1];
+	    $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
 			t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
-		$this->finalizedQueueOfGroup1 = $this->prepareInstance->prepareBind($query, $elements, "all");
+		$this->finalizedQueueOfGroup1 = json_decode($this->prepareInstance->prepareBind($query, $elements, "all"), true);
 	}
 
-	function attendantsAbleOnGroup2() {
-    $elements = ["nivel2", "yes"];
-    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
-    $row_attendants_1_on_chat = $this->prepareInstance->prepare($query, $elements, "all");
-    $this->allAttendantsOfGroup2OnChat = $row_attendants_1_on_chat[0]['total'];
+	function attendantsAbleOnGroup2()
+	{
+	    $elements = ["nivel2", "yes"];
+	    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
+	    $row_attendants_1_on_chat = $this->prepareInstance->prepare($query, $elements, "all");
+	    $this->allAttendantsOfGroup2OnChat = $row_attendants_1_on_chat[0]['total'];
 	}
 
-	function makeQueueToGroup2() {
+	function makeQueueToGroup2()
+	{
 		$limit_initialize_2 = $this->allAttendantsOfGroup2OnChat * 2;
 		$elements_to_initialize_queue_2 = ["aberto", "nivel2", $limit_initialize_2];
 		$query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
-		$this->initializedQueueOfGroup2 = $this->prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all");
+		$this->initializedQueueOfGroup2 = json_decode($this->prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all"), true);
 
 		$limit_finalized_2 = $this->allAttendantsOfGroup2OnChat;
 		$elements_to_finalized_queue_2 = ["aberto", "nivel2", "yes", $limit_finalized_2];
 		$query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
 			t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
-		$this->finalizedQueueOfGroup2 = $this->prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all");
+		$this->finalizedQueueOfGroup2 = json_decode($this->prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all"), true);
 	}
 
-	function getOrderedQueue($group) {
+	function getOrderedQueue($group)
+	{
 		$updatedQueue = array();	
 		$stepQueue = array(); 
 
 		if ($group == 1) {
 			foreach ($this->initializedQueueOfGroup1 as $row) {
 				array_push($stepQueue, $row['id_attendant']);
-			} 
+			}
 
 			$count = array_count_values($stepQueue); 
 			$updatedQueue = $this->orderByQuantity($count); 
@@ -161,41 +169,40 @@ class QueueController {
 			$queueAccordingDate = $this->orderByDate($this->finalizedQueueOfGroup2);							
 			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup2OnChat, $updatedQueue, $queueAccordingDate, 5);
 		}
-		
 		return array_merge($finalQueue, $updatedQueue);
 	} 
 
-	function chatNumberToUseInLink($idChat) {
+	function chatNumberToUseInLink($idChat)
+	{
 		$element = $idChat;
-		$query = "SELECT id_chat FROM chat WHERE id = ?";
-		
+		$query = "SELECT id_chat FROM chat WHERE id = ?";	
 		return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
-	function timeOfTicket($idChat) {
+	function timeOfTicket($idChat)
+	{
 		$element = $idChat;
-		$query = "SELECT registered_at FROM ticket WHERE id_chat = ?"; 
-		
+		$query = "SELECT registered_at FROM ticket WHERE id_chat = ?"; 	
 		return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
-	function progressBar($registeredAt) {
+	function progressBar($registeredAt)
+	{
 		$initial_time = new DateTime(date('Y/m/d H:i:s', strtotime($registeredAt)));
 		$actual_time = new DateTime();
-		$diff = $actual_time->diff($initial_time);
-		
+		$diff = $actual_time->diff($initial_time);	
 		return ($diff->h*60) + $diff->i + ($diff->s/60) + ($diff->days*24*60);
 	}
-	
 
-	function limitTimeToFinish($IdModule) {
+	function limitTimeToFinish($IdModule)
+	{
 		$element = $IdModule;
 		$query = "SELECT limit_time FROM ticket_module WHERE id = ?";
-
 		return $this->prepareInstance->prepare($query, $element, "all"); 
 	}
 
-	function attendantsOnGroup($group){
+	function attendantsOnGroup($group)
+	{
 		$element = $group;
 		$query = "SELECT id, name FROM employee WHERE t_group = ?";
 		$data = $this->prepareInstance->prepare($query, $element, "all"); 
@@ -205,23 +212,22 @@ class QueueController {
 			$name = explode(" ", $g['name']);
 			$group[$g['id']] = $name[0];
 		}
-
 		return $group;
 	}
 
-	function verifyPermission() {
+	function verifyPermission()
+	{
 		session_start();
-  	if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
-    	header("Location:../dashboard");
-  	}
+  		if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
+    		header("Location:../dashboard");
+  		}
 	}
 
-	public static function getInstance() {
-		if (!self::$instance)
-      self::$instance = new QueueController();
-
-    return self::$instance;
+	public static function getInstance()
+	{
+		if (!self::$instance) {
+      		self::$instance = new QueueController();
+		}
+    	return self::$instance;
 	}
 }
-
-?>

@@ -1,55 +1,68 @@
 <?php
-	include_once 'config.php';
-?>
+include_once 'config.php';
 
-<?php
-	class PrepareQuery{
+class PrepareQuery
+{
+	private $connectionToDatabase;
 
-		private $connectionToDatabase;
+	function __construct()
+	{
+		$this->connectionToDatabase = ConfigDatabase::getInstance();
+	}
 
-		function __construct(){
-			$this->connectionToDatabase = ConfigDatabase::getInstance();
+	public function getConnToDatabase() 
+	{
+		return $this->connectionToDatabase;
+	}
+	
+	function prepare($query, $elements, $typeReturn)
+	{
+    	$openConnection = $this->connectionToDatabase->getConnection()->prepare($query);
+    	$result = "";
+
+    	if (gettype($elements) == "string") {
+      		$openConnection->execute(array($elements)); 
+    	} else { 
+    		$openConnection->execute($elements);
+    	}
+
+    	if ($typeReturn == "all") {
+    		$result = $openConnection->fetchAll();
+    		$openConnection = null;
+    		return $result;
+    	} else {
+    		$result = $openConnection->fetch();
+    		$openConnection = null;
+    		return $result;
+    	}
+	}
+
+	function prepareBind($query, $elements, $typeReturn)
+	{
+		$openConnection = $this->connectionToDatabase->getConnection()->prepare($query);
+		$result = "";
+
+		if (count($elements) == 3) {
+			$openConnection->bindValue(':status', $elements[0], PDO::PARAM_STR);
+			$openConnection->bindValue(':group', $elements[1], PDO::PARAM_STR);
+			$openConnection->bindValue(':count', $elements[2], PDO::PARAM_INT);
+		} else {
+			$openConnection->bindValue(':status', $elements[0], PDO::PARAM_STR);
+			$openConnection->bindValue(':group', $elements[1], PDO::PARAM_STR);
+			$openConnection->bindValue(':active', $elements[2], PDO::PARAM_STR);
+			$openConnection->bindValue(':count', $elements[3], PDO::PARAM_INT);
 		}
 
-		public function getConnToDatabase() {
-   		return $this->connectionToDatabase;
-  	}
-		
-		function prepare($query, $elements, $typeReturn){
-	    $open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
-	    
-	    if(gettype($elements) == "string") {
-	      $open_connection->execute(array($elements)); 
-	    } else { 
-	      $open_connection->execute($elements);
-	    }
+		$openConnection->execute();
 
-	    if($typeReturn == "all")
-	    	return $open_connection->fetchAll();
-	    else
-	    	return $open_connection->fetch();
-  	}
-
-  	function prepareBind($query, $elements, $typeReturn){
-  		$open_connection = $this->connectionToDatabase->getConnection()->prepare($query);
-
-  		if (count($elements) == 3) {
-  			$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
-      	$open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
-      	$open_connection->bindValue(':count', $elements[2], PDO::PARAM_INT);
-  		} else {
-  			$open_connection->bindValue(':status', $elements[0], PDO::PARAM_STR);
-     		$open_connection->bindValue(':group', $elements[1], PDO::PARAM_STR);
-      	$open_connection->bindValue(':active', $elements[2], PDO::PARAM_STR);
-     		$open_connection->bindValue(':count', $elements[3], PDO::PARAM_INT);
-  		}
-
-      $open_connection->execute();
-
-      if($typeReturn == "all")
-	    	return $open_connection->fetchAll();
-	    else
-	    	return $open_connection->fetch();
-  	}
+		if ($typeReturn == "all") {
+			$result = json_encode($openConnection->fetchAll());
+			$openConnection = null;
+			return $result;
+		} else {
+			$result = json_encode($openConnection->fetch());
+			$openConnection = null;
+			return $result;
+		}
 	}
-?>
+}
