@@ -233,13 +233,27 @@
 							<?php endif;?>
 						<?php endfor; ?>
 					</tr>
-					<?php foreach ($attendants as $attendant) : ?>
+					<?php foreach ($attendants as $key => $attendant) : ?>
 						<tr>
 							<td><?= $attendant['on_chat'] == "yes" ? "<img src='img/is-on.png'></img>" : "<img src='img/is-off.png'></img>" ?></td>
 							<td><?= explode(" ", $attendant['name'])[0] ?></td>
 							
-							<?php for ($j = 0; $j < 8; $j++) : ?> 
-								<?php 
+							<?php
+							$actualDate = date('Y-m-d');
+
+							$elementsToTotalCalls = [$attendant['id'], $actualDate."%", "pendente", $actualDate."%"];
+							$query = "SELECT COUNT(*) as total FROM ticket WHERE 
+								id_attendant = ? AND (finalized_at LIKE ? OR (t_status = ? AND registered_at LIKE ?))";
+
+							$totalCalls = $prepareInstance->prepare($query, $elementsToTotalCalls, "");
+    						?>
+      						<td><?= $totalCalls['total']; ?></td>
+
+							<?php
+							if (!isset($_SESSION['user'.$key])) {
+								$dataOfUser = array();
+								for ($j=1; $j<8; $j++) : ?> 
+									<?php 
 									$actualDate = date('Y-m-d', strtotime('-' .$j. ' days'));
 
 									$elementsToTotalCalls = [$attendant['id'], $actualDate."%", "pendente", $actualDate."%"];
@@ -247,11 +261,20 @@
 										id_attendant = ? AND (finalized_at LIKE ? OR (t_status = ? AND registered_at LIKE ?))";
 
 									$totalCalls = $prepareInstance->prepare($query, $elementsToTotalCalls, "");
-        						?>
-	      						<td><?= $totalCalls['total']; ?></td>
-							<?php endfor; ?>
+									array_push($dataOfUser, $totalCalls);
+	        						?>
+
+		      						<td><?= $totalCalls['total']; ?></td>
+								<?php endfor; ?>
+								<?php $_SESSION['user'.$key] = $dataOfUser; ?>
+							<?php 
+							} else {
+								$data = $_SESSION['user'.$key];
+								for ($j=0; $j<7; $j++) : ?>
+									<td><?= $data[$j]['total']; ?></td>
+							<?php endfor; } ?>
 						</tr>
-					<?php endforeach ?>
+					<?php endforeach; ?>
 					<tr>
 						<td></td>
 						<td><strong>TOTAL</strong></td>
