@@ -553,7 +553,7 @@
                         <input type='hidden' name='selected_module' value="<?php if(!is_null($row_m_ticket['module'])){echo $row_m_ticket['module'];} ?>">
 
                         <?php
-                          if($client_ip != NULL) {
+                          if($client_ip != NULL || $_GET['id_chat'] < 100000) {
                             echo '<button type="reset" class="btn btn-secondary">Limpar</button>';
 
                             if(@$row_attendant['name'] != NULL){
