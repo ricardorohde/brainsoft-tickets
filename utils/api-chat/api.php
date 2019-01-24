@@ -3,7 +3,7 @@
 date_default_timezone_set('America/Sao_Paulo');
 $day = date('d');
 $month = "12";
-$year = "2017";
+$year = "2018";
 
 $_SESSION["id_chat"] = $_GET["id_chat"];
 $chat = $_SESSION["id_chat"];
@@ -23,7 +23,7 @@ $customers_at_reception = 0;
 $ch_1 = curl_init();
 $ch_2 = curl_init();
 
-$url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/';
+$url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/'.$year;
 $url2 = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/'.$chat; 
 
 curl_setopt($ch_1, CURLOPT_URL, $url);
