@@ -1,7 +1,7 @@
 <?php
 	include_once "../../utils/api-chat/customers-at-reception.php";
   $apiPct = new apiPct();
-  $apiPct->getCustomersAtReception();
+  $apiPct->consultCustomersAtReception();
   $apiPct->countCustomersAtReception();
 ?>
 

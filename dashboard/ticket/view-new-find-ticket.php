@@ -4,7 +4,8 @@
     header("Location:../dashboard");
   }
 
-  include ("../../utils/api-chat/api-last-chats.php");
+  include_once "../../utils/controller/ctrl_ticket.php";
+  $ticketController = TicketController::getInstance();
 ?>
 
 <!DOCTYPE html>
@@ -114,8 +115,8 @@
                       </thead>
                       <tbody>
                         <?php
-                          $actual_date = $day . "/" . $month . "/" . $year;
-                          foreach ($data1 as $key => $value):
+                          $actual_date = $ticketController->getDay() . "/" . $ticketController->getMonth() . "/" . $ticketController->getYear();
+                          foreach ($ticketController->getCustomersAtReception() as $key => $value):
                             $date_formated = date('d/m/Y', strtotime($value->chat_inicio));
                             if($date_formated == $actual_date && $value->chat_final == null): 
                               $chat_started = date('H:m:s', strtotime($value->chat_inicio));

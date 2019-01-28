@@ -1,5 +1,4 @@
 <?php 
-
 class QueueController {
 
 	private static $instance;

@@ -23,8 +23,8 @@ $customers_at_reception = 0;
 $ch_1 = curl_init();
 $ch_2 = curl_init();
 
-$url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/';
-$url2 = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/'.$chat; 
+$url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date';
+$url2 = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/' . $chat; 
 
 curl_setopt($ch_1, CURLOPT_URL, $url);
 curl_setopt($ch_1, CURLOPT_RETURNTRANSFER, true);

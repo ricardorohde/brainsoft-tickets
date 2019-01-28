@@ -1,12 +1,9 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
-?>
+  include_once "../../utils/controller/ctrl_ticket.php";
+  $ticketController = TicketController::getInstance();
+  $ticketController->verifyPermission();
 
-<?php 
-  include_once "../../utils/api-chat/api.php"; 
+  $ticketController->setIdChat($_GET["id_chat"]);
 ?>
 
 <!DOCTYPE html>
@@ -64,12 +61,11 @@
         $sql_m_ticket->execute(array($row_ticket['id_module'])); $row_m_ticket = $sql_m_ticket->fetch();
 
         $sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?");
-        if($row_ticket['id_attendant'] != NULL) {
+        if ($row_ticket['id_attendant'] != NULL) {
           $sql_attendant->execute(array($row_ticket['id_attendant'])); $row_attendant = $sql_attendant->fetch();
         } else {
           $sql_attendant->execute(array($_GET['id_attendant'])); $targetAttendant = $sql_attendant->fetch();
         }
-        
       ?>
 
       <?php 
@@ -425,135 +421,160 @@
                         <textarea class="form-control yourMessage" id="resolution" name="resolution" rows="8" placeholder="Escreva sua mensagem"><?php echo $row_ticket['resolution'];?></textarea>
                       </div>
                     </div>
-                    <div class="line"></div>
-                    <div class="form-group row">
-                      <label class="col-sm-2 form-control-label">Histórico do chat</label>
-                      <div class="col-sm-10 select" style="height: 400px; overflow: auto;">
+                    <?php if ($_GET['id_chat'] > 100000) : ?>
+                    <div class="row text-center">
+                      <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Histórico e Relatório do Chat
+                      </a>
+                    </div>
+                    <div class="collapse" id="collapseExample">
+                      <div class="card card-body mt-3">
+                        <div class="form-group row">
+                          <label class="col-sm-2 form-control-label">Histórico do chat</label>
+                          <div class="col-sm-10 select" style="height: 400px; overflow: auto;">
 
-                        <?php foreach ($data as $key => $value): $date = strtotime($value->timestamp); 
+                            <?php foreach ($ticketController->getHistoryOfChat() as $key => $value) : 
+                              $date = strtotime($value->timestamp); 
 
-                          if (empty($opening_time)){$opening_time = date('H:i:s', $date);};?>
+                              if (empty($ticketController->getOpenedAt())) {
+                                $opening_time = date('H:i:s', $date);
+                              } else {
+                                $opening_time = $ticketController->getOpenedAt();
+                              }
+                            ?>
 
-                          <div style="display: table;">
-                            <div style="float: left;">
-                              <p style="font-size: 10px;"><?php echo date('H:i:s', $date); ?></p>
-                            </div>
-                            <?php if ($value->tipo == "M"): $type = "--- Sistema";?>
-                              <?php
-                                $termo = 'transferido';
-                                $termo2 = 'Atendido por';
+                              <div style="display: table;">
+                                <div style="float: left;">
+                                  <p style="font-size: 10px;"><?php echo date('H:i:s', $date); ?></p>
+                                </div>
+                                <?php if ($value->tipo == "M") : ?>
+                                  <?php
+                                    $type = "--- Sistema";
+                                    $termo = 'Chat transferido';
+                                    $termo2 = 'Atendido por';
+                                    $attendant_time_after_transfer = "";
 
-                                $pattern = '/' . $termo . '/';//Padrão a ser encontrado
-                                if (preg_match($pattern, $value->texto)) {
-                                  $transfer_time = date('H:i:s', $date);
-                                }
+                                    $pattern = '/' . $termo . '/';//Padrão a ser encontrado
+                                    if (preg_match($pattern, $value->texto)) {
+                                      $ticketController->setTransferedAt(date('H:i:s', $date));
+                                    }
 
-                                $pattern2 = '/' . $termo2 . '/';//Padrão a ser encontrado
-                                if (preg_match($pattern2, $value->texto)) {
-                                  $attendant_time_after_transfer = date('H:i:s', $date);
-                                }
-                              ?>
-                              <div style="float: left; margin-left: 8px;">
-                                <p><?php echo "<b>".$type."</b>: ".$value->texto; ?></p>
+                                    $pattern2 = '/' . $termo2 . '/';//Padrão a ser encontrado
+                                    if (preg_match($pattern2, $value->texto)) {
+                                      $attendant_time_after_transfer = date('H:i:s', $date);
+                                    }
+                                  ?>
+                                  <div style="float: left; margin-left: 8px;">
+                                    <p><?php echo "<b>".$type."</b>: ".$value->texto; ?></p>
+                                  </div>
+                                <?php elseif ($value->tipo == "A") : ?>  
+                                  <?php if ($attendant_time_after_transfer != "") : ?>
+                                    <?php $type = ucfirst($ticketController->getAttendant()); ?>
+                                    <div style="float: left; margin-left: 8px;">
+                                      <p><?php echo "<b>".$type."</b>: ".$value->texto; ?></p>
+                                    </div>
+                                  <?php else : ?>
+                                    <div style="float: left; margin-left: 8px;">
+                                      <p><?php echo "<b>Camila</b>: ".$value->texto; ?></p>
+                                    </div>
+                                  <?php endif; ?>
+                                <?php else : $type = ucfirst($ticketController->getClient()); ?>
+                                  <div style="float: left; margin-left: 8px;">
+                                    <p><?php echo "<b>".$type."</b>: ".$value->texto; ?></p>
+                                  </div>
+                                <?php endif; ?>
                               </div>
-                            <?php elseif ($value->tipo == "A"): $type = ucfirst($attendant);?>
-                              <div style="float: left; margin-left: 8px;">
-                                <p><?php echo "<b>".$type."</b>: ".$value->texto; ?></p>
-                              </div>
-                            <?php else: $type = ucfirst($client);?>
-                              <div style="float: left; margin-left: 8px;">
-                                <p><?php echo "<b>".$type."</b>: ".$value->texto; ?></p>
-                              </div>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
+
                           </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="form-group row">
+                          <label class="col-sm-2 form-control-label">Relatório do chat</label>
+                          <div class="col-sm-10 select">
+                            <p><b>IP:</b> <?= $ticketController->getIpClient(); ?> </p>
+                            <p><b>Solicitou chat às:</b> <?= date('H:i:s', strtotime($ticketController->getStart())); ?> </p>
+                            <p><b>Finalizado às:</b> <?= date('H:i:s', strtotime($ticketController->getFinal())); ?> </p>
+                            <p><b>Nota de Atendimento:</b> 
+                              <?php if(empty($rating)){echo "Não votou";} else {echo $ticketController->getRating();} ?> 
+                            </p>
+                            <br>
+                            <p><b>Tempo até ser atendido:</b> 
+                              <?php
+                                $enterDate = new DateTime($ticketController->getStart(), new DateTimeZone( 'America/Sao_Paulo'));
+                                $attendantDate = new DateTime($opening_time, new DateTimeZone( 'America/Sao_Paulo')); 
 
-                        <?php endforeach; ?>
+                                $totalTime = $attendantDate->diff($enterDate);
+                                echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos"); 
+                              ?> 
+                            </p>
+                            <p><b>Duração do atendimento:</b> 
+                              <?php
+                                $openedIn = new DateTime($opening_time, new DateTimeZone( 'America/Sao_Paulo')); 
+                                $transferTime = new DateTime($ticketController->getTransferedAt(), new DateTimeZone( 'America/Sao_Paulo'));
+                                $finalDate = new DateTime(date('H:i:s', strtotime($ticketController->getFinal())), new DateTimeZone( 'America/Sao_Paulo'));
 
+                                if ($ticketController->getTransferedAt() != ""){
+                                  $totalTime = $transferTime->diff($openedIn);
+                                } else {
+                                  $totalTime = $finalDate->diff($openedIn);
+                                }
+                                echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos"); 
+                              ?> 
+                            </p>
+
+                            <?php if ($ticketController->getTransferedAt() != ""): ?>
+                              
+                              <p><b>Tempo de espera (Transferido - Atendido):</b> 
+                                <?php
+                                  $transferedTime = new DateTime($ticketController->getTransferedAt(), new DateTimeZone( 'America/Sao_Paulo'));
+                                  $afterTransfer = new DateTime($attendant_time_after_transfer, new DateTimeZone( 'America/Sao_Paulo')); 
+
+                                  $totalTime = $afterTransfer->diff($transferedTime);
+                                  echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos");
+                                ?> 
+                              </p>
+                              <p><b>Duração do suporte:</b> 
+                                <?php
+                                  $initialSupport = new DateTime($attendant_time_after_transfer, new DateTimeZone( 'America/Sao_Paulo')); 
+                                  $finalSupport = new DateTime(date('H:i:s', strtotime($ticketController->getFinal())), new DateTimeZone( 'America/Sao_Paulo'));
+
+                                  $totalTime = $finalSupport->diff($initialSupport);
+                                  echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos"); 
+                                ?> 
+                              </p>
+                            
+                            <?php endif; ?>
+
+                            <p><b>Duração total do chat:</b> 
+                              <?php 
+                                $startDate = new DateTime($ticketController->getStart(), new DateTimeZone('America/Sao_Paulo'));
+                                $finalDate = new DateTime($ticketController->getFinal(), new DateTimeZone('America/Sao_Paulo')); 
+
+                                $totalTime = $finalDate->diff($startDate);
+
+                                $totalTimeInMinutes = ($totalTime->h * 60) + $totalTime->i;
+
+                                echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos");
+                              ?> 
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="line"></div>
-                    <div class="form-group row">
-                      <label class="col-sm-2 form-control-label">Relatório do chat</label>
-                      <div class="col-sm-10 select">
-                        <p><b>IP:</b> <?php echo $client_ip; ?> </p>
-                        <p><b>Solicitou chat às:</b> <?php echo date('H:i:s', strtotime($start)); ?> </p>
-                        <p><b>Finalizado às:</b> <?php echo date('H:i:s', strtotime($final)); ?> </p>
-                        <p><b>Nota de Atendimento:</b> 
-                          <?php if(empty($rating)){echo "Não votou";} else {echo $rating;} ?> 
-                        </p>
-                        <br>
-                        <p><b>Tempo até ser atendido:</b> 
-                          <?php
-                            $enterDate = new DateTime($start, new DateTimeZone( 'America/Sao_Paulo'));
-                            $attendantDate = new DateTime($opening_time, new DateTimeZone( 'America/Sao_Paulo')); 
-
-                            $totalTime = $attendantDate->diff($enterDate);
-                            echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos"); 
-                          ?> 
-                        </p>
-                        <p><b>Duração do atendimento:</b> 
-                          <?php
-                            $openedIn = new DateTime($opening_time, new DateTimeZone( 'America/Sao_Paulo')); 
-                            $transferTime = new DateTime($transfer_time, new DateTimeZone( 'America/Sao_Paulo'));
-                            $finalDate = new DateTime(date('H:i:s', strtotime($final)), new DateTimeZone( 'America/Sao_Paulo'));
-
-                            if ($transfer_time != ""){
-                              $totalTime = $transferTime->diff($openedIn);
-                            } else {
-                              $totalTime = $finalDate->diff($openedIn);
-                            }
-                            echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos"); 
-                          ?> 
-                        </p>
-
-                        <?php if ($transfer_time != ""): ?>
-                          
-                          <p><b>Tempo de espera (Transferido - Atendido):</b> 
-                            <?php
-                              $transferedTime = new DateTime($transfer_time, new DateTimeZone( 'America/Sao_Paulo'));
-                              $afterTransfer = new DateTime($attendant_time_after_transfer, new DateTimeZone( 'America/Sao_Paulo')); 
-
-                              $totalTime = $afterTransfer->diff($transferedTime);
-                              echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos");
-                            ?> 
-                          </p>
-                          <p><b>Duração do suporte:</b> 
-                            <?php
-                              $initialSupport = new DateTime($attendant_time_after_transfer, new DateTimeZone( 'America/Sao_Paulo')); 
-                              $finalSupport = new DateTime(date('H:i:s', strtotime($final)), new DateTimeZone( 'America/Sao_Paulo'));
-
-                              $totalTime = $finalSupport->diff($initialSupport);
-                              echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos"); 
-                            ?> 
-                          </p>
-                        
-                        <?php endif; ?>
-
-                        <p><b>Duração total do chat:</b> 
-                          <?php 
-                            $startDate = new DateTime($start, new DateTimeZone('America/Sao_Paulo'));
-                            $finalDate = new DateTime($final, new DateTimeZone('America/Sao_Paulo')); 
-
-                            $totalTime = $finalDate->diff($startDate);
-
-                            $totalTimeInMinutes = ($totalTime->h * 60) + $totalTime->i;
-
-                            echo ($totalTime->h." horas ".$totalTime->i." minutos e ".$totalTime->s." segundos");
-                          ?> 
-                        </p>
-                      </div>
-                    </div>
+                    <?php endif; ?>
                     <div class="form-group row">
                       <div class="offset-sm-2 col-sm-12">
                         <input type="hidden" name="id_chat" value="<?php echo $_GET['id_chat']; ?>">
-                        <input type="hidden" name="opening_time" value="<?php echo $start == "" ? "0000-00-00 00:00:00" : $start ?>">
-                        <input type="hidden" name="final_time" value="<?php echo $final == "" ? "0000-00-00 00:00:00" : $final ?>">
+                        <input type="hidden" name="opening_time" value="<?php echo $ticketController->getStart() == "" ? "0000-00-00 00:00:00" : $ticketController->getStart() ?>">
+                        <input type="hidden" name="final_time" value="<?php echo $ticketController->getFinal() == "" ? "0000-00-00 00:00:00" : $ticketController->getFinal() ?>">
                         <input type="hidden" name="duration_in_minutes" value="<?php if($totalTimeInMinutes < 1){echo 1;} else{echo $totalTimeInMinutes;} ?>">
                         <input type='hidden' name='selected_category' value="<?php if(!is_null($row_m_ticket['category'])){echo $row_m_ticket['category'];} ?>">
                         <input type='hidden' name='selected_module' value="<?php if(!is_null($row_m_ticket['module'])){echo $row_m_ticket['module'];} ?>">
 
                         <?php
-                          if($client_ip != NULL || $_GET['id_chat'] < 100000) {
+                          if($ticketController->getIpClient() != NULL || $_GET['id_chat'] < 100000) {
                             echo '<button type="reset" class="btn btn-secondary">Limpar</button>';
 
                             if(@$row_attendant['name'] != NULL){
