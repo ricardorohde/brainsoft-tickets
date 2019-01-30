@@ -1,6 +1,6 @@
 <?php
 
-	include __DIR__.'/../../commom/config.php';
+	include __DIR__.'/../../common/config.php';
 
 	class Chat {
 

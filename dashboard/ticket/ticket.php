@@ -401,7 +401,7 @@
                       <div class="col-sm-4 select">
                         <select name="attendant" class="form-control" id="attendant">
                           <?php if ($row_attendant != NULL): ?>
-                            <option value=<?php echo '"'.$row_attendant['id'].'"';?>><?php echo $row_attendant['name'];?></option>
+                            <option value=<?php echo '"'.$row_attendant['id'].'"';?>><?= $row_attendant['name'];?></option>
                           <?php else: ?>
                             <option value="">Selecione um atendente...</option>
                           <?php endif; ?>
@@ -412,9 +412,6 @@
                       </div>
                     </div>
 
-                    <div class="form-group row">
-                      
-                    </div>
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Resolução</label>
                       <div class="col-sm-10 select">

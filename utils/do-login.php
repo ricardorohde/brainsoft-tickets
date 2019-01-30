@@ -1,5 +1,5 @@
 <?php 
-  include_once '../commom/config.php';
+  include_once '../common/config.php';
 
   session_start();
 

@@ -1,6 +1,6 @@
 <?php
 
-	include_once __DIR__.'/../../commom/config.php';
+	include_once __DIR__.'/../../common/config.php';
 	include_once('../controller/ctrl_ticket.php');
 
 	class Ticket{

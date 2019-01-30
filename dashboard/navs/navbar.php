@@ -12,10 +12,10 @@
       <div class="side-navbar-wrapper">
         <div class="sidenav-header d-flex align-items-center justify-content-center">
           <div class="sidenav-header-inner text-center"><img src="/dashboard/img/avatar-1.jpg" alt="person" class="img-fluid rounded-circle">
-            <h2 class="h5 text-uppercase"><?= $controller->findRolesById()['name']; ?></h2>
+            <h2 class="h5 text-uppercase"><?= $controller->findRoleById()['name']; ?></h2>
             <span class="text-uppercase">
-              <?= $controller->findRolesById()['role'] == "supportBrain" ? "Suporte Brain" : 
-                                                                           $controller->findRolesById()['role']?>       
+              <?= $controller->findRoleById()['role'] == "supportBrain" ? "Suporte Brain" : 
+                                                                           $controller->findRoleById()['role']?>       
             </span>
           </div>
           <div class="sidenav-header-logo">

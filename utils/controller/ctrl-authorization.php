@@ -1,6 +1,6 @@
 <?php
-	include_once __DIR__.'/../../commom/prepare.php';
-	include_once __DIR__.'/../../commom/session.php';
+	include_once __DIR__.'/../../common/prepare.php';
+	include_once __DIR__.'/../../common/session.php';
 ?>
 
 <?php 
@@ -21,7 +21,7 @@ class AuthorizationController{
 		$this->prepareInstance = new PrepareQuery();
 	}
 	function setSession(){
-		$this->session = new Session();
+		$this->session = new Session("");
 	}
 	function setIdLoginInSession(){
 		$this->idInSession = $_SESSION['login'];
@@ -29,7 +29,8 @@ class AuthorizationController{
 
 	function authorizePage($authorizations){
 		foreach ($authorizations as $auth) {
-			$this->session->authorize(trim($auth['name']) . "_page_" . $this->idInSession);	
+			$this->session->setSession(trim($auth['name']) . "_page_" . $this->idInSession);
+			$this->session->authorize();	
 		}
 	}
 

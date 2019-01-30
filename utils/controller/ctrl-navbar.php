@@ -1,6 +1,6 @@
 <?php
-include_once __DIR__.'/../../commom/prepare.php';
-include_once __DIR__.'/../../commom/session.php';
+include_once __DIR__.'/../../common/prepare.php';
+include_once __DIR__.'/../../common/session.php';
 
 class NavBarController{
 
@@ -34,7 +34,7 @@ class NavBarController{
 	function setInstances()
 	{
 		$this->prepareInstance = new PrepareQuery();
-		$this->session = new Session();
+		$this->session = new Session("");
 	}
 
 	function setPrepareAndConnection()
@@ -44,10 +44,16 @@ class NavBarController{
 
 	function setIdLoginInSession()
 	{
+		session_start();
 		$this->idInSession = $_SESSION['login'];
 	}
 
-	function findRolesById()
+	function cleanDataOfCall()
+	{
+		$this->session->cleanDataOfCalls();
+	}
+
+	function findRoleById()
 	{
 		$element = $this->idInSession;
 		$query = "SELECT client.name as name, role.description as role FROM client, role WHERE client.id_credential = ? AND client.id_role = role.id";

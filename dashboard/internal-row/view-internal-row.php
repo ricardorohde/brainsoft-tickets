@@ -55,9 +55,9 @@
 	</head>
 
 	<body>
-	  <?php include ("../navs/navbar.php");?>
+	  <?php include ("../navs/navbar.php"); ?>
 	  <div class="root-page forms-page">
-	  	<?php include ("../navs/header.php");?>
+	  	<?php include ("../navs/header.php"); ?>
 	  	<?php 
 	  		$queueController->setPrepareInstance($prepareInstance); 
 	  		$queueController->openChats();
@@ -87,20 +87,20 @@
 	        	<h1>Disponibilidade Grupo 1</h1>  	
 		    		<div class="row" id="internal-row">
 		    		
-					<?php if($queueGroup1 != null) : ?>
+					<?php if ($queueGroup1 != null) : ?>
 						<?php 
 							$groupOne = $queueController->attendantsOnGroup("nivel1");
 							$placeInLine1 = 1;
 						?>
 						<table align="center">
 							<tr>
-								<?php foreach($queueGroup1 as $newQueue) {
+								<?php foreach ($queueGroup1 as $newQueue) {
 									echo "<th class='place_in_line'>" . $placeInLine1 . "º </th>";
 									$placeInLine1++;
 								}?>
 							</tr>
 							<tr>
-								<?php foreach($queueGroup1 as $newQueue) : ?>	
+								<?php foreach ($queueGroup1 as $newQueue) : ?>	
 									<td class="colum_of_place">
 										<div class="card mb-3 user<?=$newQueue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
 											<div class="card-header"><?=$groupOne[$newQueue]; ?></div>
@@ -150,20 +150,20 @@
 			<hr>
 			<h1>Disponibilidade Grupo 2</h1>
 			<div class="row" id="internal-row">
-				<?php if($queueGroup2 != null) : ?>
+				<?php if ($queueGroup2 != null) : ?>
 					<?php 
 						$groupTwo = $queueController->attendantsOnGroup("nivel2");
 						$placeInLine2 = 1;
 					?>
 					<table align="center">
 						<tr>
-							<?php foreach($queueGroup2 as $newQueue) {
+							<?php foreach ($queueGroup2 as $newQueue) {
 								echo "<th class='place_in_line'>" . $placeInLine2 . "º </th>";
 								$placeInLine2++;
 							}?>
 						</tr>
 						<tr>
-							<?php foreach($queueGroup2 as $newQueue) : ?>	
+							<?php foreach ($queueGroup2 as $newQueue) : ?>	
 								<?php $position = 0; ?>
 								<td class="colum_of_place">	
 									<div class="card mb-3 user<?=$newQueue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
@@ -226,10 +226,8 @@
 						<?php for ($i = 0; $i < 8; $i++) : ?>
 							<?php if($i == 0) : ?>
 								<td>Hoje</td>
-							<?php elseif($i == 1) : ?>
-								<td>Ontem</td>
 							<?php else : ?>
-								<td><?= date('d/m', strtotime('-' .$i. ' days'));?></td>
+								<td><?= date('d/m', strtotime('-' .$i. ' days')); ?></td>
 							<?php endif;?>
 						<?php endfor; ?>
 					</tr>

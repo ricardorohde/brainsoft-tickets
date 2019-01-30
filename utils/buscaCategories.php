@@ -1,6 +1,6 @@
 <?php  
 
-include_once("../commom/config.php");
+include_once("../common/config.php");
 $connection = new ConfigDatabase();
 
 $text1 = $_GET['term'];

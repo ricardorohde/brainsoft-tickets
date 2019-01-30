@@ -10,5 +10,3 @@ $controllerEmployee->isOnChat($_SESSION['login'], "no"); //DEIXANDO O USUÁRIO O
 session_destroy(); //destruimos a sessão ;)
 session_unset(); //limpamos as variaveis globais das sessões
 header("Location:/"); /*aqui você pode redirecionar para uma determinada página*/
- 
-?>

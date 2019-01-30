@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+include_once 'ctrl-navbar.php';
+
 class QueueController {
 
 	private static $instance;
@@ -12,6 +15,18 @@ class QueueController {
 	private $allAttendantsOfGroup2OnChat;
 	private $initializedQueueOfGroup2;
 	private $finalizedQueueOfGroup2;
+
+	private $navBarController;
+	
+	public function setNavBarController($navBarController) {
+	  $this->navBarController = $navBarController;
+	}
+
+	function __construct()
+	{
+		$this->setNavBarController(new NavBarController());
+		$this->cleanDataInTable();
+	}
 
 	function setPrepareInstance($prepareInstance)
 	{
@@ -214,9 +229,13 @@ class QueueController {
 		return $group;
 	}
 
+	function cleanDataInTable()
+	{
+		$this->navBarController->cleanDataOfCall();
+	}
+
 	function verifyPermission()
 	{
-		session_start();
   		if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
     		header("Location:../dashboard");
   		}

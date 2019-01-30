@@ -97,13 +97,13 @@
 					$_SESSION['login'] = $id;
 
 					$controllerAuthorization = new AuthorizationController();
-					$authorizations          = $controllerAuthorization->findAuthorizationsById();
+					$authorizations = $controllerAuthorization->findAuthorizationsById();
 					$controllerAuthorization->authorizePage($authorizations);		
 
-      		unset($_SESSION['withoutLogin']);
-      		unset($_SESSION['errorLogin']);
-      		unset($_SESSION['thereIsProblemInLogin']);
-      		header("Location:../../dashboard");
+  					unset($_SESSION['withoutLogin']);
+      				unset($_SESSION['errorLogin']);
+      				unset($_SESSION['thereIsProblemInLogin']);
+      				header("Location:../../dashboard");
 					break;
 				case '404':
 					unset($_SESSION['withoutLogin']);
