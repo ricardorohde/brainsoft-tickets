@@ -1,9 +1,8 @@
 <?php
-
 include_once 'ctrl-navbar.php';
 
-class QueueController {
-
+class QueueController
+{
 	private static $instance;
 	private $prepareInstance;
 	private $allOpenChats;
@@ -18,7 +17,8 @@ class QueueController {
 
 	private $navBarController;
 	
-	public function setNavBarController($navBarController) {
+	public function setNavBarController($navBarController)
+	{
 	  $this->navBarController = $navBarController;
 	}
 

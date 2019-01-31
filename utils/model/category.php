@@ -1,49 +1,61 @@
 <?php
-
 include_once __DIR__.'/../../common/config.php';
 
-class CategoryModule {
-
+class CategoryModule
+{
 	protected $id;
 	protected $description;
 	protected $tGroup;
 
-	public function getId(){
+	public function getId()
+	{
 	    return $this->id;
 	}
-	public function setId($id){
+
+	public function setId($id)
+	{
 	    $this->id = $id;
 	}
-	public function getDescription(){
+
+	public function getDescription()
+	{
 	    return $this->description;
 	}
-	public function setDescription($description){
+
+	public function setDescription($description)
+	{
 	    $this->description = $description;
 	}
-	public function getTGroup(){
+
+	public function getTGroup()
+	{
 	    return $this->tGroup;
 	}
-	public function setTGroup($tGroup){
+
+	public function setTGroup($tGroup)
+	{
 	    $this->tGroup = $tGroup;
 	}
 
-	function __construct() {
+	function __construct()
+	{
     	$this->connection = new ConfigDatabase();
 	}
 
-	public function register(){
+	public function register()
+	{
 		$sql = $this->connection->getConnection()->prepare("INSERT INTO category_module (id, description, t_group) VALUES (NULL, ?, ?)");
 	        
 	    $result = $sql->execute(array($this->description, $this->tGroup));
-	
 	    return $result;
 	}
 
-	public function findIdByName($name){
+	public function findIdByName($name)
+	{
 		$sql = $this->connection->getConnection()->prepare("SELECT id FROM category_module WHERE description LIKE ?");
     	$sql->execute(array($name));
 
-   		while($row = $sql->fetch()){
+   		while ($row = $sql->fetch()) {
   			$id = $row['id'];
 		}
 

@@ -1,5 +1,4 @@
 <?php
-
 class ConfigDatabase
 {
 	private static $instance;

@@ -3,11 +3,13 @@ class Session
 {
 	private $session;
 
-	public function getSession() {
+	public function getSession()
+	{
 	  return $this->session;
 	}
 	
-	public function setSession($session) {
+	public function setSession($session)
+	{
 	  $this->session = $session;
 	}
 
@@ -18,7 +20,7 @@ class Session
 
 	function unset()
 	{
-		unset($this->session);	
+		session_unset($_SESSION[$this->session]);	
 	}
 
 	function authorize()
