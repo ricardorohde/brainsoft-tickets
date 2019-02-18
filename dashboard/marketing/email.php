@@ -35,11 +35,11 @@
             <div class="col-lg-12">
               <div class="card">
                 <div class="card-body">
-                	<form id="sendEmail" action="send.php" method="POST" enctype="multipart/form-data">
+                	<form id="sendEmail" action="send.php" method="POST" target="_blank" enctype="multipart/form-data">
                 		<div class="form-group row">
                 			<label class="col-sm-1 pt-2 form-control-label">Assunto</label>
                 			<div class="col-sm-6">
-                				<input type="text" name="subject" id="subject" class="form-control">
+                				<input type="text" name="subject" id="subject" class="form-control" autofocus="">
                 			</div>
                 		</div>
                 		<div class="form-group row">
@@ -53,16 +53,17 @@
 								</select>
                      		</div>
                 		</div>
-                		<div class="form-group row allStates hide">
+                		<div class="form-group row divAllStates hide">
 	                		<div class="offset-sm-1 col-sm-3 select">
-		                        <select class="form-control" name="allStates" id="allStates" required>
+		                        <select class="form-control" name="allStates" id="allStates">
 		                            <option value="">Selecione um estado...</option>
 		                        </select>
 	                      	</div>
                       	</div>
                       	<div class="form-group row divSetRegistry hide">
 	                      	<div class="offset-sm-1 col-sm-3 select">
-	                        	<input type="text" name="setRegistry" id="setRegistry" class="form-control" required><span class="help-block-none">Informe o cartório do cliente.</span>
+	                        	<input type="text" name="setRegistry" id="setRegistry" class="form-control">
+                                <span class="help-block-none">Informe o cartório do cliente.</span>
 	                      	</div>
 	                    </div>
                       	<div class="form-group row tableClients hide">
@@ -92,6 +93,7 @@
                 			<label class="col-sm-1 pt-2 form-control-label">Mensagem</label>
                 			<div class="col-sm-11">
                 				<textarea name="message" id="message" rows="10" cols="80"></textarea>
+                                <span style="color: #000000;"><strong class="var">$nome:</strong> Nome completo do usuário &nbsp;|&nbsp; <strong class="var">$cartorio:</strong> Nome do cartório do usuário &nbsp;|&nbsp; <strong class="var">$usuario:</strong> Nome do usuário para acesso ao sistema &nbsp;|&nbsp; <strong class="var">$senha:</strong> Senha temporária do usuário para acesso ao sistema</span>
                 			</div>
                 		</div>
                 		<div class="form-group row">

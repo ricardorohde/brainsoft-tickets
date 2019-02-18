@@ -62,17 +62,8 @@ class SendEmail
 	public function sendToAllDestiny()
 	{
 		$qtdDestinyRaw = count($this->destinyEmail);
-		/*$qtdDestinyFinal = 0;
 
-		for ($i=0; $i < $qtdDestinyRaw; $i++) { 
-			if ($_POST['radio' . $i] == "send") {
-				$qtdDestinyFinal++;
-			}
-		}
-
-		echo $qtdDestinyFinal;*/
-
-		for ($i=0; $i < $qtdDestinyRaw; $i++) { 
+		for ($i=0; $i < $qtdDestinyRaw; $i++) {
 			if ($_POST['radio' . $i] == "send") {
 				$this->changeNameVariableInMessage($i);
 				$this->changeLoginVariableInMessage($i);
@@ -91,13 +82,13 @@ class SendEmail
 	public function getFiles()
 	{
 		if (isset($_FILES['file'])) {
-			$name = $_FILES['file']['name']; //Atribui uma array com os nomes dos arquivos à variável
-		    $tmp_name = $_FILES['file']['tmp_name']; //Atribui uma array com os nomes temporários dos arquivos à variável
+			$name = $_FILES['file']['name'];
+		    $tmp_name = $_FILES['file']['tmp_name'];
 		    $this->totalUploads = count($tmp_name);
 
 		    $allowedExts = array(".jpg", ".png", ".pdf", ".gif");
 
-		    $dir = 'uploadedFiles/'; 
+		    $dir = 'uploadedFiles/';
 
 		    for($i = 0; $i < $this->totalUploads; $i++) {
 		    	$ext = strtolower(substr($name[$i],-4));
@@ -116,14 +107,9 @@ class SendEmail
 
 	public function unlinkUploads()
 	{
-		for ($i=0; $i < $this->totalUploads; $i++) {	
-			unlink($this->pathOfUploads[$i]);
+		for ($i = 0; $i < $this->totalUploads; $i++) {
+			$toRemove = @$this->pathOfUploads[$i];
+			@unlink($toRemove);
 		}
 	}
-
-	public function redirectAfterSend()
-	{
-
-	}
 }
-

@@ -27,51 +27,41 @@ class SenderMail
 
 	public function sender()
 	{
-		//Tell PHPMailer to use SMTP
-		$this->mail->isSMTP();
-		//Enable SMTP debugging
-		// 0 = off (for production use)
-		// 1 = client messages
-		// 2 = client and server messages
-		$this->mail->SMTPDebug = 1;
-		//Set the hostname of the mail server
-		$this->mail->Host = 'smtp.brainsoftsistemas.com.br';
-		//Set the SMTP port number - likely to be 25, 465 or 587
-		$this->mail->Port = 587;
-		//Whether to use SMTP authentication
-		$this->mail->SMTPAuth = true;
+		try {
+			//Server settings
+			$this->mail->SMTPDebug = 0;
+			$this->mail->isSMTP();
+			$this->mail->Host = 'smtp.brainsoftsistemas.com.br';
+			$this->mail->SMTPAuth = true;
+			$this->mail->Username = 'comunicados@brainsoftsistemas.com.br';
+			$this->mail->Password = 'comunicados5150';
+			$this->mail->SMTPSecure = 'tls';
+			$this->mail->Port = 587;
+			$this->mail->SMTPOptions = array(
+			    'ssl' => array(
+			        'verify_peer' => false,
+			        'verify_peer_name' => false,
+			        'allow_self_signed' => true
+			    )
+			);
 
-		$this->mail->SMTPOptions = array(
-		    'ssl' => array(
-		        'verify_peer' => false,
-		        'verify_peer_name' => false,
-		        'allow_self_signed' => true
-		    )
-		);
-		//Username to use for SMTP authentication
-		$this->mail->Username = 'comunicados@brainsoftsistemas.com.br';
-		//Password to use for SMTP authentication
-		$this->mail->Password = 'comunicados5150';
-		//Set who the message is to be sent from
-		$this->mail->setFrom('comunicados@brainsoftsistemas.com.br', 'Brainsoft Sistemas');
-		//Set who the message is to be sent to
-		$this->mail->addAddress($this->destiny);
-		//Set the subject line
-		$this->mail->Subject = $this->subject;
-		//Read an HTML message body from an external file, convert referenced images to embedded,
-		//convert HTML into a basic plain-text alternative body
-		$this->mail->msgHTML($this->message);
-		//send the message, check for errors
-		//Attach an image file
-		for ($i=0; $i < $this->totalUp; $i++) {
-			$this->mail->addAttachment($this->path[$i]);
-		}
-		
-		if (!$this->mail->send()) {
-		    echo 'Mailer Error: ' . $this->mail->ErrorInfo;
-		} else {
-		    echo 'Message sent!';
+			//Recipients
+			$this->mail->setFrom('comunicados@brainsoftsistemas.com.br', 'Brainsoft Sistemas');
+			$this->mail->addAddress($this->destiny);
+
+			//Attachments
+			for ($i = 0; $i < $this->totalUp; $i++) {
+				@$this->mail->addAttachment($this->path[$i]);
+			}
+
+			//Content
+			$this->mail->Subject = $this->subject;
+			$this->mail->msgHTML($this->message);
+
+			$this->mail->send();
+			echo 'Sucesso! Mensagem enviada para: ' . $this->destiny . '!<br>';
+		} catch (Exception $e) {
+			echo 'Erro! Mensagem não enviada para:' . $this->destiny . '! Descrição do Erro: ' . $this->mail->ErrorInfo . '<br>';
 		}
 	}
 }
-

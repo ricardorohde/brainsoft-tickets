@@ -32,7 +32,7 @@
                 "Authorization" => $root . "autorizacoes Autorizações fa-key",
                 "Registry"      => $root . "cartorios Cartórios fa-home",
                 "Queue"         => $root . "fila-interna Fila fa-sort-amount-down",
-                "Marketing"     => $root . "marketing Marketing fa-mail-bulk",
+                "Marketing"     => $root . "marketing/email.php Marketing fa-mail-bulk",
                 "Module"        => $root . "cadastros Módulos fa-plus-square",
                 "Report"        => $root . "relatorios Relatórios fa-chart-pie",
                 "Ticket"        => $root . "tickets Tickets fa-ticket-alt",

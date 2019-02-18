@@ -1,9 +1,8 @@
-$(document).ready(function(){
-
-	$("#destiny").change(function() {
+$(document).ready(function () {
+	$("#destiny").change(function () {
 		var destinySelected = $("#destiny option:selected").val();
 		hideElement(".tableClients");
-		hideElement(".allStates");
+		hideElement(".divAllStates");
 		hideElement(".divSetRegistry");
 		removeElement("#status");
 		if (destinySelected != "choose") {	
@@ -34,7 +33,7 @@ $(document).ready(function(){
 
 				setTimeout(function () {
 				   	hideElement("#status");
-				   	$(".allStates").show();
+				   	$(".divAllStates").show();
 				}, 2000);
 			} else {
 				$("table[name=tableWithData] > tbody").html("");
@@ -43,7 +42,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$("#allStates").change(function() {
+	$("#allStates").change(function () {
 		removeElement("#status");
 		hideElement(".tableClients");
 		$("table[name=tableWithData] > tbody").html("");
@@ -63,15 +62,16 @@ $(document).ready(function(){
 		}, 2000);
 	});
 
-	$(function() {
+	$(function () {
         $("#setRegistry").autocomplete({
             highlightClass: "bold-text",
             source: '../../../utils/buscaDados.php',
         });
     });
 
-    $("input[name=setRegistry]").blur(function(){
+    $("input[name=setRegistry]").blur(function () {
     	$("table[name=tableWithData] > tbody").html("");
+    	hideElement(".tableClients");
 
     	var registrySelected = $(this).val();
     	addElement("#sendEmail > div:eq(4)", '<div id="status" class="form-group row"><div id="searching" class="offset-sm-2 col-sm-10">Buscando clientes...</div></div>');
