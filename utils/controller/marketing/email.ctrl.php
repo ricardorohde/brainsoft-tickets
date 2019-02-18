@@ -148,7 +148,7 @@ class EmailController
     function verifyPermission()
     {
         if (!isset($_SESSION['Marketing'.'_page_'.$_SESSION['login']])) {
-            header("Location:../dashboard");
+            header("Location:../");
         }
     }
 
