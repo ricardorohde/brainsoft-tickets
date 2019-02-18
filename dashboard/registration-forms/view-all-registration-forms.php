@@ -1,8 +1,10 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Module'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
+    include_once __DIR__.'/../../utils/controller/registration/registration.ctrl.php';
+    $controller = RegistrationController::getInstance();
+    $controller->verifyPermission();
+
+    $controller->findAllModules();
+    $controller->findAllRoles();
 ?>
 
 <!DOCTYPE html>
@@ -44,31 +46,8 @@
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
-      <?php 
-        $sql_ticket_module = $connection->getConnection()->prepare("SELECT * FROM ticket_module");
-        $sql_ticket_module->execute(); $row_ticket_module = $sql_ticket_module->fetchAll();
-
-        $sql_role = $connection->getConnection()->prepare("SELECT * FROM role");
-        $sql_role->execute(); $row_role = $sql_role->fetchAll();
-      ?>
       <section class="forms">
-        <div class="container-fluid">
-          <div id="statusCategory" class="alert alert-success" 
-            <?php echo (isset($_SESSION['categoryOk'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-            <?php echo $_SESSION['categoryOk']; unset($_SESSION['categoryOk']);?>
-          </div>
-          <div id="statusCategory" class="alert alert-danger" 
-            <?php echo (isset($_SESSION['categoryNo'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-            <?php echo $_SESSION['categoryNo']; unset($_SESSION['categoryNo']);?>
-          </div>
-          <div id="statusLogin" class="alert alert-success" 
-            <?php echo (isset($_SESSION['moduleOk'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-            <?php echo $_SESSION['moduleOk']; unset($_SESSION['moduleOk']);?>
-          </div>
-          <div id="statusLogin" class="alert alert-danger" 
-            <?php echo (isset($_SESSION['moduleNo'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-            <?php echo $_SESSION['moduleNo']; unset($_SESSION['moduleNo']);?>
-          </div>
+        <div class="container-fluid"> 
           <ul class="nav nav-tabs menu-users">
             <li class="nav-item">
               <a class="nav-link active" href="#first-tab" data-toggle="tab">Categorias / Módulos</a>
@@ -96,6 +75,7 @@
                 <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                   <tr>
+                    <th>Id</th>
                     <th>Categoria</th>
                     <th>Módulo</th>  
                     <th>Grupo</th>
@@ -105,26 +85,21 @@
                   </tr>
                 </thead>
                 <tbody>
-                <?php if (!empty($row_ticket_module)) : ?>
-                  <?php foreach ($row_ticket_module as $module) : ?>
-
-                    <?php
-                      $sql_category_module = $connection->getConnection()->prepare("SELECT * FROM category_module WHERE id = ? ORDER BY id DESC");
-                      $sql_category_module->execute(array($module['id_category'])); $row_category_module =
-                      $sql_category_module->fetch();
-                    ?>
-
+                <?php if (!empty($controller->getAllModules())) : ?>
+                  <?php foreach ($controller->getAllModules() as $module) : ?>
+                    <?php $controller->findCategoryByIdAndOrder($module['id_category']); ?>
                     <tr>
-                      <td><?= $row_category_module['description']?></td>
+                      <td><?= $module['id']?></td>
+                      <td><?= $controller->getCategory()['description']?></td>
                       <td><?= $module['description']?></td>
-                      <td><?= $row_category_module['t_group']?></td>
-                      <td name="limit" id="<?php echo $module['id'];?>" title="Duplo clique para editar!"><?php echo $module['limit_time']?></td>
+                      <td><?= $controller->getCategory()['t_group']?></td>
+                      <td name="limit" id="<?= $module['id'];?>" title="Duplo clique para editar!"><?= $module['limit_time'] ?></td>
                       <td><?= ucfirst($module['status'])?></td>
                       <td class="actions text-right">
                         <?php if ($module['status'] == "ativo") { ?>
-                          <a href="../utils/controller/ctrl-module.php?id=<?php echo $module['id']; ?>" class="btn btn-sm btn-danger" title="desativar"><i class="fa fa-trash-o"></i> Desativar</a>
+                          <a href="../utils/controller/module/module-data.ctrl.php?id=<?= $module['id']; ?>" class="btn btn-sm btn-danger" title="desativar"><i class="fa fa-trash-o"></i> Desativar</a>
                         <?php } else { ?>
-                          <a href="../utils/controller/ctrl-module.php?type=active&id=<?php echo $module['id']; ?>" class="btn btn-sm btn-success" title="ativar"><i class="fa fa-check-circle-o"></i> Ativar</a>
+                          <a href="../utils/controller/module/module-data.ctrl.php?type=active&id=<?= $module['id']; ?>" class="btn btn-sm btn-success" title="ativar"><i class="fa fa-check-circle-o"></i> Ativar</a>
                         <?php } ?>
                       </td>
                     </tr>
@@ -155,6 +130,7 @@
                 <table id="example2" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                   <tr>
+                    <th>Id</th>
                     <th>Descrição</th>
                     <th>Destinado a</th>   
                     <th>Situação</th>   
@@ -162,17 +138,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                <?php if (!empty($row_role)) : ?>
-                  <?php foreach ($row_role as $role) : ?>
+                <?php if (!empty($controller->getAllRoles())) : ?>
+                  <?php foreach ($controller->getAllRoles() as $role) : ?>
                     <tr>
-                      <td><?php echo $role['description']; ?></td>
-                      <td><?php echo ($role['type'])==1 ? "Cliente" : "Funcionário"; ?></td>
-                      <td><?php echo ucfirst($role['status']); ?></td>
+                      <td><?= $role['id'] ?></td>
+                      <td><?= $role['description'] ?></td>
+                      <td><?= ($role['type']) == 1 ? "Cliente" : "Funcionário" ?></td>
+                      <td><?= ucfirst($role['status']) ?></td>
                       <td class="actions text-right">
                         <?php if ($role['status'] == "ativo") { ?>
-                          <a href="../utils/controller/ctrl-role.php?id=<?php echo $role['id']; ?>" class="btn btn-sm btn-danger" title="desativar"><i class="fa fa-trash-o"></i> Desativar</a>
+                          <a href="../utils/controller/role/role-data.ctrl.php?id=<?= $role['id']; ?>" class="btn btn-sm btn-danger" title="desativar"><i class="fa fa-trash-o"></i> Desativar</a>
                         <?php } else { ?>
-                          <a href="../utils/controller/ctrl-role.php?type=active&id=<?php echo $role['id']; ?>" class="btn btn-sm btn-success" title="ativar"><i class="fa fa-check-circle-o"></i> Ativar</a>
+                          <a href="../utils/controller/role/role-data.ctrl.php?type=active&id=<?= $role['id']; ?>" class="btn btn-sm btn-success" title="ativar"><i class="fa fa-check-circle-o"></i> Ativar</a>
                         <?php } ?>
                       </td>
                     </tr>

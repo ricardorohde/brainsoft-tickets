@@ -3,13 +3,36 @@ include_once __DIR__.'/../../common/config.php';
 
 class Credential
 {
+    private static $instance;
+    private $prepareInstance;
+    private $myController;
+
 	protected $id;
 	protected $login;
 	protected $password;
 	protected $b_salt;
 
 	protected $connection;
-	protected $myController;
+
+    public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
 
 	public function getId()
 	{
@@ -61,20 +84,18 @@ class Credential
         $this->connection = $conn;
     }
 
-    public function getController()
+    function __construct($controller, $prepareInstance)
     {
-        return $this->myController;
+        $this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
+        $this->setConn(new ConfigDatabase());
     }
 
-    public function setController($controller)
+    public function findById() //NEW
     {
-        $this->myController = $controller;
-    }
-
-    function __construct($myController)
-    {
-    	$this->setConn(new ConfigDatabase());
-		$this->setController($myController);
+        $element = $this->getId();
+        $query = "SELECT login FROM credential WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
     }
 
     public function checkLogin()
@@ -93,9 +114,9 @@ class Credential
 	    $salted_hash = hash('sha256', $this->getPassword().$bs_salt.$b_salt);
 
 	    if ($passwd == $salted_hash) {
-	    	$this->getController()->setHeader($id, $this->getPassword(), '200');
+	    	$this->myController->setHeader($id, $this->getPassword(), '200');
 	    } else {
-	    	$this->getController()->setHeader(0, NULL, '404');
+	    	$this->myController->setHeader(0, NULL, '404');
     	}
     }
 
@@ -115,7 +136,7 @@ class Credential
 	    $sql->bindValue(3, $this->getId());
 	    $result = $sql->execute();
 
-	    $this->getController()->verifyChangePass($result);
+	    $this->myController->verifyChangePass($result);
     }
 
     public function register()
@@ -140,14 +161,9 @@ class Credential
 
     public function verifyIfExists()
     {
-		$sql = $this->getConn()->getConnection()->prepare("SELECT COUNT(*) as total FROM credential WHERE login LIKE ?");
-		$sql->bindValue(1, $this->getLogin());
-    	$sql->execute();
-
-   		while($row = $sql->fetch()){
-				$total = $row['total'];
-		}
-		return $total;
+        $element = $this->getLogin();
+        $query = "SELECT COUNT(*) as total FROM credential WHERE login LIKE ?";
+        return $this->prepareInstance->prepare($query, $element, "");
 	}
 
 	private function rand_string($length)

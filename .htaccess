@@ -37,7 +37,10 @@
 	  	RewriteRule ^dashboard/categorias-e-modulos/novo?$ dashboard/registration-forms/view-new-category-module.php [NC]
 
 
-	  	RewriteRule ^dashboard/fila-interna?$ dashboard/internal-row/view-internal-row.php [NC]
+	  	RewriteRule ^dashboard/fila-interna?$ dashboard/queue/view-queue.php [NC]
+
+
+	  	RewriteRule ^dashboard/marketing?$ dashboard/marketing/email.php [NC]
 
 
 	  	RewriteRule ^dashboard/autorizacoes?$ dashboard/authorization/view-all-authorization.php [NC]
@@ -46,6 +49,6 @@
 	 	RewriteRule ^dashboard/relatorios?$ dashboard/report/generate-report.php [NC]
 
 
-	  	RewriteRule ^dashboard/logout?$ utils/controller/ctrl_logout.php [NC]
+	  	RewriteRule ^dashboard/logout?$ utils/controller/logout/logout.ctrl.php [NC]
 
 </IfModule>

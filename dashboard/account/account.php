@@ -1,9 +1,10 @@
 <?php 
-  session_start();
-
-  include_once __DIR__.'/../../utils/controller/ctrl-account.php';
+  include_once __DIR__.'/../../utils/controller/account/account.ctrl.php';
   $accountController = AccountController::getInstance();
-  $post = false;
+  $accountController->verifyPermission();
+
+  $accountController->setPostReceived($_POST);
+  $accountController->verifyPost();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -39,54 +40,19 @@
   </head>
 
   <body>
-    <?php include ("../navs/navbar.php");?>
+    <?php include ("../navs/navbar.php"); ?>
     <div class="root-page forms-page">
-      <?php include ("../navs/header.php");?>
-
-      <?php 
-        if (isset($_POST['actual-password']) AND isset($_POST['new-password']) AND isset($_POST['confirmation-new-password'])) {
-          $post = true;
-
-          $actualPass  = $_POST['actual-password'];
-          $newPass     = $_POST['new-password'];
-          $confirmPass = $_POST['confirmation-new-password'];
-
-          $accountController->setPrepareInstance($prepareInstance);
-
-          $accountController->setIdUser($id);
-          $accountController->setActualPass($actualPass);
-          $accountController->setNewPass($newPass);
-          $accountController->setConfirmPass($confirmPass);
-
-          $return = $accountController->change();
-        }
-
-        if (isset($_POST['registry']) AND isset($_POST['client']) AND isset($_POST['new-password-user']) AND isset($_POST['confirmation-new-password-user'])) {
-          $post = true;
-
-          $id          = $_POST['client'];
-          $newPass     = $_POST['new-password-user'];
-          $confirmPass = $_POST['confirmation-new-password-user'];
-
-          $accountController->setPrepareInstance($prepareInstance);
-
-          $accountController->setIdUser($id);
-          $accountController->setNewPass($newPass);
-          $accountController->setConfirmPass($confirmPass);
-
-          $return = $accountController->changeToUser();
-        }
-      ?>
+      <?php include ("../navs/header.php"); ?>
 
       <section class="forms">
         <div class="container-fluid">
-          <?php if ($post) : ?>
-          <?php @$type = $return[0]; $message = $return[1];?>
-          <div class="alert alert-<?= $type ?> mt-3" role="alert">
-            <?= $message ?>
-          </div>
-          <?php endif; ?>           
-          <div class="row">    
+          <?php if ($accountController->getResult() != "") : ?>
+            <?php @$type = $accountController->getResult()[0]; $message = $accountController->getResult()[1];?>
+              <div class="alert alert-<?= $type ?> mt-3" role="alert">
+                <?= $message ?>
+              </div>
+          <?php endif; ?>
+          <div class="row">
             <div class="col-lg-12 mt-3">
               <div class="card">
                 <div class="card-header d-flex align-items-center">
@@ -118,7 +84,7 @@
                 </div>
               </div>
 
-              <?php if($controller->findRolesById()['role'] == "adm") : ?>
+              <?php if($accountController->findRole()['role'] == "adm") : ?>
                 <div class="card mt-5">
                   <div class="card-header d-flex align-items-center">
                     <h2 class="h5 display">Redefinir senha de usuário</h2>
@@ -128,25 +94,25 @@
                       <div class="col-lg-6 form-group">
                         <label for="actual-password">Cartório</label>
                         <input type="text" name="registry" id="registry" class="form-control" required>
-                        <small id="actual-password-help" class="form-text text-muted">Informe a sua senha atual.</small>
+                        <small id="registry-help" class="form-text text-muted">Informe o cartório do cliente.</small>
                       </div>
                       <div class="col-lg-6 form-group">
                         <label for="actual-password">Usuário</label>
                         <select name="client" id="client" class="form-control">
                           <option >Primeiramente, informe o cartório...</option>
                         </select>
-                        <small id="actual-password-help" class="form-text text-muted">Informe a sua senha atual.</small>
+                        <small id="client-help" class="form-text text-muted">Informe o cliente.</small>
                       </div>
                       <div class="row" style="margin-left: 1px;">
                         <div class="col-lg-5">
                           <label for="new-password">Nova Senha</label>
                           <input type="password" name="new-password-user" id="new-password-user" class="form-control">
-                          <small id="new-password-help" class="form-text text-muted">Informe a sua nova senha.</small>
+                          <small id="new-password-help" class="form-text text-muted">Informe a nova senha.</small>
                         </div>
                         <div class="col-lg-5">
                           <label for="confirmation-new-password">Confirmação da Nova Senha</label>
                           <input type="password" name="confirmation-new-password-user" id="confirmation-new-password-user" class="form-control">
-                          <small id="confirmation-new-password-help" class="form-text text-muted">Confirme sua nova senha.</small>
+                          <small id="confirmation-new-password-help" class="form-text text-muted">Confirme a nova senha.</small>
                         </div>
                         <div class="col-lg-2">
                           <button type="submit" class="btn btn-primary" style="margin-top: 32px; width: 90%;">Redefinir!</button>

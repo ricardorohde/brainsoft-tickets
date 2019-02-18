@@ -1,8 +1,9 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Registry'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
+    include_once "../../utils/controller/registry/registry.ctrl.php";
+    $registryController = RegistryController::getInstance();
+    $registryController->verifyPermission();
+
+    $registryController->findAll();
 ?>
 
 <!DOCTYPE html>
@@ -44,10 +45,6 @@
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
-      <?php 
-        $sql_registry = $connection->getConnection()->prepare("SELECT * FROM registry ORDER BY id DESC");
-        $sql_registry->execute(); $registries = $sql_registry->fetchAll();
-      ?>
       <section class="forms">
         <div class="container-fluid">
           <header>
@@ -82,20 +79,15 @@
               </tr>
             </thead>
             <tbody>
-            <?php if (!empty($registries)) : ?>
-              <?php foreach ($registries as $registry) : ?>
-
-                <?php 
-                  $sql_city = $connection->getConnection()->prepare("SELECT description FROM city WHERE id = ?"); $sql_city->execute(array($registry['id_city'])); 
-                    $city = $sql_city->fetch();
-                ?>
-
+            <?php if (!empty($registryController->getAllRegistries())) : ?>
+              <?php foreach ($registryController->getAllRegistries() as $registry) : ?>
+                <?php $city = $registryController->findCityById($registry['id_city']); ?>
                 <tr>
-                  <td>00<?php echo $registry['id']; ?></td>
-                  <td><?php echo $registry['name']; ?></td>
-                  <td><?php echo $city['description']; ?></td>
+                  <td>00<?= $registry['id']; ?></td>
+                  <td><?= $registry['name']; ?></td>
+                  <td><?= $city['description']; ?></td>
                   <td class="actions text-right">
-                    <a href="registry/view-new-registry.php?id=<?php echo $registry[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                    <a href="registry/view-new-registry.php?id=<?= $registry[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                   </td>
                 </tr>
               <?php endforeach; ?>

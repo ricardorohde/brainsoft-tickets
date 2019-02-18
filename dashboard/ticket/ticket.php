@@ -1,9 +1,10 @@
 <?php 
-  include_once "../../utils/controller/ctrl_ticket.php";
+  include_once "../../utils/controller/ticket/ticket.ctrl.php";
   $ticketController = TicketController::getInstance();
   $ticketController->verifyPermission();
 
   $ticketController->setIdChat($_GET["id_chat"]);
+  $connection = $ticketController->getConn();
 ?>
 
 <!DOCTYPE html>
@@ -15,25 +16,16 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
+   
     <link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <!-- Custom icon font-->
     <link rel="stylesheet" href="../../css/fontastic.css">
-    <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- jQuery Circle-->
     <link rel="stylesheet" href="../../css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <!-- Custom Scrollbar-->
     <link rel="stylesheet" href="../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <!-- theme stylesheet-->
     <link rel="stylesheet" href="../../css/style.default.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="../../css/custom.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
-
     <link type="text/css" href="../../css/jquery-ui.css" rel="stylesheet"/>
 
     <link rel="shortcut icon" href="favicon.png">
@@ -110,23 +102,23 @@
                 <?php } ?>
                 <div class="card-body">
                   <input type="hidden" id="target-attendant" value="<?= isset($targetAttendant) ? $targetAttendant['name'] : $row_attendant['name'] ?>">
-                  <form id="ticket-form" class="form-horizontal" action="../../../utils/controller/ctrl_ticket.php" method="POST">
+                  <form id="ticket-form" class="form-horizontal" action="../../../utils/controller/ticket/ticket-data.ctrl.php" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Reincidente</label>
                       <div class="col-sm-1 select ui-widget">
-                        <input type="checkbox" name="is_repeated" id="is_repeated" class="form-control repeated" <?php echo $row_ticket['is_repeated'] == 1 ? "checked" : " "?>>
+                        <input type="checkbox" name="is_repeated" id="is_repeated" class="form-control repeated" <?= $row_ticket['is_repeated'] == 1 ? "checked" : " "?>>
                       </div>
                     </div> 
                     <div class="form-group row">
                       <label class="col-sm-2 pt-2 form-control-label">Cartório</label>
                       <div class="col-sm-4 select ui-widget">
-                        <input type="text" name="registry" id="registry" class="form-control" value= <?php echo '"'.$row_registry['name'].'"'; ?> required><span class="help-block-none">Informe o cartório do cliente.</span>
+                        <input type="text" name="registry" id="registry" class="form-control" value= <?= '"'.$row_registry['name'].'"'; ?> required><span class="help-block-none">Informe o cartório do cliente.</span>
                       </div>
                       <label class="col-sm-2 pt-2 form-control-label text-center">Usuário</label>
                       <div class="col-sm-4 select">
                         <select name="client" class="form-control" id="client">
                           <?php if ($row_client != NULL): ?>
-                            <option value=<?php echo '"'.$row_client['id'].'"';?>><?php echo $row_client['name'];?></option>
+                            <option value=<?= '"'.$row_client['id'].'"';?>><?= $row_client['name'];?></option>
                           <?php else: ?>
                             <option >Primeiramente, informe o cartório...</option>
                           <?php endif; ?>
@@ -213,12 +205,12 @@
                       <label class="col-sm-2 pt-2 form-control-label">Origem</label>
                       <div class="col-sm-3 select">
                         <select name="source" class="form-control" id="source" required>
-                          <?php if($_GET['id_chat'] < 100000){
+                          <?php if($_GET['id_chat'] < 100000) {
                               echo "<option value='chat'>Chat</option>";
                               echo "<option value='telefone' selected>Telefone</option>";
                               echo "<option value='email'>Email</option>";
                             } else {
-                              switch($row_ticket['source']){
+                              switch ($row_ticket['source']) {
                                 case "chat":
                                   echo "<option value='chat' selected>Chat</option>";
                                   echo "<option value='telefone'>Telefone</option>";
@@ -246,7 +238,7 @@
                       <label class="col-sm-3 pt-2 form-control-label text-center">Tipo</label>
                       <div class="col-sm-4 select">
                         <select name="type" class="form-control" id="type" required>
-                          <?php switch($row_ticket['type']){
+                          <?php switch ($row_ticket['type']) {
                             case "solicitacao":
                               echo "<option value='solicitacao' selected>Solicitação</option>";
                               echo "<option value='duvida'>Dúvida</option>";
@@ -326,7 +318,7 @@
                           <ul>
                             <li>Grupo 1
                               <ul>
-                                <?php foreach ($json_obj_nivel1 as $key => $value){ ?>
+                                <?php foreach ($json_obj_nivel1 as $key => $value) { ?>
                                   <li id='<?= $value->category ?>'><?= $value->category ?>
                                      <ul>
                                       <?php 
@@ -350,7 +342,7 @@
 
                             <li>Grupo 2
                               <ul>
-                                <?php foreach ($json_obj_nivel2 as $key => $value){ ?>
+                                <?php foreach ($json_obj_nivel2 as $key => $value) { ?>
                                   <li id='<?= $value->category ?>'><?= $value->category ?>
                                     <ul>
                                       <?php 
@@ -380,7 +372,7 @@
                       <label class="col-sm-2 pt-2 form-control-label">Grupo</label>
                       <div class="col-sm-3 select">
                         <select name="group" class="form-control" id="group" required>
-                          <?php switch($row_ticket['t_group']){
+                          <?php switch ($row_ticket['t_group']) {
                             case "nivel1":
                               echo "<option value='nivel1' selected>Nível 1</option>";
                               echo "<option value='nivel2'>Nível 2</option>";
@@ -400,13 +392,13 @@
                       <label class="col-sm-3 pt-2 form-control-label text-center">Atendente</label>
                       <div class="col-sm-4 select">
                         <select name="attendant" class="form-control" id="attendant">
-                          <?php if ($row_attendant != NULL): ?>
+                          <?php if ($row_attendant != NULL) : ?>
                             <option value=<?php echo '"'.$row_attendant['id'].'"';?>><?= $row_attendant['name'];?></option>
                           <?php else: ?>
                             <option value="">Selecione um atendente...</option>
                           <?php endif; ?>
                         </select>
-                        <?php if($row_id_chat == NULL) : ?>
+                        <?php if ($row_id_chat == NULL) : ?>
                         <span id="span-attendant">Selecione o atendente <strong><?= $targetAttendant['name'] ?>.</strong></span>
                         <?php endif; ?>
                       </div>

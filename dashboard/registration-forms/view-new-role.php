@@ -54,7 +54,7 @@
                   <h2 class="h5 display">Novo Cargo</h2>
                 </div>
                 <div class="card-body">
-                  <form class="form-horizontal" action="../../utils/controller/ctrl-role.php" method="POST">
+                  <form class="form-horizontal" action="../../utils/controller/role/role-data.ctrl.php" method="POST">
                     <div id="statusLogin" class="alert alert-success" 
                       <?php echo (isset($_SESSION['registryOk'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
                       <?php echo $_SESSION['registryOk']; unset($_SESSION['registryOk']);?>

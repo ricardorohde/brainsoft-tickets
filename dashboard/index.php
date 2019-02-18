@@ -1,12 +1,7 @@
 <?php
-  session_start();
-  if(!isset($_SESSION['login'])){
-    if(isset($_SESSION['errorLogin'])){
-      unset($_SESSION['errorLogin']);
-    };
-    $_SESSION['withoutLogin'] = "<strong>Informação!</strong> Informe seus dados para acessar o sistema.";
-    header("Location:../utils/do-login.php");
-  }
+    include_once __DIR__.'/../utils/controller/dashboard/dashboard.ctrl.php';
+    $dashboardController = DashboardController::getInstance();  
+    $dashboardController->verifyPermission();
 ?>
 
 <!DOCTYPE html>
@@ -34,16 +29,8 @@
   <body>
 
     <?php include ("navs/navbar.php");?>
-    <?php if(isset($_SESSION["Index"."_page_".$_SESSION['login']])) : ?>
     <div class="root-page home-page">
-      <?php include ("navs/header.php") ?>
-      <?php 
-        $total_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket", "", "");
-        $open_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?", "aberto", "");
-        $pending_tickets = $prepareInstance->prepare("SELECT COUNT(*) as total FROM ticket WHERE t_status = ?", "pendente", "");
-        $tickets_solved = $total_tickets['total'] - $pending_tickets['total'];
-      ?>
-      
+      <?php include ("navs/header.php") ?>      
       <section class="dashboard-counts section-padding">
         <div class="container-fluid">
           <div class="row">
@@ -51,7 +38,7 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-ticket"></i></div>
                 <div class="name"><strong class="text-uppercase">Tickets</strong>
-                  <div class="count-number"><?= $total_tickets['total'] ?></div>
+                  <div class="count-number"><?= $dashboardController->getTotalTickets()['total'] ?></div>
                 </div>
               </div>
             </div>
@@ -59,7 +46,7 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-folder-open-alt"></i></div>
                 <div class="name"><strong class="text-uppercase">Abertos</strong>
-                  <div class="count-number"><?= $open_tickets['total'] ?></div>
+                  <div class="count-number"><?= $dashboardController->getOpenTickets()['total'] ?></div>
                 </div>
               </div>
             </div>
@@ -67,7 +54,7 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-folder-open-alt"></i></div>
                 <div class="name"><strong class="text-uppercase">Solucionados</strong>
-                  <div class="count-number"><?= $tickets_solved ?></div>
+                  <div class="count-number"><?= $dashboardController->getSolvedTickets() ?></div>
                 </div>
               </div>
             </div>
@@ -75,7 +62,7 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-folder-close-alt"></i></div>
                 <div class="name"><strong class="text-uppercase">Pendentes</strong>
-                  <div class="count-number"><?= $pending_tickets['total'] ?></div>
+                  <div class="count-number"><?= $dashboardController->getPendingTickets()['total'] ?></div>
                 </div>
               </div>
             </div>
@@ -150,24 +137,7 @@
         </div>
       </footer>
     </div>
-    <?php else : ?>
-    <div class="root-page home-page">
-      <?php include ("navs/header.php") ?>
-      <footer class="main-footer">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-6">
-              <p>Brainsoft Sistemas &copy; 2018</p>
-            </div>
-            <div class="col-sm-6 text-right">
-              <p style="font-size: 12px;">Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
-              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>  
-    <?php endif; ?>
+
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
@@ -203,7 +173,7 @@
                       "showLegend": "1",
                       "legendShadow": "0",
                       "legendBorderAlpha": "0",
-                      "defaultCenterLabel": "Total: <?= $total_tickets['total']?>",
+                      "defaultCenterLabel": "Total: <?= $dashboardController->getTotalTickets()['total']?>",
                       "centerLabel": "Tickets $label: $value",
                       "centerLabelBold": "1",
                       "showTooltip": "0",
@@ -215,15 +185,15 @@
                   "data": [
                       {
                           "label": "Solucionados",
-                          "value": "<?= $tickets_solved; ?>"
+                          "value": "<?= $dashboardController->getSolvedTickets()['total'] ?>"
                       },
                       {
                           "label": "Abertos",
-                          "value": "<?= $open_tickets['total']; ?>"
+                          "value": "<?= $dashboardController->getOpenTickets()['total'] ?>"
                       }, 
                       {
                           "label": "Pendentes",
-                          "value": "<?= $pending_tickets['total']; ?>"
+                          "value": "<?= $dashboardController->getPendingTickets()['total'] ?>"
                       }
                   ]
               }

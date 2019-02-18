@@ -1,12 +1,13 @@
 <?php
 class Registry
 {
-	protected $id;
-	protected $name;
-	protected $idCity;
+	private static $instance;
+    private $prepareInstance;
+    private $myController;
 
-	protected $connection;
-	protected $myController;
+	private $id;
+	private $name;
+	private $idCity;
 
 	public function getId()
 	{
@@ -38,100 +39,67 @@ class Registry
 	    $this->idCity = $idCity;
 	}
 
-	public function getConn()
-	{
-	    return $this->connection;
-	}
+	function __construct($controller, $prepareInstance)
+    {
+    	$this->myController = $controller;
+        $this->prepareInstance = $prepareInstance;
+   	}
 
-	public function setConn($conn)
+	function findRegistries()
 	{
-	    $this->connection = $conn;
-	}
-
-	public function getController()
-	{
-	    return $this->myController;
-	}
-
-	public function setController($controller)
-	{
-	    $this->myController = $controller;
-	}
-
-	function __construct($myController)
-	{
-		$this->setConn($this->getConnection());
-		$this->setController($myController);
-	}
-
-	public function findRegistries()
-	{
-		$sql = $this->getConn()->prepare("SELECT id, name FROM registry WHERE id_city = ? ORDER BY name");
-    	$sql->bindValue(1, $this->getIdCity());
-    	$sql->execute();
-   		return $sql->fetchAll();
+		$element = $this->getIdCity();
+        $query = "SELECT id, name FROM registry WHERE id_city = ? ORDER BY name";
+        return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
 	public function register()
 	{
-		$sql = $this->connection->prepare("INSERT INTO registry (id, name, id_city) VALUES (NULL, ?, ?)");
-	    $sql->bindValue(1, $this->getName());
-	    $sql->bindValue(2, $this->getIdCity());
-	    $result = $sql->execute();
-	    return $result;
+		$elements = [$this->getName(), $this->getIdCity()];
+        $query = "INSERT INTO registry (id, name, id_city) VALUES (NULL, ?, ?)";
+        return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
 	public function update()
 	{
-		$sql = $this->connection->prepare("UPDATE registry SET name = ?, id_city = ? WHERE id = ?");
-	    $sql->bindValue(1, $this->getName());
-	    $sql->bindValue(2, $this->getIdCity());
-	    $sql->bindValue(3, $this->getId());
-        $result = $sql->execute();
-        return $result;
+		$elements = [$this->getName(), $this->getIdCity(), $this->getId()];
+        $query = "UPDATE registry SET name = ?, id_city = ? WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
+	}
+
+	public function findAll()
+	{
+		$query = "SELECT * FROM registry ORDER BY id DESC";
+        return $this->prepareInstance->prepare($query, "", "all");
+	}
+
+	public function findById() // NEW
+	{
+		$element = $this->getId();
+        $query = "SELECT * FROM registry WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
 	}
 
 	public function findIdByName()
 	{
-		$name = utf8_decode($this->getName());
-
-		$sql = $this->getConn()->prepare("SELECT id FROM registry WHERE name LIKE ?");
-		$sql->bindValue(1, $name);
-	    $sql->execute();
-	    return $sql->fetchAll();
+	    $element = $this->getName();
+        $query = "SELECT id FROM registry WHERE name LIKE ?";
+        return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
 	public function findFiles()
 	{
-		$sql = $this->getConn()->prepare("SELECT * FROM administrative_file WHERE id_registry = ?");
-    	$sql->bindValue(1, $this->getId());
-    	$sql->execute();
-   		return $sql->fetchAll();
+   		$element = $this->getId();
+        $query = "SELECT * FROM administrative_file WHERE id_registry = ?";
+        return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
-	public function verifyIfExists()
-	{	
-		$city = utf8_decode($this->getName());
-
-		$sql = $this->getConn()->prepare("SELECT COUNT(*) as total FROM registry WHERE name LIKE :city");
-		$sql->bindValue(':city', $city, PDO::PARAM_STR);
-    	$sql->execute();
-
-   		while ($row = $sql->fetch()) {
-			$total = $row['total'];
-		}
-		return $total;
-	}
-
-	public function getConnection()
+	function verifyIfExists()
 	{
-		$host = "localhost"; // Hostname
-		$port = "3306"; // MySQL Port : Default : 3306
-		$user = "root"; // Username Here
-		$pass = "brain123"; //Password Here
-		$db   = "brain"; // Database Name
+		$registry = utf8_decode($this->getName());
 
-		$dbh  = new PDO('mysql:dbname='.$db.';host='.$host.';port='.$port,$user,$pass);
-		return $dbh;
+		$element = $registry;
+        $query = "SELECT COUNT(*) as total FROM registry WHERE name LIKE ?";
+        $total = $this->prepareInstance->prepare($query, $element, "all");
+        return $total['total'];
 	}
 }

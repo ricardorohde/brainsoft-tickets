@@ -1,25 +1,25 @@
 /*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function () {
 
-    $("#submit-search-register").click(function(){
+    $("#submit-search-register").click(function () {
         var idChat = $("#id_chat").val();
         var idAttendant = $("input[name='id_attendant']:checked").val();
         var error = false;
 
-        if(!error) {
-            if(idChat == "" || idChat == null) {
+        if (!error) {
+            if (idChat == "" || idChat == null) {
                 $("#id_chat").addClass("border-danger");
                 error = true;
             }
         }
 
-        if(!error) {
-            if(idAttendant == "" || idAttendant == null) {
+        if (!error) {
+            if (idAttendant == "" || idAttendant == null) {
                 error = true;
             }
         }
 
-        if(error){
+        if (error) {
             return false;
         }
 
@@ -43,30 +43,30 @@ $(document).ready(function () {
         }
     });
 
-    $("#final-date").blur(function(){
+    $("#final-date").blur(function () {
         var final_date = $(this).val().split('-');
 
         actual_year = verifyActualDate("actual_year");
         actual_month = verifyActualDate("actual_month");
 
-        if (final_date[1] > actual_month){
+        if (final_date[1] > actual_month) {
             $(this).val(actual_year+"-"+actual_month+"-"+final_date[2]);
         }
 
-        if (final_date[0] != actual_year){
+        if (final_date[0] != actual_year) {
             $(this).val(verifyActualDate(""));
         }
 
-        if ($(this).val() < $("#initial-date").val()){
+        if ($(this).val() < $("#initial-date").val()) {
             $(this).val($("#initial-date").val());
         }
     });
 
-    $("#final-date").change(function(){
+    $("#final-date").change(function () {
         $("#btn-generate-report").prop("disabled", false);
     });
 
-    $(document).bind("contextmenu", function(e){
+    $(document).bind("contextmenu", function (e) {
         //return false;
     });
 
@@ -75,8 +75,8 @@ $(document).ready(function () {
         if(e.which == 17) pressedCtrl = false; 
     })
     $(document).keydown(function (e) { 
-        if(e.which == 17) pressedCtrl = true; 
-        if((e.which == 80 || e.keyCode == 80) && pressedCtrl == true) { 
+        if (e.which == 17) pressedCtrl = true; 
+        if ((e.which == 80 || e.keyCode == 80) && pressedCtrl == true) { 
             $("#label-initial-date").addClass("to-print");
             $("#initial-date").addClass("to-print");
             $("#label-final-date").addClass("to-print");
@@ -85,7 +85,7 @@ $(document).ready(function () {
             $(".title-report").hide();
         }
 
-        setTimeout(function(){ 
+        setTimeout(function () { 
             $(".generate-report").removeClass("to-print");
             $("#label-initial-date").removeClass("to-print");
             $("#initial-date").removeClass("to-print");
@@ -95,16 +95,16 @@ $(document).ready(function () {
         }, 3000); 
     });
 
-    $("#date_filter").change(function(){
+    $("#date_filter").change(function () {
         var date_required = $(this).val();
         
         setCookie("date_to_filter", 0.5);
 
-        function setCookie(name, exdays){    //função universal para criar cookie
+        function setCookie(name, exdays) { //função universal para criar cookie
             var expires;
             var date; 
 
-            date = new Date(); //  criando o COOKIE com a data atual
+            date = new Date(); //criando o COOKIE com a data atual
             date.setHours(date.getHours() - 3);
             date.setTime(date.getTime() + (exdays*24*60*60*1000));
             expires = date.toUTCString();
@@ -115,8 +115,8 @@ $(document).ready(function () {
         }
     });
 
-    $('.card-body').each(function(){
-        if ($(this).children().eq(1) != null){
+    $('.card-body').each(function () {
+        if ($(this).children().eq(1) != null) {
             $(this).children().eq(1).addClass("second-ticket");
         };
     });
@@ -126,20 +126,20 @@ $(document).ready(function () {
         setBorderClass(user, ".user"+i);
     }
 
-    $("#status-sql").fadeTo(3000, 500).slideUp(500, function(){
+    $("#status-sql").fadeTo(3000, 500).slideUp(500, function () {
         $("#status-sql").alert('close');
     });
 
-    $("#txtBusca").keyup(function(){
+    $("#txtBusca").keyup(function () {
         var texto = $(this).val();
         
-        if(texto == ""){
+        if (texto == "") {
             location.reload();
         }
 
         $("#conteudo .mb-3").css("display", "block");
-        $("#conteudo .mb-3").each(function(){
-            if($(this).text().indexOf(texto) < 0)
+        $("#conteudo .mb-3").each(function () {
+            if ($(this).text().indexOf(texto) < 0)
                $(this).parent().parent().parent().remove();
         });
     });
@@ -157,14 +157,14 @@ $(document).ready(function () {
                 var novoConteudo = $(this).val();
                 $(this).parent().text(novoConteudo);
                 $(this).parent().removeClass("celulaEmEdicao");
-                $.post("../utils/controller/ctrl-module.php", {id:idModule, valor:novoConteudo},
-                    function(valor){
+                $.post("../utils/controller/module/module-data.ctrl.php", {id:idModule, valor:novoConteudo},
+                    function (valor) {
                     }
                 )
             }
         });
         
-        $(this).children().first().blur(function(){
+        $(this).children().first().blur(function () {
             $(this).parent().text(conteudoOriginal);
             $(this).parent().removeClass("celulaEmEdicao");
         });
@@ -186,12 +186,12 @@ $(document).ready(function () {
 
     $(".control").remove();
 
-    $("#table input").keyup(function(){       
+    $("#table input").keyup(function () {       
         var index = $(this).parent().index();
         var nth = "#table td:nth-child("+(index+1).toString()+")";
         var valor = $(this).val().toUpperCase();
         $("#table tbody tr").show();
-        $(nth).each(function(){
+        $(nth).each(function () {
             if($(this).text().toUpperCase().indexOf(valor) < 0){
                 $(this).parent().hide();
             }
@@ -272,7 +272,7 @@ $(document).ready(function () {
 
     $("select[name=group]").change(function(){
         $("select[name=attendant]").html('<option value="">Selecione um atendente</option>');
-        $.post("../../../utils/controller/ctrl_employee.php", {valor:$(this).val()},
+        $.post("../../../utils/controller/employee/employee-js.ctrl.php", {group:$(this).val()},
           function(valor){
             $("select[name=attendant]").append(valor);
           }
@@ -280,9 +280,9 @@ $(document).ready(function () {
     });
 
     $("input[name=login]").blur(function(){
-        $.post("../../utils/controller/ctrl_credential.php", {/*typeUser: $("input[name=typeUser]:checked").val(),*/userToVerify:$(this).val().trim()},
+        $.post("../../utils/controller/credential/credential-js.ctrl.php", {userToVerify:$(this).val().trim()},
           function(result){
-            if (result == 1){
+            if (result > 0){
                 document.formAdd.login.style.boxShadow = "0 0 5px #ff0000"; 
                 document.formAdd.login.style.border = "1px solid #ff0000";
                 $("button[type=submit]").hide();
@@ -296,7 +296,7 @@ $(document).ready(function () {
     });
 
     $("input[name=category]").blur(function(){
-        $.post("../../utils/controller/ctrl-category.php", {fromCategory:$(this).val()},
+        $.post("../../utils/controller/category/category-js.ctrl.php", {fromCategory:$(this).val()},
           function(fromCategory){
             $("#id_category").val(fromCategory);
           }
@@ -305,7 +305,7 @@ $(document).ready(function () {
 
     $("input[name=registry]").blur(function(){
         $("select[name=client]").html('<option value="">Selecione o cliente requerente</option>');
-        $.post("../../../utils/controller/ctrl_client.php", {registry:$(this).val()},
+        $.post("../../../utils/controller/client/client-js.ctrl.php", {registry:$(this).val()},
           function(client){
             $("select[name=client]").append(client);
           }
@@ -321,7 +321,7 @@ $(document).ready(function () {
     $("select[name=state]").change(function(){
         $("select[name=city]").html('<option value="">aguarde...</option>');
         $("select[name=registry]").html('<option value="">Selecione uma cidade</option>');
-        $.post("../../utils/controller/ctrl_city.php", {valor:$(this).val()},
+        $.post("../../utils/controller/city/city-js.ctrl.php", {valor:$(this).val()},
           function(valor){
             $("select[name=city]").html(valor);
           }
@@ -330,7 +330,7 @@ $(document).ready(function () {
 
     $("select[name=city]").change(function(){
         $("select[name=registry]").html('<option value="">aguarde...</option>');
-        $.post("../../utils/controller/ctrl_registry.php", {valor:$(this).val()},
+        $.post("../../utils/controller/registry/registry-js.ctrl.php", {valor:$(this).val()},
           function(valor){
             $("select[name=registry]").html(valor);
           }
@@ -462,37 +462,37 @@ $(document).ready(function () {
 
 function inputTypeUserChanged(){
     if ($('input[name="typeUser"]:checked').val() === "client") {
-        $('.dataOfClient').slideDown("slow");
-
         $("select[name=role] option").each(function() {
             $(this).remove();
         });
         
         if($("#userInformed").length){
-            $.post("../../utils/controller/ctrl-role.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
+            $.post("../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
               function(valor){
                 $("select[name=role]").append(valor);
               }
             )
         }
+
+        $('.dataOfClient').slideDown("slow");
     } else {
         $('.dataOfClient').slideUp("slow");
     }
 
     if ($('input[name="typeUser"]:checked').val() === "employee") {
-        $('.dataOfEmployee').slideDown("slow");
-
         $("select[name=role] option").each(function() {
             $(this).remove();
         });
-
+        
         if($("#userInformed").length){
-            $.post("../../utils/controller/ctrl-role.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
+            $.post("../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
               function(valor){
                 $("select[name=role]").append(valor);
               }
             )
         }
+
+        $('.dataOfEmployee').slideDown("slow");
     } else {
         $('.dataOfEmployee').slideUp("slow");
     }

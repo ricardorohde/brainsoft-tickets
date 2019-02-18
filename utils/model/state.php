@@ -1,12 +1,33 @@
 <?php
 class State
 {
+    private static $instance;
+    private $prepareInstance;
+    private $myController;
+
 	private $id;
 	private $description;
 	private $initials;
 
-	private $conn;
-	private $myController;
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
 
 	public function getId()
 	{
@@ -38,13 +59,22 @@ class State
 	  $this->initials = $initials;
 	}
 
-	public function getMyController()
-	{
-	  return $this->myController;
+	function __construct($controller, $prepareInstance)
+    {
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
 	}
-	
-	public function setMyController($myController)
+
+	public function findById()
 	{
-	  $this->myController = $myController;
+		$element = $this->getId();
+		$query = "SELECT * FROM state WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+	}
+
+	public function findAll()
+	{
+        $query = "SELECT id, description FROM state ORDER BY description";
+        return $this->prepareInstance->prepare($query, "", "all");
 	}
 }

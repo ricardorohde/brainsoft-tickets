@@ -1,47 +1,118 @@
 <?php
-include __DIR__.'/../../common/config.php';
-
 class Chat
 {
-	protected $id;
-	protected $id_chat;
-	protected $opening_time;
-	protected $final_time;
-	protected $duration_in_minutes;
-	protected $id_client;
+    private static $instance;
+    private $prepareInstance;
+    private $myController;
 
-	protected $connection;
-	protected $myController;
+	private $id;
+	private $idChat;
+	private $openingTime;
+	private $finalTime;
+	private $durationInMinutes;
+	private $idClient;
 
-    function __construct($myControllerInstance)
+    public function getMyController()
     {
-    	$this->connection = new ConfigDatabase();
-    	$this->myController = $myControllerInstance;
-	}
-
-	function register($id_chat, $opening_time, $final_time, $duration_in_minutes)
-	{
-        //REGISTRANDO O ACESSO DO USUÁRIO
-        $sql = $this->connection->getConnection()->prepare("INSERT INTO `chat` (`id`, `id_chat`, `opening_time`, `final_time`, `duration_in_minutes`) VALUES (NULL, ?, ?, ?, ?)");
-        $sql->execute(array($id_chat, $opening_time, $final_time, $duration_in_minutes));
-
-        //RECEBENDO O ID DO ULTIMO REGISTRO FEITO EM 'CREDENTIAL'
-    	$sql = $this->connection->getConnection()->prepare("SELECT MAX(ID) as last FROM chat");
-    	$sql->execute();
-    	return $sql->fetchAll();
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
     }
 
-    function searchId($id_chat, $id_attendant)
+    public function getId()
     {
-    	$id = 0;
+      return $this->id;
+    }
+    
+    public function setId($id)
+    {
+      $this->id = $id;
+    }
 
-    	$sql = $this->connection->getConnection()->prepare("SELECT chat.id FROM chat, ticket WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat");
-    	$sql->execute(array($id_chat, $id_attendant));
+    public function getIdChat() 
+    {
+        return $this->idChat;
+    }
+    
+    public function setIdChat($idChat) 
+    {
+        $this->idChat = $idChat;
+    }
 
-   		while ($row = $sql->fetch()) {
-			$id = $row['id'];
-		}
-		return $id;
+    public function getOpeningTime() 
+    {
+        return $this->openingTime;
+    }
+    
+    public function setOpeningTime($openingTime) 
+    {
+        $this->openingTime = $openingTime;
+    }
+
+    public function getFinalTime() 
+    {
+        return $this->finalTime;
+    }
+    
+    public function setFinalTime($finalTime) 
+    {
+        $this->finalTime = $finalTime;
+    }
+
+    public function getDurationInMinutes() 
+    {
+        return $this->durationInMinutes;
+    }
+    
+    public function setDurationInMinutes($durationInMinutes) 
+    {
+        $this->durationInMinutes = $durationInMinutes;
+    }
+
+    public function getIdClient() 
+    {
+        return $this->idClient;
+    }
+    
+    public function setIdClient($idClient) 
+    {
+        $this->idClient = $idClient;
+    }
+
+    function __construct($controller, $prepareInstance)
+    {
+        $this->setMyController($controller);
+        $this->prepareInstance = $prepareInstance;
+    }
+
+    public function findById() //NEW
+    {
+        $element = $this->getId();
+        $query = "SELECT * FROM chat WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+    }
+
+	function register()
+	{
+        //REGISTRANDO O ACESSO DO USUÁRIO
+        $elements = [$this->getId(), $this->getOpeningTime(), $this->getFinalTime(), $this->getDurationInMinutes()];
+        $query = "INSERT INTO `chat` (`id`, `id_chat`, `opening_time`, `final_time`, `duration_in_minutes`) VALUES (NULL, ?, ?, ?, ?)";
+        $this->prepareInstance->prepare($query, $elements, "");
+
+        //RECEBENDO O ID DO ULTIMO REGISTRO FEITO EM 'CREDENTIAL'
+        $query = "SELECT MAX(ID) as last FROM chat";
+        return $this->prepareInstance->prepare($query, "", "all");
+    }
+
+    function findByIdAndIdAttendant($idAttendant)
+    {
+        $elements = [$this->getId(), $idAttendant];
+        $query = "SELECT chat.id FROM chat, ticket WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat";
+        $result = $this->prepareInstance->prepare($query, $elements, "");
+        return $result['id'];
     }
 
     function searchChatId($id)
@@ -60,10 +131,10 @@ class Chat
 		}		
     }
 
-    function update($id_chat, $final_time, $duration_in_minutes)
+    function update()
     {
-        $sql = $this->connection->getConnection()->prepare("UPDATE chat SET final_time = ?, duration_in_minutes = ? WHERE id_chat = ?");
-        
-        $result = $sql->execute(array($final_time, $duration_in_minutes, $id_chat));
+        $elements = [$this->getIdChat(), $this->getFinalTime(), $this->getDurationInMinutes()];
+        $query = "UPDATE chat SET final_time = ?, duration_in_minutes = ? WHERE id_chat = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
     }
 }

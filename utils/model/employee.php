@@ -1,8 +1,10 @@
 <?php
-include_once __DIR__.'/../../common/config.php';
-
 class Employee
 {
+    private static $instance;
+    private $prepareInstance;
+    private $myController;
+
 	protected $id;
 	protected $name;
 	protected $email;
@@ -10,10 +12,27 @@ class Employee
 	protected $tGroup;
 	protected $idCredential;
 	protected $idRole;
-
-	protected $connection;
-	protected $myController;
 	
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
+
 	public function getId()
 	{
 	    return $this->id;
@@ -84,73 +103,64 @@ class Employee
 	    $this->idRole = $idRole;
 	}
 
-    public function getConn()
+    function __construct($controller, $prepareInstance)
     {
-        return $this->connection;
-    }
-
-    public function setConn($conn)
-    {
-        $this->connection = $conn;
-    }
-
-    public function getController()
-    {
-        return $this->myController;
-    }
-
-    public function setController($controller)
-    {
-        $this->myController = $controller;
-    }
-
-    function __construct($myController)
-    {
-    	$this->setConn(new ConfigDatabase());
-    	$this->setController($myController);
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
 	}
 
     public function register()
     {
-  		$sql = $this->getConn()->getConnection()->prepare("INSERT INTO employee (`id`, `name`, `email`, `t_group`, `id_credential`, `id_role`) VALUES (NULL, ?, ?, ?, ?, ?)");
-  		$sql->bindValue(1, $this->getName());
-		$sql->bindValue(2, $this->getEmail());
-		$sql->bindValue(3, $this->getTGroup());
-		$sql->bindValue(4, $this->getIdCredential());
-		$sql->bindValue(5, $this->getIdRole());
-
-  		return $sql->execute();	
+    	$elements = [$this->getName(), $this->getEmail(), $this->getTGroup(), $this->getIdCredential(), $this->getIdRole()];
+    	$query = "INSERT INTO employee (`id`, `name`, `email`, `t_group`, `id_credential`, `id_role`) VALUES (NULL, ?, ?, ?, ?, ?)";
+        return $this->prepareInstance->prepare($query, $elements, "");
     }
 
     public function update()
     {
-    	$sql = $this->getConn()->getConnection()->prepare("UPDATE employee SET name = ?, email = ?, t_group = ?, id_role = ? WHERE id = ?");
-    	$sql->bindValue(1, $this->getName());
-		$sql->bindValue(2, $this->getEmail());
-		$sql->bindValue(3, $this->getTGroup());
-		$sql->bindValue(4, $this->getIdRole());
-		$sql->bindValue(5, $this->getId());
+    	$elements = [$this->getName(), $this->getEmail(), $this->getTGroup(), $this->getIdRole(), $this->getId()];
+    	$query = "UPDATE employee SET name = ?, email = ?, t_group = ?, id_role = ? WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
+    }
 
-  		return $sql->execute();
+    public function findAll()
+    {
+        $query = "SELECT * FROM employee ORDER BY id DESC";
+        return $this->prepareInstance->prepare($query, "", "all");
+    }
+
+    public function findById()
+    {
+    	$elements = $this->getId();
+    	$query = "SELECT * FROM employee WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
     }
 
     public function findAttendants()
     {
-		$sql = $this->getConn()->getConnection()->prepare("SELECT id, name FROM employee WHERE t_group = ? AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY name");
-		$sql->bindValue(1, $this->getTGroup());
-		$sql->bindValue(2, $this->getOnChat());
-		$sql->bindValue(3, "aberto");
-    	$sql->execute();
-
-   		return $sql->fetchAll();
+    	$elements = [$this->getTGroup(), $this->getOnChat(), "aberto"];
+        $query = "SELECT id, name FROM employee WHERE t_group = ? AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY name";
+        return $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
 	public function turnOn()
 	{
-		$sql = $this->getConn()->getConnection()->prepare("UPDATE employee SET on_chat = ? WHERE id_credential = ?");
-    	$sql->bindValue(1, $this->getOnChat());
-		$sql->bindValue(2, $this->getIdCredential());
+		$elements = [$this->getOnChat(), $this->getIdCredential()];
+        $query = "UPDATE employee SET on_chat = ? WHERE id_credential = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
+	}
 
-  		return $sql->execute();
+	public function filterByTwoGroups()
+	{
+		$element = ["nivel1", "nivel2"];
+        $query = "SELECT id, name FROM employee WHERE t_group = ? OR t_group = ?";
+        return $this->prepareInstance->prepare($query, $element, "all");
+	}
+
+	public function findToForward()
+	{
+		$elements = ["nivel1", "nivel2", "yes", "aberto"];
+		$query = "SELECT id, name, id_credential FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
+		return $this->prepareInstance->prepare($query, $elements, "all");
 	}
 }

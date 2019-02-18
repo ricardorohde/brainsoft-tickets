@@ -1,5 +1,5 @@
 <?php
-include_once 'ctrl-navbar.php';
+include_once "navbar/navbar.ctrl.php";
 
 class QueueController
 {
@@ -25,6 +25,7 @@ class QueueController
 	function __construct()
 	{
 		$this->setNavBarController(new NavBarController());
+		$this->setPrepareInstance($this->navBarController->getPrepareInstance());
 		$this->cleanDataInTable();
 	}
 
@@ -227,6 +228,20 @@ class QueueController
 			$group[$g['id']] = $name[0];
 		}
 		return $group;
+	}
+
+	function dataToTable()
+	{
+		$elements = ["nivel1", "nivel2"];
+		$query = "SELECT id, name, on_chat FROM employee WHERE t_group = ? OR t_group = ? ORDER BY t_group, name";
+		return $this->prepareInstance->prepare($query, $elements, "all");
+	}
+
+	function totalCalls($attendant, $actualDate)
+	{
+		$elements = [$attendant['id'], $actualDate."%", "pendente", $actualDate."%"];
+		$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND (finalized_at LIKE ? OR (t_status = ? AND registered_at LIKE ?))";
+		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
 	function cleanDataInTable()

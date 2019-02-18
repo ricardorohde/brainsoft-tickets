@@ -1,32 +1,117 @@
 <?php
-include_once __DIR__.'/../../common/config.php';
-
 class Module
 {
-	protected $id;
-	protected $description;
-	protected $id_category;
+	private static $instance;
+    private $prepareInstance;
+    private $myController;
 
-	function __construct()
+	private $id;
+	private $description;
+	private $idCategory;
+	private $limitTime;
+	private $status;
+
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
+
+	public function getId()
 	{
-    	$this->connection = new ConfigDatabase();
+	  return $this->id;
+	}
+	
+	public function setId($id)
+	{
+	  $this->id = $id;
 	}
 
-	public function register($name, $id_category, $limit_time)
+	public function getDescription()
 	{
-		$sql = $this->connection->getConnection()->prepare("INSERT INTO ticket_module (id, description, id_category, limit_time, status) VALUES (NULL, ?, ?, ?, ?)");
-	    $result = $sql->execute(array($name, $id_category, $limit_time, "ativo"));
-	    return $result;
+	  return $this->description;
+	}
+	
+	public function setDescription($description)
+	{
+	  $this->description = $description;
 	}
 
-	public function findIdByNameAndCategory($name, $id_category)
+	public function getIdCategory()
 	{
-		$sql = $this->connection->getConnection()->prepare("SELECT id FROM ticket_module WHERE description = ? AND id_category = ?");
-    	$sql->execute(array($name, $id_category));
+	  return $this->idCategory;
+	}
+	
+	public function setIdCategory($idCategory)
+	{
+	  $this->idCategory = $idCategory;
+	}
 
-   		while ($row = $sql->fetch()) {
-  			$id = $row['id'];
-		}
+	public function getLimitTime() 
+	{
+		return $this->limitTime;
+	}
+	
+	public function setLimitTime($limitTime) 
+	{
+		$this->limitTime = $limitTime;
+	}
+
+	public function getStatus() 
+	{
+		return $this->status;
+	}
+	
+	public function setStatus($status) 
+	{
+		$this->status = $status;
+	}
+
+	function __construct($controller, $prepareInstance)
+    {
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
+   	}
+
+   	public function findAll()
+   	{
+   		$query = "SELECT * FROM ticket_module";
+   		return $this->prepareInstance->prepare($query, "", "all");
+   	}
+
+	public function findById()
+	{
+		$element = $this->getId();
+		$query = "SELECT description, id_category FROM ticket_module WHERE id = ?";
+		return $this->prepareInstance->prepare($query, $element, "");
+	}
+
+	public function register()
+	{
+		$elements = [$this->getDescription(), $this->getIdCategory(), $this->getLimitTime(), "ativo"];
+		$query = "INSERT INTO ticket_module (id, description, id_category, limit_time, status) VALUES (NULL, ?, ?, ?, ?)";
+		return $this->prepareInstance->prepare($query, $elements, "");
+	}
+
+	public function findIdByDescriptionAndCategory()
+	{
+		$elements = [$this->getDescription(), $this->getIdCategory()];
+		$query = "SELECT id FROM ticket_module WHERE description = ? AND id_category = ?";
+		$id = $this->prepareInstance->prepare($query, $elements, "")['id'];
 
 		if (isset($id)) {
 			return $id;
@@ -35,27 +120,24 @@ class Module
 		}
 	}
 
-	public function active($id)
+	public function active()
 	{
-		$sql = $this->connection->getConnection()->prepare("UPDATE ticket_module SET status = ? WHERE id = ?");
-	        
-	    $result = $sql->execute(array("ativo", $id));
-	    return $result;
+		$elements = ["ativo", $this->getId()];
+		$query = "UPDATE ticket_module SET status = ? WHERE id = ?";
+		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
-	public function delete($id)
+	public function delete()
 	{
-		$sql = $this->connection->getConnection()->prepare("UPDATE ticket_module SET status = ? WHERE id = ?");
-	        
-	    $result = $sql->execute(array("inativo", $id));
-	    return $result;
+		$elements = ["inativo", $this->getId()];
+		$query = "UPDATE ticket_module SET status = ? WHERE id = ?";
+		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
-	public function update($id, $value)
+	public function update()
 	{
-		$sql = $this->connection->getConnection()->prepare("UPDATE ticket_module SET limit_time = ? WHERE id = ?");
-	        
-	    $result = $sql->execute(array($value, $id));
-	    return $result;
+		$elements = [$this->getLimitTime(), $this->getId()];
+		$query = "UPDATE ticket_module SET limit_time = ? WHERE id = ?";
+		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 }

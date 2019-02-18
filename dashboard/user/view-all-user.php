@@ -1,8 +1,7 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['User'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
+    include_once __DIR__ . '/../../utils/controller/user/all-user.ctrl.php';
+    $allUserController = AllUserController::getInstance();  
+    $allUserController->verifyPermission();
 ?>
 
 <!DOCTYPE html>
@@ -14,39 +13,27 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
+
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <!-- Custom icon font-->
     <link rel="stylesheet" href="css/fontastic.css">
-    <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- jQuery Circle-->
     <link rel="stylesheet" href="css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <!-- Custom Scrollbar-->
     <link rel="stylesheet" href="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <!-- theme stylesheet-->
-    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="css/custom.css">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
-
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="css/custom.css">
 
+    <link rel="shortcut icon" href="favicon.png">
   </head>
 
   <body>
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
-      <?php 
-        $sql_client = $connection->getConnection()->prepare("SELECT id, name, email, id_registry FROM client ORDER BY id DESC");
-        $sql_client->execute(); $row_client = $sql_client->fetchAll();
-
-        $sql_employee = $connection->getConnection()->prepare("SELECT id, name, email FROM employee ORDER BY id DESC");
-        $sql_employee->execute(); $row_employee = $sql_employee->fetchAll();
+      <?php
+        $clients = $allUserController->findAllClients();
+        $employees = $allUserController->findAllEmployees();
       ?>
       <section class="forms">
         <div class="container-fluid">
@@ -100,22 +87,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                <?php if (!empty($row_client)) : ?>
-                  <?php foreach ($row_client as $client) : ?>
-                    <?php
-                      $sql_registry = $connection->getConnection()->prepare("SELECT id_city FROM registry WHERE id = ?");
-                      $sql_registry->execute(array($client['id_registry'])); $row_registry = $sql_registry->fetchAll();
-
-                      $sql_city = $connection->getConnection()->prepare("SELECT description FROM city WHERE id = ?");
-                      $sql_city->execute(array($row_registry[0]['id_city'])); $row_city = $sql_city->fetchAll();
-                    ?>
+                <?php if (!empty($clients)) : ?>
+                  <?php foreach ($clients as $client) : ?>
+                    <?php $city = $allUserController->cityOfClient($client['id_registry']); ?>
                     <tr>
                       <td>00<?= $client['id']; ?></td>
                       <td><?= $client['name']; ?></td>
                       <td><?= $client['email']; ?></td>
-                      <td><?= $row_city[0]['description'];?></td>
+                      <td><?= $city; ?></td>
                       <td class="actions text-right">
-                        <a href="user/view-new-user.php?type=client&id=<?php echo $client[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                        <a href="user/view-new-user.php?type=client&id=<?= $client[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -140,14 +121,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                <?php if (!empty($row_employee)) : ?>
-                  <?php foreach ($row_employee as $employee) : ?>
+                <?php if (!empty($employees)) : ?>
+                  <?php foreach ($employees as $employee) : ?>
                     <tr>
                       <td>00<?=$employee['id']; ?></td>
                       <td><?=$employee['name']; ?></td>
                       <td><?=$employee['email']; ?></td>
                       <td class="actions text-right">
-                        <a href="user/view-new-user.php?type=employee&id=<?php echo $employee[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                        <a href="user/view-new-user.php?type=employee&id=<?= $employee[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                       </td>
                     </tr>
                   <?php endforeach; ?>

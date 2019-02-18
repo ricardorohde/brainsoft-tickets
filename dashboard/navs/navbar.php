@@ -1,10 +1,8 @@
 <?php 
-  include_once __DIR__.'/../../utils/controller/ctrl-navbar.php';
+  include_once __DIR__.'/../../utils/controller/navbar/navbar.ctrl.php';
 
-  $controller = new NavBarController();
-  $prepareInstance = $controller->getPrepareInstance();
-  $connection = $controller->getConnection();
-  $id = $controller->getIdInSession();
+  $navBarController = new NavBarController();
+  $id = $navBarController->getIdInSession();
 ?>
 
 <!-- Side Navbar -->
@@ -12,10 +10,10 @@
       <div class="side-navbar-wrapper">
         <div class="sidenav-header d-flex align-items-center justify-content-center">
           <div class="sidenav-header-inner text-center"><img src="/dashboard/img/avatar-1.jpg" alt="person" class="img-fluid rounded-circle">
-            <h2 class="h5 text-uppercase"><?= $controller->findRoleById()['name']; ?></h2>
+            <h2 class="h5 text-uppercase"><?= $navBarController->findRoleById()['name']; ?></h2>
             <span class="text-uppercase">
-              <?= $controller->findRoleById()['role'] == "supportBrain" ? "Suporte Brain" : 
-                                                                           $controller->findRoleById()['role']?>       
+              <?= $navBarController->findRoleById()['role'] == "supportBrain" ? "Suporte Brain" : 
+                                                                           $navBarController->findRoleById()['role']?>       
             </span>
           </div>
           <div class="sidenav-header-logo">
@@ -34,6 +32,7 @@
                 "Authorization" => $root . "autorizacoes Autorizações fa-key",
                 "Registry"      => $root . "cartorios Cartórios fa-home",
                 "Queue"         => $root . "fila-interna Fila fa-sort-amount-down",
+                "Marketing"     => $root . "marketing Marketing fa-mail-bulk",
                 "Module"        => $root . "cadastros Módulos fa-plus-square",
                 "Report"        => $root . "relatorios Relatórios fa-chart-pie",
                 "Ticket"        => $root . "tickets Tickets fa-ticket-alt",
@@ -41,7 +40,7 @@
                 "Logout"        => $root . "logout"
               );
             ?>
-            <?= $controller->makeMenu($targets); ?>
+            <?= $navBarController->makeMenu($targets); ?>
           </ul>
         </div>  
       </div>

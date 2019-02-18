@@ -56,7 +56,7 @@
                   <h2 class="h5 display">Nova Categoria</h2>
                 </div>
                 <div class="card-body">
-                  <form class="form-horizontal" action="../../utils/controller/ctrl-category.php" method="POST">
+                  <form class="form-horizontal" action="../../utils/controller/category/category-data.ctrl.php" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Descrição</label>
                       <div class="col-sm-10">
@@ -93,7 +93,7 @@
                   <h2 class="h5 display">Novo Módulo</h2>
                 </div>
                 <div class="card-body">
-                  <form class="form-horizontal" action="../../utils/controller/ctrl-module.php" method="POST">
+                  <form class="form-horizontal" action="../../utils/controller/module/module-data.ctrl.php" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Categoria</label>
                       <div class="col-sm-10">

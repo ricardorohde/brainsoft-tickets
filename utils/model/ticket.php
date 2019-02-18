@@ -1,29 +1,47 @@
 <?php
-include_once __DIR__.'/../../common/config.php';
-include_once('../controller/ctrl_ticket.php');
-
 class Ticket
 {
-	protected $id;
-	protected $idChat;
-	protected $idRegistry;
-	protected $idClient;
-	protected $priority;
-	protected $status;
-	protected $source;
-	protected $type;
-	protected $tGroup;
-	protected $idModule;
-	protected $idAttendant;
-	protected $resolution;
-	protected $historic;
-	protected $isRepeated;
-	protected $finalizedAt;
-	protected $idWhoOpened;
-	protected $idWhoClosed;
+    private static $instance;
+    private $prepareInstance;
+    private $myController;
 
-	protected $connection;
-    protected $myController;
+	private $id;
+	private $idChat;
+	private $idRegistry;
+	private $idClient;
+	private $priority;
+	private $status;
+	private $source;
+	private $type;
+	private $tGroup;
+	private $idModule;
+	private $idAttendant;
+	private $resolution;
+	private $historic;
+	private $isRepeated;
+	private $finalizedAt;
+	private $idWhoOpened;
+	private $idWhoClosed;
+
+    public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
 
     public function getId()
     {
@@ -134,7 +152,8 @@ class Ticket
         $this->idAttendant = $idAttendant;
     }
 
-    public function getResolution(){
+    public function getResolution()
+    {
         return $this->resolution;
     }
 
@@ -143,7 +162,8 @@ class Ticket
         $this->resolution = $resolution;
     }
 
-    public function getHistoric(){
+    public function getHistoric()
+    {
         return $this->historic;
     }
 
@@ -160,26 +180,6 @@ class Ticket
     public function setIsRepeated($isRepeated)
     {
         $this->isRepeated = $isRepeated;
-    }
-
-    public function getConn()
-    {
-        return $this->connection;
-    }
-
-    public function setConn($connection)
-    {
-        $this->connection = $connection;
-    }
-
-    public function getController()
-    {
-        return $this->mycontroller;
-    }
-
-    public function setController($controller)
-    {
-        $this->controller = $controller;
     }
 
     public function getFinalizedAt()
@@ -212,31 +212,18 @@ class Ticket
         $this->idWhoClosed = $idWhoClosed;
     }
 
-	function __construct()
+	function __construct($controller, $prepareInstance)
     {
-    	$this->setConn(new ConfigDatabase());
-    	$this->setController(new TicketController());
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
    	}
 
-   	function register()
+   	public function register()
     {
-    	$sql = $this->getConn()->getConnection()->prepare("INSERT INTO ticket (`id`, `id_registry`, `id_client`, `priority`, `t_status`, `source`, `type`, `t_group`, `id_module`, `id_attendant`, `resolution`, 
-            `is_repeated`, `id_who_opened`, `id_who_closed`, `id_chat`) 
-            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?);");
-
-    	$sql->bindValue(1, $this->getIdRegistry());
-		$sql->bindValue(2, $this->getIdClient());
-		$sql->bindValue(3, $this->getPriority());
-		$sql->bindValue(4, $this->getStatus());
-		$sql->bindValue(5, $this->getSource());
-		$sql->bindValue(6, $this->getType());
-		$sql->bindValue(7, $this->getGroup());
-		$sql->bindValue(8, $this->getIdModule());
-		$sql->bindValue(9, $this->getIdAttendant());
-		$sql->bindValue(10, $this->getResolution());
-        $sql->bindValue(11, $this->getIsRepeated());
-		$sql->bindValue(12, $this->getIdWhoOpened());
-		$sql->bindValue(13, $this->getIdChat());
+        $elements = [$this->getIdRegistry(), $this->getIdClient(), $this->getPriority(), $this->getStatus(), $this->getSource(), $this->getType(),
+                    $this->getGroup(),$this->getIdModule(), $this->getIdAttendant(), $this->getResolution(), $this->getIsRepeated(), $this->getIdWhoOpened(), $this->getIdChat()];
+        $query = "INSERT INTO ticket (`id`, `id_registry`, `id_client`, `priority`, `t_status`, `source`, `type`, `t_group`, `id_module`, `id_attendant`, `resolution`, `is_repeated`, `id_who_opened`, `id_who_closed`, `id_chat`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?);";
+        return $this->prepareInstance->prepare($query, $elements, "");
 
         /*echo $this->getIdRegistry();
         echo "<br>";
@@ -261,46 +248,83 @@ class Ticket
         echo $this->getIdWhoOpened();
         echo "<br>";
         echo $this->getIdChat();*/
-    	return $sql->execute();
    	}
 
-   	function update()
+   	public function update()
     {
-   		$sql = $this->getConn()->getConnection()->prepare("UPDATE ticket SET id_registry = ?, id_client = ?, priority = ?, t_status = ?, source = ?, type = ?, t_group = ?, id_module = ?, id_attendant = ?, resolution = ?, is_repeated = ? WHERE id_chat = ?");
-
-   		$sql->bindValue(1, $this->getIdRegistry());
-		$sql->bindValue(2, $this->getIdClient());
-		$sql->bindValue(3, $this->getPriority());
-		$sql->bindValue(4, $this->getStatus());
-		$sql->bindValue(5, $this->getSource());
-		$sql->bindValue(6, $this->getType());
-		$sql->bindValue(7, $this->getGroup());
-		$sql->bindValue(8, $this->getIdModule());
-		$sql->bindValue(9, $this->getIdAttendant());
-		$sql->bindValue(10, $this->getResolution());
-		$sql->bindValue(11, $this->getIsRepeated());
-		$sql->bindValue(12, $this->getIdChat());
-        return $sql->execute();
+        $elements = [$this->getIdRegistry(), $this->getIdClient(), $this->getPriority(), $this->getStatus(), $this->getSource(), $this->getType(),
+                    $this->getGroup(),$this->getIdModule(), $this->getIdAttendant(), $this->getResolution(), $this->getIsRepeated(), $this->getIdChat()];
+        $query = "UPDATE ticket SET id_registry = ?, id_client = ?, priority = ?, t_status = ?, source = ?, type = ?, t_group = ?, id_module = ?, id_attendant = ?, resolution = ?, is_repeated = ? WHERE id_chat = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
    	}
 
-   	function finish()
+   	public function finish()
     {
-   		$sql = $this->connection->getConnection()->prepare("UPDATE ticket SET id_registry = ?, id_client = ?, priority = ?, t_status = ?, source = ?, type = ?, t_group = ?, id_module = ?, id_attendant = ?, resolution = ?, is_repeated = ?, id_who_closed = ?, finalized_at = ? WHERE id_chat = ?");
-
-   		$sql->bindValue(1, $this->getIdRegistry());
-		$sql->bindValue(2, $this->getIdClient());
-		$sql->bindValue(3, $this->getPriority());
-		$sql->bindValue(4, $this->getStatus());
-		$sql->bindValue(5, $this->getSource());
-		$sql->bindValue(6, $this->getType());
-		$sql->bindValue(7, $this->getGroup());
-		$sql->bindValue(8, $this->getIdModule());
-		$sql->bindValue(9, $this->getIdAttendant());
-		$sql->bindValue(10, $this->getResolution());
-		$sql->bindValue(11, $this->getIsRepeated());
-		$sql->bindValue(12, $this->getIdWhoClosed());
-		$sql->bindValue(13, $this->getFinalizedAt());
-		$sql->bindValue(14, $this->getIdChat());
-        return $sql->execute();
+        $elements = [$this->getIdRegistry(), $this->getIdClient(), $this->getPriority(), $this->getStatus(), $this->getSource(), $this->getType(),
+                    $this->getGroup(),$this->getIdModule(), $this->getIdAttendant(), $this->getResolution(), $this->getIsRepeated(), $this->getIdWhoClosed(), 
+                    $this->getFinalizedAt(), $this->getIdChat()];
+        $query = "UPDATE ticket SET id_registry = ?, id_client = ?, priority = ?, t_status = ?, source = ?, type = ?, t_group = ?, id_module = ?, id_attendant = ?, resolution = ?, is_repeated = ?, id_who_closed = ?, finalized_at = ? WHERE id_chat = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
    	}
+
+    //TO CTRL-SHOW-ALL
+    public function filterByPeriod($initialDate, $actualDate)
+    {
+        $elements = [$initialDate."%", $actualDate."%"];
+        $query = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC";
+        return $this->prepareInstance->prepare($query, $elements, "all");
+    }
+
+    public function filterByPeriodAndAttendant($initialDate, $actualDate, $attedantId, $status)
+    {
+        $elements = [$initialDate."%", $actualDate."%", $attedantId, $status];
+        $query = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            WHERE (registered_at BETWEEN ? AND ?) AND id_attendant = ? AND t_status = ? ORDER BY id DESC";
+        return $this->prepareInstance->prepare($query, $elements, "all");
+    }
+
+    public function filterByActualDate($actualDate)
+    {
+        $element = $actualDate."%";
+        $query = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
+            WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC";
+        return $this->prepareInstance->prepare($query, $element, "all");
+    }
+
+    public function findBySource()
+    {
+        $element = $this->getSource();
+        $query = "SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 5";
+        return $this->prepareInstance->prepare($query, $element, "all");
+    }
+
+    //
+    public function findTotalTickets()
+    {
+        $query = "SELECT COUNT(*) as total FROM ticket";
+        return $this->prepareInstance->prepare($query, "", "");
+    }
+
+    public function findOpenTickets()
+    {
+        $element = $this->getStatus();
+        $query = "SELECT COUNT(*) as total FROM ticket WHERE t_status = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+    }
+
+    public function findPendingTickets()
+    {
+        $element = $this->getStatus();
+        $query = "SELECT COUNT(*) as total FROM ticket WHERE t_status = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+    }
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new Ticket();
+        }
+        return self::$instance;
+    }
 }

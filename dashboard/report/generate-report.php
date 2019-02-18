@@ -1,9 +1,7 @@
 <?php 
-  date_default_timezone_set('America/Sao_Paulo');
-
-  include_once __DIR__.'/../../utils/controller/ctrl-report.php';
-  $reportController = ReportController::getInstance();  
-  $reportController->verifyPermission();
+    include_once __DIR__.'/../../utils/controller/report/report.ctrl.php';
+    $reportController = ReportController::getInstance();  
+    $reportController->verifyPermission();
 ?>
 
 <!DOCTYPE html>
@@ -64,9 +62,8 @@
           <?php if (isset($_POST['initial-date']) AND isset($_POST['final-date'])) : ?>
             <?php 
               $initialDate = $_POST['initial-date'];
-              $finalDate   = $_POST['final-date'];
+              $finalDate = $_POST['final-date'];
 
-              $reportController->setPrepareInstance($prepareInstance); 
               $reportController->setIdClient($id);
               $reportController->setInitialDate($initialDate . " 00:00:01");
               $reportController->setFinalDate($finalDate . " 23:59:59");

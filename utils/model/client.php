@@ -1,6 +1,10 @@
 <?php
 class Client
 {
+	private static $instance;
+    private $prepareInstance;
+    private $myController;
+
 	protected $id;
 	protected $name;
 	protected $email;
@@ -9,7 +13,26 @@ class Client
 	protected $idRole;
 
 	protected $connection;
-	protected $myController;
+
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
 	
 	public function getId()
 	{
@@ -71,88 +94,87 @@ class Client
 	    $this->idRole = $idRole;
 	}
 
-	public function getConn()
-	{
-	    return $this->connection;
-	}
-
-	public function setConn($conn)
-	{
-	    $this->connection = $conn;
-	}
-
-	public function getController()
-	{
-	    return $this->myController;
-	}
-
-	public function setController($controller)
-	{
-	    $this->myController = $controller;
-	}
-
-    function __construct($myController)
+	function __construct($controller, $prepareInstance)
     {
-    	$this->setConn($this->getConnection());
-    	$this->setController($myController);
-		}
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
+   	}
 
-    public function register()
+   	public function register()
     {
-      	$sql = $this->getConn()->prepare("INSERT INTO client (`id`, `name`, `email`, `id_credential`, `id_registry`, `id_role`) VALUES (NULL, ?, ?, ?, ?, ?)");
-      	$sql->bindValue(1, $this->getName());
-		$sql->bindValue(2, $this->getEmail());
-		$sql->bindValue(3, $this->getIdCredential());
-		$sql->bindValue(4, $this->getIdRegistry());
-		$sql->bindValue(5, $this->getIdRole());
-      	$result = $sql->execute();
-    
-    	$this->getController()->verifyResult("register", $result);		
+    	$elements = [$this->getName(), $this->getEmail(), $this->getIdCredential(), $this->getIdRegistry(), $this->getIdRole()];
+        $query = "INSERT INTO client (`id`, `name`, `email`, `id_credential`, `id_registry`, `id_role`) VALUES (NULL, ?, ?, ?, ?, ?)";
+        $result = $this->prepareInstance->prepare($query, $elements, "");
+        //$this->getMyController()->verifyResult("register", $result);  			
     }
 
     public function update()
     {
-    	$sql = $this->getConn()->prepare("UPDATE client SET name = ?, email = ?, id_registry = ?, id_role = ? WHERE id = ?");
-    	$sql->bindValue(1, $this->getName());
-		$sql->bindValue(2, $this->getEmail());
-		$sql->bindValue(3, $this->getIdRegistry());
-		$sql->bindValue(4, $this->getIdRole());
-		$sql->bindValue(5, $this->getId());
-  		$result = $sql->execute();
-    
-    	$this->getController()->verifyResult("update", $result);
+    	$elements = [$this->getName(), $this->getEmail(), $this->getIdRegistry(), $this->getIdRole(), $this->getId()];
+        $query = "UPDATE client SET name = ?, email = ?, id_registry = ?, id_role = ? WHERE id = ?";
+        $result = $this->prepareInstance->prepare($query, $elements, "");
+        //$this->getMyController()->verifyResult("update", $result);
+    }
+
+	public function findAll()
+	{
+		$query = "SELECT * FROM client ORDER BY name";
+        return $this->prepareInstance->prepare($query, "", "all");
+	}
+
+	public function findById()
+	{
+		$element = $this->getId();
+        $query = "SELECT * FROM client WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+	}
+
+	public function findIdRegistry()
+    {
+        $element = $this->getId();
+        $query = "SELECT id_registry FROM client WHERE id = ?";
+        $id = $this->prepareInstance->prepare($query, $element, "");
+        return $id['id_registry'];
     }
 
     public function findClients()
     {
-		$sql = $this->getConn()->prepare("SELECT id, name FROM client WHERE id_registry = ? ORDER BY name");
-		$sql->bindValue(1, $this->getIdRegistry());
-    	$sql->execute();
-
-   		return $sql->fetchAll();
+    	$element = $this->getIdRegistry();
+        $query = "SELECT id, name FROM client WHERE id_registry = ? ORDER BY name";
+        return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
-	public function findIdRegistry()
-	{
-		$sql = $this->getConn()->prepare("SELECT id_registry FROM client WHERE id = ?");
-		$sql->bindValue(1, $this->getId());
-    	$sql->execute();
+	public function findByIdCredential()
+    {
+        $element = $this->idCredential;
+        $query = "SELECT client.name as name, role.description as role FROM client, role WHERE client.id_credential = ? AND client.id_role = role.id";
+        $resultDb = $this->prepareInstance->prepare($query, $element, "");
 
-   		while ($row = $sql->fetch()) {
-				$id = $row['id_registry'];
-		}
-		return $id;
+        if (!$resultDb) {
+            $element = $this->idCredential;
+            $query = "SELECT employee.name as name, role.description as role FROM employee, role WHERE employee.id_credential = ? AND employee.id_role = role.id";
+            $resultDb = $this->prepareInstance->prepare($query, $element, "");
+        }
+        return $resultDb;
+    }
+
+	public function findAllByEmailNotNull() //used by MARKETING
+	{
+        $query = "SELECT client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id ORDER BY registry.name";
+        return $this->prepareInstance->prepare($query, "", "all");
 	}
 
-	public function getConnection()
+	public function findAllByStateEmailNotNull($state) //used by MARKETING
 	{
-		$host = "localhost"; // Hostname
-		$port = "3306"; // MySQL Port : Default : 3306
-		$user = "root"; // Username Here
-		$pass = "brain123"; //Password Here
-		$db   = "brain"; // Database Name
+		$element = $state;
+        $query = "SELECT client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry, city WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.id_city = city.id AND city.id_state = ? ORDER BY registry.name";
+        return $this->prepareInstance->prepare($query, $element, "all");
+	}
 
-		$dbh  = new PDO('mysql:dbname='.$db.';host='.$host.';port='.$port,$user,$pass);
-		return $dbh;
+	public function findAllByRegistryEmailNotNull($registry) //used by MARKETING
+	{
+		$element = $registry;
+        $query = "SELECT client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.name = ? ORDER BY registry.name";
+        return $this->prepareInstance->prepare($query, $element, "all");
 	}
 }

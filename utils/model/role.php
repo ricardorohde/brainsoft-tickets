@@ -3,10 +3,34 @@ include_once __DIR__.'/../../common/config.php';
 
 class Role
 {
-	protected $id;
-	protected $description;
-	protected $type;
-	protected $status;
+	private static $instance;
+    private $prepareInstance;
+    private $myController;
+
+	private $id;
+	private $description;
+	private $type;
+	private $status;
+
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }	
 
 	public function getId()
 	{
@@ -48,46 +72,58 @@ class Role
 	    $this->status = $status;
 	}
 
-	function __construct()
-	{
-    	$this->connection = new ConfigDatabase();
-	}
+	function __construct($controller, $prepareInstance)
+    {
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
+        $this->connection = new ConfigDatabase();
+   	}
 
-	public function show()
+   	public function findAll()
+   	{
+   		$query = "SELECT * FROM role";
+   		return $this->prepareInstance->prepare($query, "", "all");
+   	}
+
+   	public function findAllByType() //NEW
+   	{
+   		$element = $this->getType();
+   		$query = "SELECT * FROM role WHERE type = ?";
+   		return $this->prepareInstance->prepare($query, $element, "all");
+   	}
+
+   	public function findRoleByStatusAndId() //NEW
+   	{
+   		$elements = [$this->getStatus(), $this->getId()];
+   		$query = "SELECT * FROM role WHERE status = ? AND id = ?";
+   		return $this->prepareInstance->prepare($query, $elements, "");
+   	}
+
+	public function findAllByStatusAndType()
 	{
-		$sql = $this->connection->getConnection()->prepare("SELECT id, description FROM `role` WHERE status = ? AND type = ? ORDER BY `description`");
-		$sql->execute(array("ativo", $this->getType()));
-		return $sql->fetchAll();
+		$elements = ["ativo", $this->getType()];
+   		$query = "SELECT id, description FROM `role` WHERE status = ? AND type = ? ORDER BY `description`";
+   		return $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
 	public function register()
 	{
-		$sql = $this->connection->getConnection()->prepare("INSERT INTO role (id, description, type, status) VALUES (NULL, ?, ?, ?)");
-		$sql->bindValue(1, $this->getDescription());
-		$sql->bindValue(2, $this->getType());
-		$sql->bindValue(3, "ativo");
-	        
-	    $result = $sql->execute();
-	    return $result;
+		$elements = [$this->getDescription(), $this->getType(), "ativo"];
+   		$query = "INSERT INTO role (id, description, type, status) VALUES (NULL, ?, ?, ?)";
+   		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
 	public function active()
 	{
-		$sql = $this->connection->getConnection()->prepare("UPDATE role SET status = ? WHERE id = ?");
-	    $sql->bindValue(1, "ativo");
-		$sql->bindValue(2, $this->getId()); 
-
-	    $result = $sql->execute();
-	    return $result;
+		$elements = ["ativo", $this->getId()];
+   		$query = "UPDATE role SET status = ? WHERE id = ?";
+   		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
 	public function delete()
 	{
-		$sql = $this->connection->getConnection()->prepare("UPDATE role SET status = ? WHERE id = ?");
-	    $sql->bindValue(1, "inativo");
-		$sql->bindValue(2, $this->getId()); 
-
-	    $result = $sql->execute();
-	    return $result;
+		$elements = ["inativo", $this->getId()];
+   		$query = "UPDATE role SET status = ? WHERE id = ?";
+   		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 }

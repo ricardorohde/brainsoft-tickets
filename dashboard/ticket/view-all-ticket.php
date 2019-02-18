@@ -1,23 +1,10 @@
-<?php 
-  session_start();
-  if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
-?>
-
 <?php
-  if (isset($_COOKIE['date_to_filter'])) {
-    $actual_date_to_find = $_COOKIE['date_to_filter'];
-  } else {
-    date_default_timezone_set('America/Sao_Paulo');
-    $day   = date('d');
-    $month = date('m');
-    $year  = date('Y');
-    $actual_date_to_find = $year . "-" . $month . "-" . $day; 
-  }
+  include_once "../../utils/controller/ticket/show-all.ctrl.php";
+  $allTicketCtrl = AllTicketController::getInstance();
+  $allTicketCtrl->verifyPermission();
 
-  $initial_date_to_find = date('Y-m-d', strtotime("-15 day", strtotime($actual_date_to_find)));
-  $filter = "";
+  $allTicketCtrl->verifyCookie($_COOKIE);
+  $allTicketCtrl->verifyPost($_POST);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -46,46 +33,6 @@
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
-      <?php 
-        if (isset($_POST['initial-date-filter'])) {
-          $hasFilter            = true;
-          $initial_date_to_find = date('Y-m-d', strtotime($_POST['initial-date-filter']));
-          $actual_date_to_find  = date('Y-m-d', strtotime("+1 day", strtotime($actual_date_to_find)));
-          
-          if (isset($_POST['filter-by-period'])) {
-            $elements = [$initial_date_to_find."%", $actual_date_to_find."%"];
-            $query    = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
-              WHERE registered_at BETWEEN ? AND ? ORDER BY id DESC";
-            $tickets  = $prepareInstance->prepare($query, $elements, "all");
-
-            $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
-            $filter              = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
-          } else if (isset($_POST['filter-by-attendant'])) {
-            $attedantId = $_POST['attendant'];
-            $status     = $_POST['status'];
-
-            $elements = [$initial_date_to_find."%", $actual_date_to_find."%", $attedantId, $status];
-            $query    = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
-              WHERE (registered_at BETWEEN ? AND ?) AND id_attendant = ? AND t_status = ? ORDER BY id DESC";
-            $tickets  = $prepareInstance->prepare($query, $elements, "all");
-
-            $actual_date_to_find = date('Y-m-d', strtotime("-1 day", strtotime($actual_date_to_find)));
-            $filter              = "de " . date('d/m/Y', strtotime($initial_date_to_find)) . " até " . date('d/m/Y', strtotime($actual_date_to_find));
-          }
-        } else {
-          $hasFilter = false;
-          $element   = $actual_date_to_find."%";
-          $query     = "SELECT id_registry, id_client, id_module, id_attendant, id_chat, t_status, registered_at, finalized_at FROM ticket 
-            WHERE registered_at LIKE ? ORDER BY t_status ASC, id DESC";
-          $tickets   = $prepareInstance->prepare($query, $element, "all");
-
-          $filter = date('d/m/Y', strtotime($actual_date_to_find));
-        }
-
-        $element    = ["nivel1", "nivel2"];
-        $query      = "SELECT id, name FROM employee WHERE t_group = ? OR t_group = ?";
-        $attendants = $prepareInstance->prepare($query, $element, "all");
-      ?>
       <section class="forms">
         <div class="container-fluid">
           <header>
@@ -116,19 +63,19 @@
             <div class="col-sm-12 text-center">
               <button id="show-hide-filters" class="btn btn-info mb-3" type="button" data-toggle="collapse" data-target="#collapseExample" 
                       aria-expanded="false" aria-controls="collapseExample">
-                <?= $hasFilter ? "Esconder Filtros" : "Exibir Filtros" ?>
+                <?= $allTicketCtrl->getHasFilter() ? "Esconder Filtros" : "Exibir Filtros" ?>
               </button>
             </div>
           </div>
-          <div class="collapse <?= $hasFilter ? "show" : "" ?>" id="collapseExample">
+          <div class="collapse <?= $allTicketCtrl->getHasFilter() ? "show" : "" ?>" id="collapseExample">
             <form id="form-filter-all-ticket" action="#" method="POST">
               <div class="row mb-2">
                 <div class="col col-lg-3">
-                  <input type="date" name="initial-date-filter" id="initial-date-filter" class="form-control" min="2018-10-10" value="<?= $initial_date_to_find?>">
+                  <input type="date" name="initial-date-filter" id="initial-date-filter" class="form-control" min="2018-10-10" value="<?= $allTicketCtrl->getInitialDateToFind() ?>">
                   <span>Data Inicial</span>
                 </div>
                 <div class="col col-lg-3">
-                  <input type="date" name="final-actual-date-filter" id="final-actual-date-filter" class="form-control" min="2018-10-10" value="<?= $actual_date_to_find?>">
+                  <input type="date" name="final-actual-date-filter" id="final-actual-date-filter" class="form-control" min="2018-10-10" value="<?= $allTicketCtrl->getActualDateToFind() ?>">
                   <span>Data Atual ou Final</span>
                 </div>
                 <div class="col col-lg-1">
@@ -143,18 +90,18 @@
                 <div class="col col-lg-3">
                   <select name="attendant" class="form-control" id="attendant" required>
                     <option>Selecione o atendente...</option>
-                    <?php foreach ($attendants as $attendant) : ?>
-                    <option value="<?= $attendant['id'] ?>" <?= @$attedantId == $attendant['id'] ? "selected" : "" ?>><?= $attendant['name'] ?></option>
+                    <?php foreach ($allTicketCtrl->getAttendants() as $attendant) : ?>
+                      <option value="<?= $attendant['id'] ?>" <?= @$allTicketCtrl->getAttendantIdOfFilter() == $attendant['id'] ? "selected" : "" ?>><?= $attendant['name'] ?></option>
                     <?php endforeach; ?>
                   </select>
                 </div>
                 <div class="col col-lg-3">
                   <select name="status" class="form-control" id="status" required>
                     <option>Selecione o status...</option>
-                    <option value="aberto" <?= @$status == "aberto" ? "selected" : ""?>>Aberto</option>
-                    <option value="pendente" <?= @$status == "pendente" ? "selected" : ""?>>Pendente</option>
-                    <option value="solucionado" <?= @$status == "solucionado" ? "selected" : ""?>>Solucionado</option>
-                    <option value="fechado" <?= @$status == "fechado" ? "selected" : ""?>>Fechado</option>
+                    <option value="aberto" <?= @$allTicketCtrl->getStatusOfFilter() == "aberto" ? "selected" : ""?>>Aberto</option>
+                    <option value="pendente" <?= @$allTicketCtrl->getStatusOfFilter() == "pendente" ? "selected" : ""?>>Pendente</option>
+                    <option value="solucionado" <?= @$allTicketCtrl->getStatusOfFilter() == "solucionado" ? "selected" : ""?>>Solucionado</option>
+                    <option value="fechado" <?= @$allTicketCtrl->getStatusOfFilter() == "fechado" ? "selected" : ""?>>Fechado</option>
                   </select>
                 </div>
                 <div class="col col-lg-3">
@@ -167,7 +114,7 @@
               <p>Aguarde...</p>
             </div>
             <div id="actual-filter" class="hide">
-              <p>Filtro: <?= $filter ?></p>
+              <p>Filtro: <?= $allTicketCtrl->getFilterToShow() ?></p>
             </div>
             <div id="qtd-tickets" class="hide">
               <p></p>
@@ -175,38 +122,40 @@
           </div>
           <div class="row">
             <div id="conteudo" class="col-md-12">
-              <?php if (!empty($tickets)) : ?>
-                <?php
-                  $elements = ["nivel1", "nivel2", "yes", "yes"];
-                  $query = "SELECT id, name FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
-                  $attendants = $prepareInstance->prepare($query, $elements, "all");
-                ?>
+              <?php if (!empty($allTicketCtrl->getTickets())) : ?>
+                <?php $allTicketCtrl->forwardTo(); ?>
 
-                <?php foreach ($tickets as $ticket) : ?>
+                <?php foreach ($allTicketCtrl->getTickets() as $ticket) : ?>
                   <?php 
-                    $sql_module = $connection->getConnection()->prepare("SELECT description, id_category FROM ticket_module WHERE id = ?"); 
+                    /*$sql_module = $connection->getConnection()->prepare("SELECT description, id_category FROM ticket_module WHERE id = ?"); 
                     $sql_module->execute(array($ticket['id_module'])); 
-                    $module = $sql_module->fetch();
+                    $module = $sql_module->fetch();*/
+                    $allTicketCtrl->findModule($ticket['id_module']);
 
-                    $sql_category_module = $connection->getConnection()->prepare("SELECT description FROM category_module WHERE id = ?"); 
+                    /*$sql_category_module = $connection->getConnection()->prepare("SELECT description FROM category_module WHERE id = ?"); 
                     $sql_category_module->execute(array($module['id_category'])); 
-                    $category_module = $sql_category_module->fetch();
+                    $category_module = $sql_category_module->fetch();*/
+                    $allTicketCtrl->findCategoryModule($allTicketCtrl->getModuleOfTicket()['id_category']);
 
-                    $sql_registry = $connection->getConnection()->prepare("SELECT name FROM registry WHERE id = ?"); 
+                    /*$sql_registry = $connection->getConnection()->prepare("SELECT name FROM registry WHERE id = ?"); 
                     $sql_registry->execute(array($ticket['id_registry'])); 
-                    $registry = $sql_registry->fetch();
+                    $registry = $sql_registry->fetch();*/
+                    $allTicketCtrl->findRegistry($ticket['id_registry']);
 
-                    $sql_client = $connection->getConnection()->prepare("SELECT name FROM client WHERE id = ?"); 
+                    /*$sql_client = $connection->getConnection()->prepare("SELECT name FROM client WHERE id = ?"); 
                     $sql_client->execute(array($ticket['id_client'])); 
-                    $client = $sql_client->fetch();
+                    $client = $sql_client->fetch();*/
+                    $allTicketCtrl->findClient($ticket['id_client']);
 
-                    $sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?"); 
+                    /*$sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?"); 
                     $sql_attendant->execute(array($ticket['id_attendant'])); 
-                    $attendant = $sql_attendant->fetch();
+                    $attendant = $sql_attendant->fetch();*/
+                    $allTicketCtrl->findEmployee($ticket['id_attendant']);
 
-                    $sql_chat = $connection->getConnection()->prepare("SELECT id_chat, opening_time, final_time FROM chat WHERE id = ?"); 
+                    /*$sql_chat = $connection->getConnection()->prepare("SELECT id_chat, opening_time, final_time FROM chat WHERE id = ?"); 
                     $sql_chat->execute(array($ticket['id_chat'])); 
-                    $id_chat = $sql_chat->fetch();
+                    $id_chat = $sql_chat->fetch();*/
+                    $allTicketCtrl->findChat($ticket['id_chat']);
                   ?>
 
                   <?php 
@@ -224,12 +173,12 @@
 
                   <div class="row">
                     <div class="col-11" style="padding-right: 0px;">    
-                      <a href="ticket/<?= $id_chat[0]; ?>/<?= $attendant['id']; ?>" style="padding: 0px!important; width: 100%;">
+                      <a href="ticket/<?= $allTicketCtrl->getChat()['id_chat']; ?>/<?= $allTicketCtrl->getEmployee()['id']; ?>" style="padding: 0px!important; width: 100%;">
                         <div class="card-in-ticket-list card <?= $status_background?> mb-3">
                           <div class="card-header">
-                            <?= $category_module['description']. " / " .$module['description']; ?> | 
-                            <span><?= $client['name'] ?> do <?= $registry['name'] ?></span>
-                            <?php if ($id_chat[0] > 100000) : ?>
+                            <?= $allTicketCtrl->getCategoryModule()['description']. " / " .$allTicketCtrl->getModuleOfTicket()['description']; ?> | 
+                            <span><?= $allTicketCtrl->getClient()['name'] ?> do <?= $allTicketCtrl->getRegistry()['name'] ?></span>
+                            <?php if ($allTicketCtrl->getChat()['id_chat'] > 100000) : ?>
                               <i class="material-icons" style="float: left; opacity: 0.4;">chat</i>
                             <?php else : ?>
                               <i class="material-icons" style="float: left; opacity: 0.4;">phone</i>
@@ -237,13 +186,13 @@
                           </div>
                           <div class="card-body" style="font-size: 0.8em;">
                             <p class="card-text" id="data-ticket-text">
-                              <?php if ($id_chat[0] > 100000) : ?>
+                              <?php if ($allTicketCtrl->getChat()['id_chat'] > 100000) : ?>
                                 <strong>Chat:</strong>
                               <?php else : ?>
                                 <strong>Ligação:</strong>
                               <?php endif; ?> 
-                              <?= $id_chat[0]; ?> |
-                              <strong>Atendente:</strong> <?= $attendant['name'] ?> |
+                              <?= $allTicketCtrl->getChat()['id_chat']; ?> |
+                              <strong>Atendente:</strong> <?= $allTicketCtrl->getEmployee()['name'] ?> |
                               <strong>Abertura:</strong> <?= date('d/m/Y H:i:s', strtotime($ticket['registered_at'])) ?> 
                               <?php
                                 $closure = date('d/m/Y H:i:s', strtotime($ticket['finalized_at']));
@@ -264,9 +213,9 @@
                           <i class="material-icons" style="padding-top: 10px;">forward</i>
                         </button>
                         <div class="dropdown-menu">
-                          <?php foreach ($attendants as $at) : ?>
-                            <?php if($attendant['name'] != $at['name']) : ?>
-                              <a class="dropdown-item" href="ticket/<?= $id_chat[0] ?>/<?= $at['id'] ?>"><?= $at['name'] ?></a>
+                          <?php foreach ($allTicketCtrl->getAttendantsToForward() as $at) : ?>
+                            <?php if($allTicketCtrl->getEmployee()['name'] != $at['name']) : ?>
+                              <a class="dropdown-item" href="ticket/<?= $allTicketCtrl->getChat()['id_chat'] ?>/<?= $at['id'] ?>"><?= $at['name'] ?></a>
                               <div class="dropdown-divider"></div> 
                             <?php endif; ?>
                           <?php endforeach; ?>

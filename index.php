@@ -1,12 +1,3 @@
-<?php 
-  include_once 'common/config.php';
-
-  session_start();
-
-  $dbInstance = new ConfigDatabase();
-
-  $_SESSION['connectionDbInstance'] = $dbInstance;
-?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -47,7 +38,7 @@
               <span>Sistema</span><strong class="text-primary">Brainsoft</strong>
             </div>
             <p>Informe seu usuário e senha para ter acesso a área administrativa.</p>
-            <form id="login-form" method="post" action="utils/controller/ctrl_credential.php">
+            <form id="login-form" method="post" action="utils/controller/credential/credential-data.ctrl.php">
               <div class="form-group">
                 <input id="login" type="text" name="login" required="" autofocus="" placeholder="Usuário...">
               </div>

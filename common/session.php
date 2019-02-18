@@ -1,7 +1,10 @@
 <?php
 class Session
 {
+	private static $instance;
+	
 	private $session;
+	private $content;
 
 	public function getSession()
 	{
@@ -13,27 +16,42 @@ class Session
 	  $this->session = $session;
 	}
 
-	function __construct($session)
+	public function getContent() 
+	{
+		return $this->content;
+	}
+	
+	public function setContent($content) 
+	{
+		$this->content = $content;
+	}
+
+	public function __construct($session)
 	{
 		$this->session = $session;
 	}
 
-	function unset()
+	public function set()
+	{
+		$_SESSION[$this->session] = $this->content;
+	}
+
+	public function unset()
 	{
 		session_unset($_SESSION[$this->session]);	
 	}
 
-	function authorize()
+	public function authorize()
 	{
 		$_SESSION[$this->session] = "authorized";
 	}
 
-	function destroy()
+	public function destroy()
 	{
 		session_destroy();
 	}
 
-	function cleanDataOfCalls()
+	public function cleanDataOfCalls()
 	{
 		$schedule = date("H:i");
 
@@ -44,4 +62,12 @@ class Session
 			}
 		}
 	}
+
+	public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new Session("");
+        }
+        return self::$instance;
+    }
 }

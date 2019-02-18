@@ -1,12 +1,33 @@
 <?php
-include_once __DIR__.'/../../common/config.php';
-
 class City
 {
+	private static $instance;
+    private $prepareInstance;
+    private $myController;
+
 	private $id;
 	private $description;
 	private $idState;
-	private $connection;
+
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
 
 	public function getId()
 	{
@@ -28,15 +49,23 @@ class City
 	  $this->idState = $idState;
 	}
 
-	function __construct()
-	{
-    	$this->connection = new ConfigDatabase();
-	}
+	function __construct($controller, $prepareInstance)
+    {
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
+   	}
 
-	public function findCities($state)
+   	public function findById() //NEW
+   	{
+   		$element = $this->getId();
+        $query = "SELECT * FROM city WHERE id = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+   	}
+
+	public function findCitiesByState()
 	{
-		$sql = $this->connection->getConnection()->prepare("SELECT id, description FROM city WHERE id_state = ? ORDER BY description");
-    	$sql->execute(array($state));
-   		return $sql->fetchAll();
+        $element = $this->getIdState();
+        $query = "SELECT id, description FROM city WHERE id_state = ? ORDER BY description";
+        return $this->prepareInstance->prepare($query, $element, "all");
 	}
 }

@@ -1,11 +1,6 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
-
-  include_once "../../utils/controller/ctrl_ticket.php";
-  $ticketController = TicketController::getInstance();
+  include_once "../../utils/controller/ticket/new-find.ctrl.php";
+  $ticketController = NewFindTicketController::getInstance();
 ?>
 
 <!DOCTYPE html>
@@ -46,12 +41,8 @@
       <?php include ("../navs/header.php");?>
 
       <?php
-        $elements = ["nivel1", "nivel2", "yes", "yes"];
-        $query = "SELECT id, name, id_credential FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
-        $attendants = $prepareInstance->prepare($query, $elements, "all");
-
-        $sql_calls = $connection->getConnection()->prepare("SELECT * FROM ticket WHERE source = ? ORDER BY id DESC LIMIT 5");
-        $sql_calls->execute(array("telefone")); $calls = $sql_calls->fetchAll();
+        $attendants = $ticketController->findAttendantsInQueue();
+        $calls = $ticketController->findCalls();
       ?>
 
       <section class="forms">
@@ -168,21 +159,16 @@
                         <?php if (!empty($calls)) : ?>
                           <?php foreach ($calls as $call) : ?>
                             <?php 
-                              $sql_module = $connection->getConnection()->prepare("SELECT description FROM ticket_module WHERE id = ?"); $sql_module->execute(array($call['id_module'])); 
-                                $module = $sql_module->fetch();
-
-                              $sql_attendant = $connection->getConnection()->prepare("SELECT name FROM employee WHERE id = ?"); $sql_attendant->execute(array($call['id_attendant'])); 
-                                $attendant = $sql_attendant->fetch();
-
-                              $sql_chat = $connection->getConnection()->prepare("SELECT id_chat FROM chat WHERE id = ?"); $sql_chat->execute(array($call['id_chat'])); 
-                                $id_chat = $sql_chat->fetch();
+                                $module = $ticketController->findModule($call['id_module']);
+                                $attendant = $ticketController->findEmployee($call['id_attendant']);
+                                $chat = $ticketController->findChat($call['id_chat']);
                             ?>
 
                             <tr>
-                              <td><?= $id_chat[0]; ?></td>
+                              <td><?= $chat['id_chat']; ?></td>
                               <td><?= ucfirst($call['t_status']); ?></td>
-                              <td><?= $module[0]; ?></td>
-                              <td><?= $pieces = explode(" ", $attendant[0])[0]; ?></td>
+                              <td><?= $module['description']; ?></td>
+                              <td><?= explode(" ", $attendant['name'])[0]; ?></td>
                               <td><?= date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
                             </tr>
                           <?php endforeach; ?>

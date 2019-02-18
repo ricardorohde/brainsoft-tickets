@@ -1,11 +1,33 @@
 <?php
-include_once __DIR__.'/../../common/config.php';
-
 class CategoryModule
 {
-	protected $id;
-	protected $description;
-	protected $tGroup;
+	private static $instance;
+    private $prepareInstance;
+    private $myController;
+
+	private $id;
+	private $description;
+	private $tGroup;
+
+	public function getPrepareInstance()
+    {
+      return $this->prepareInstance;
+    }
+    
+    public function setPrepareInstance($prepareInstance)
+    {
+      $this->prepareInstance = $prepareInstance;
+    }
+
+    public function getMyController()
+    {
+      return $this->myController;
+    }
+    
+    public function setMyController($myController)
+    {
+      $this->myController = $myController;
+    }
 
 	public function getId()
 	{
@@ -37,32 +59,42 @@ class CategoryModule
 	    $this->tGroup = $tGroup;
 	}
 
-	function __construct()
-	{
-    	$this->connection = new ConfigDatabase();
-	}
+	function __construct($controller, $prepareInstance)
+    {
+    	$this->setMyController($controller);
+        $this->setPrepareInstance($prepareInstance);
+   	}
 
 	public function register()
 	{
-		$sql = $this->connection->getConnection()->prepare("INSERT INTO category_module (id, description, t_group) VALUES (NULL, ?, ?)");
-	        
-	    $result = $sql->execute(array($this->description, $this->tGroup));
-	    return $result;
+		$elements = [$this->description, $this->tGroup];
+		$query = "INSERT INTO category_module (id, description, t_group) VALUES (NULL, ?, ?)";
+		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
-	public function findIdByName($name)
+	public function findById() // NEW
 	{
-		$sql = $this->connection->getConnection()->prepare("SELECT id FROM category_module WHERE description LIKE ?");
-    	$sql->execute(array($name));
+		$element = $this->getId();
+		$query = "SELECT description FROM category_module WHERE id = ?";
+		return $this->prepareInstance->prepare($query, $element, "");
+	}
 
-   		while ($row = $sql->fetch()) {
-  			$id = $row['id'];
-		}
+	public function findIdByDescription()
+	{
+		$element = $this->description;
+		$query = "SELECT id FROM category_module WHERE description LIKE ?";
+		$id = $this->prepareInstance->prepare($query, $element, "")['id'];
 
 		if (isset($id)) {
 			return $id;
 		} else {
 			return $id = "";
 		}
+	}
+
+	public function findCategoryByIdAndOrder(){
+		$element = $this->getId();
+		$query = "SELECT * FROM category_module WHERE id = ? ORDER BY id DESC";
+		return $this->prepareInstance->prepare($query, $element, "");
 	}
 }

@@ -1,8 +1,9 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['User'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
+    include_once __DIR__.'/../../utils/controller/user/new-user.ctrl.php';
+    $newUserController = NewUserController::getInstance();  
+    $newUserController->verifyPermission();
+
+    $newUserController->verifyGet($_GET);
 ?>
 
 <!DOCTYPE html>
@@ -38,56 +39,29 @@
   <body>
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
-      <?php include ("../navs/header.php");?>
+        <?php include ("../navs/header.php");?>
       
-      <?php
-        $thereIsProblem = false;
-        if((isset($_GET['type']) && $_GET['type'] != "") && (isset($_GET['id']) && $_GET['id'] != "")){
-          $type = $_GET['type'];
-          $id = $_GET['id'];
+        <?php
+            $row_sql_user = $newUserController->getUser();
+            $row_sql_registry = $newUserController->getRegistry();
+            $row_sql_city = $newUserController->getCity();
+            $row_sql_state = $newUserController->getState();
+            $row_sql_role = $newUserController->getRole();
 
-          if($type == "client"){
-            $sql_user = $connection->getConnection()->prepare("SELECT name, email, id_credential, id_registry, id_role FROM client WHERE id = ?"); 
-            $sql_user->execute(array($id)); $row_sql_user = $sql_user->fetch();
+            echo $newUserController->getInputHasEmployee();
+            $row_sql_credential = $newUserController->getCredential();
+            $thereIsProblem = $newUserController->getThereIsProblem();
 
-            $sql_registry = $connection->getConnection()->prepare("SELECT * FROM registry WHERE id = ?"); 
-            $sql_registry->execute(array($row_sql_user['id_registry'])); $row_sql_registry = $sql_registry->fetch();
+            $type = $newUserController->getCurrentType();
+        ?>
 
-            $sql_city = $connection->getConnection()->prepare("SELECT * FROM city WHERE id = ?"); 
-            $sql_city->execute(array($row_sql_registry['id_city'])); $row_sql_city = $sql_city->fetch();
+        <?php 
+            $newUserController->findAllStates();
+            $allStates = $newUserController->getAllStates();
+            $allRoles = $newUserController->getAllRoles();
 
-            $sql_state = $connection->getConnection()->prepare("SELECT * FROM state WHERE id = ?"); 
-            $sql_state->execute(array($row_sql_city['id_state'])); $row_sql_state = $sql_state->fetch();
-
-            $sql_role = $connection->getConnection()->prepare("SELECT * FROM role WHERE status = ? AND id = ?"); 
-            $sql_role->execute(array("ativo", $row_sql_user['id_role'])); $row_sql_role = $sql_role->fetch();
-          } else if ($type == "employee"){
-            echo "<input type='hidden' id='hasEmployee'>";
-
-            $sql_user = $connection->getConnection()->prepare("SELECT name, email, t_group, id_credential, id_role FROM employee WHERE id = ?");
-            $sql_user->execute(array($id)); $row_sql_user = $sql_user->fetch();
-
-            $sql_role = $connection->getConnection()->prepare("SELECT * FROM role WHERE status = ? AND id = ?"); 
-            $sql_role->execute(array("ativo", $row_sql_user['id_role'])); $row_sql_role = $sql_role->fetch();
-          } else {
-            $thereIsProblem = true;
-          }
-
-          $sql_credential = $connection->getConnection()->prepare("SELECT login FROM credential WHERE id = ?"); 
-          $sql_credential->execute(array(@$row_sql_user['id_credential'])); $row_sql_credential = $sql_credential->fetch();
-        } else{
-          $thereIsProblem = true;
-        }
-      ?>
-
-      <?php 
-        $sql_state = $connection->getConnection()->prepare("SELECT id, description FROM `state` ORDER BY `initials`");
-        $sql_state->execute();
-
-        @$user_role = $row_sql_role['description'];
-
-        echo '<input type="hidden" id="userInformed" value="'.$user_role.'">';
-      ?>
+            echo '<input type="hidden" id="userInformed" value="' . $row_sql_role['description'] . '">';
+        ?>
       <section class="forms">
         <div class="container-fluid">
           <header> 
@@ -100,7 +74,7 @@
                   <h2 class="h5 display"><?php echo isset($_GET['id']) ? "Visualizar/Alterar Usuário" : "Novo Usuário"?></h2>
                 </div>
                 <div class="card-body">
-                  <form class="form-horizontal" id="formAdd" name="formAdd" action="../../utils/controller/ctrl_user.php" method="POST">                    
+                  <form class="form-horizontal" id="formAdd" name="formAdd" action="../../utils/controller/user/new-user-data.ctrl.php" method="POST">                    
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Tipo</label>
                       <div class="col-sm-10">
@@ -134,14 +108,14 @@
                       <div class="col-sm-3 select">
                         <select class="form-control" name="state" id="state">
                           <?php if (@$row_sql_state != NULL): ?>
-                            <option value=<?php echo '"'.$row_sql_state['id'].'"';?>><?php echo $row_sql_state['description'];?></option>
+                            <option value=<?= '"'.$row_sql_state['id'].'"';?>><?= $row_sql_state['description'];?></option>
                           <?php else: ?>
                             <option value="">Selecione um estado...</option>
                           <?php endif; ?>
 
-                          <?php while($row = $sql_state->fetch()) { ?>
-                            <option value="<?php echo $row['id'] ?>"><?php echo $row['description']; ?></option>
-                          <?php } ?>
+                          <?php foreach ($allStates as $state) : ?>
+                              <option value="<?= $state['id'] ?>"><?= $state['description']; ?></option>
+                          <?php endforeach; ?>
                         </select>
                       </div>
                       <label class="col-sm-3 form-control-label text-center">Cidade</label>
@@ -161,7 +135,7 @@
                       <div class="col-sm-10 select">
                         <select name="registry" class="form-control" id="id_registry">
                           <?php if (@$row_sql_registry != NULL): ?>
-                            <option value=<?php echo '"'.$row_sql_registry['id'].'"';?>><?php echo $row_sql_registry['name'];?></option>
+                            <option value=<?= '"'.$row_sql_registry['id'].'"';?>><?= $row_sql_registry['name'];?></option>
                           <?php else: ?>
                             <option value="">Selecione uma cidade...</option>
                           <?php endif; ?>
@@ -172,8 +146,7 @@
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Cargo</label>
                       <div class="col-sm-10 select">
-                        <select name="role" class="form-control">
-                        </select>
+                        <select name="role" class="form-control"></select>
                       </div>
                     </div>
                     <div class="line dataOfEmployee"></div>

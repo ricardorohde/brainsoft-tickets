@@ -1,8 +1,14 @@
 <?php 
-  session_start();
-  if (!isset($_SESSION['Registry'.'_page_'.$_SESSION['login']])) {
-    header("Location:../dashboard");
-  }
+    include_once "../../utils/controller/registry/new-registry-data.ctrl.php";
+    $newRegistryController = NewRegistryDataController::getInstance();
+    $newRegistryController->verifyPermission();
+
+    $newRegistryController->verifyDataGetReceived();
+
+    $city = $newRegistryController->getCity();
+    $state = $newRegistryController->getState();
+
+    $newRegistryController->findAllStates();
 ?>
 
 <!DOCTYPE html>
@@ -42,23 +48,6 @@
     <?php include ("../navs/navbar.php");?>
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
-
-      <?php 
-        if (isset($_GET['id'])){
-          $sql_registry = $connection->getConnection()->prepare("SELECT name, id_city FROM registry WHERE id = ?"); $sql_registry->execute(array($_GET['id'])); 
-            $row_sql_registry = $sql_registry->fetch();
-
-          $sql_city = $connection->getConnection()->prepare("SELECT id, description, id_state FROM city WHERE id = ?"); $sql_city->execute(array($row_sql_registry['id_city'])); 
-            $row_sql_city = $sql_city->fetch();
-
-          $sql_state_of_city = $connection->getConnection()->prepare("SELECT id, description FROM state WHERE id = ?"); $sql_state_of_city->execute(array($row_sql_city['id_state'])); 
-            $row_sql_state_of_city = $sql_state_of_city->fetch();
-        }
-      ?>
-
-      <?php 
-        $sql_state = $connection->getConnection()->prepare("SELECT id, description FROM `state` ORDER BY `initials`");
-        $sql_state->execute();?>
       <section class="forms">
         <div class="container-fluid">
           <header> 
@@ -71,11 +60,11 @@
                   <h2 class="h5 display">Novo Cartório</h2>
                 </div>
                 <div class="card-body">
-                  <form id="formAddRegistry" name="formAddRegistry" class="form-horizontal" action="../../utils/controller/ctrl_registry.php" method="POST">
+                  <form id="formAddRegistry" name="formAddRegistry" class="form-horizontal" action="../../utils/controller/registry/new-registry-data.ctrl.php" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Nome</label>
                       <div class="col-sm-10">
-                        <input type="text" name="nameRegistry" class="form-control" value="<?php if(isset($row_sql_registry['name'])){echo $row_sql_registry['name'];}?>"><span class="help-block-none">Informe o nome do cartório.</span>
+                        <input type="text" name="nameRegistry" class="form-control" value="<?= isset($newRegistryController->getRegistry()['name']) ? $newRegistryController->getRegistry()['name'] : ""?>"><span class="help-block-none">Informe o nome do cartório.</span>
                       </div>
                     </div>
                     <div class="line"></div>
@@ -83,22 +72,22 @@
                       <label class="col-sm-2 form-control-label">Estado</label>
                       <div class="col-sm-3 select">
                         <select name="state" class="form-control" id="state">
-                          <?php if (isset($row_sql_state_of_city)): ?>
-                            <option value=<?php echo '"'.$row_sql_state_of_city['id'].'"';?>><?php echo $row_sql_state_of_city['description'];?></option>
+                          <?php if (isset($state)): ?>
+                            <option value=<?= '"'.$state['id'].'"';?>><?= $state['description'];?></option>
                           <?php else: ?>
                             <option value="">Selecione um estado...</option>
                           <?php endif; ?>
 
-                          <?php while($row = $sql_state->fetch()) { ?>
-                            <option value="<?php echo $row['id'] ?>"><?php echo $row['description']; ?></option>
-                          <?php } ?>
+                          <?php foreach ($newRegistryController->getAllStates() as $state) : ?>
+                              <option value="<?= $state['id'] ?>"><?= $state['description']; ?></option>
+                          <?php endforeach; ?>
                         </select>
                       </div>
                       <label class="col-sm-3 form-control-label text-center">Cidade</label>
                       <div class="col-sm-4 select">
                         <select name="city" class="form-control" id="city">
-                          <?php if (isset($row_sql_city)): ?>
-                            <option value=<?php echo '"'.$row_sql_city['id'].'"';?>><?php echo $row_sql_city['description'];?></option>
+                          <?php if (isset($city)) : ?>
+                            <option value=<?= '"'.$city['id'].'"';?>><?= $city['description'];?></option>
                           <?php else: ?>
                             <option value="">Selecione um estado...</option>
                           <?php endif; ?>
@@ -109,13 +98,13 @@
                     <div class="line"></div>
                     <div class="form-group row">
                       <div class="col-sm-4 offset-sm-2">
-                        <?php 
-                          if (isset($_GET['id']) && $row_sql_registry['name'] == NULL){
+                        <?php
+                          if (isset($_GET['id']) && $newRegistryController->getRegistry()['name'] == "") {
                             echo '<span id="wrongIdChat"><strong>Erro!</strong> Número do cartório informado não existe. Contate o Administrador.</span>';
                           } else {
                             echo '<button type="reset" class="btn btn-secondary">Limpar</button>';
 
-                            if(isset($_GET['id'])){
+                            if (isset($_GET['id'])) {
                               echo '<button type="submit" id="newRegistry" name="newRegistry" class="btn 
                               btn-primary btnAction">Salvar!</button>';
                             } else {
