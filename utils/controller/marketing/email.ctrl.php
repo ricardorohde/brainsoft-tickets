@@ -5,7 +5,7 @@ require_once __DIR__ . "/../client/client.ctrl.php";
 
 class EmailController
 {
-	private static $instance;
+    private static $instance;
     private $prepareInstance;
     private $navBarController;
 
@@ -58,7 +58,7 @@ class EmailController
 
     public function findAllStates()
     {
-    	$stateController = new StateController();
+        $stateController = new StateController();
         $states = $stateController->findAllStates();
         $qtdStates = count($states);
 
@@ -142,6 +142,13 @@ class EmailController
                        </tr>";
 
             echo $option;
+        }
+    }
+
+    function verifyPermission()
+    {
+        if (!isset($_SESSION['Marketing'.'_page_'.$_SESSION['login']])) {
+            header("Location:../dashboard");
         }
     }
 

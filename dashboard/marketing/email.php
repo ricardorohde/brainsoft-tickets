@@ -1,9 +1,14 @@
+<?php
+    include_once __DIR__ . '/../../utils/controller/marketing/email.ctrl.php';
+    $emailController = EmailController::getInstance();  
+    $emailController->verifyPermission();
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Brainsoft Sistemas - Ticket Detalhado</title>
+    <title>Brainsoft Sistemas - Marketing com Email</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -35,73 +40,73 @@
             <div class="col-lg-12">
               <div class="card">
                 <div class="card-body">
-                	<form id="sendEmail" action="send.php" method="POST" target="_blank" enctype="multipart/form-data">
-                		<div class="form-group row">
-                			<label class="col-sm-1 pt-2 form-control-label">Assunto</label>
-                			<div class="col-sm-6">
-                				<input type="text" name="subject" id="subject" class="form-control" autofocus="">
-                			</div>
-                		</div>
-                		<div class="form-group row">
-                			<label class="col-sm-1 pt-2 form-control-label">Destino</label>
-                     		<div class="col-sm-3">
-                     			<select name="destiny" class="form-control" id="destiny" required>
-                     				<option value="choose" selected="">Selecione o destinatário...</option>
-									<option value="all">Todos</option>
-									<option value="state">Estado</option>
-									<option value="registry">Cartório</option>
-								</select>
-                     		</div>
-                		</div>
-                		<div class="form-group row divAllStates hide">
-	                		<div class="offset-sm-1 col-sm-3 select">
-		                        <select class="form-control" name="allStates" id="allStates">
-		                            <option value="">Selecione um estado...</option>
-		                        </select>
-	                      	</div>
-                      	</div>
-                      	<div class="form-group row divSetRegistry hide">
-	                      	<div class="offset-sm-1 col-sm-3 select">
-	                        	<input type="text" name="setRegistry" id="setRegistry" class="form-control">
+                  <form id="sendEmail" action="send.php" method="POST" target="_blank" enctype="multipart/form-data">
+                    <div class="form-group row">
+                      <label class="col-sm-1 pt-2 form-control-label">Assunto</label>
+                      <div class="col-sm-6">
+                        <input type="text" name="subject" id="subject" class="form-control" autofocus="">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-1 pt-2 form-control-label">Destino</label>
+                        <div class="col-sm-3">
+                          <select name="destiny" class="form-control" id="destiny" required>
+                            <option value="choose" selected="">Selecione o destinatário...</option>
+                  <option value="all">Todos</option>
+                  <option value="state">Estado</option>
+                  <option value="registry">Cartório</option>
+                </select>
+                        </div>
+                    </div>
+                    <div class="form-group row divAllStates hide">
+                      <div class="offset-sm-1 col-sm-3 select">
+                            <select class="form-control" name="allStates" id="allStates">
+                                <option value="">Selecione um estado...</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row divSetRegistry hide">
+                          <div class="offset-sm-1 col-sm-3 select">
+                            <input type="text" name="setRegistry" id="setRegistry" class="form-control">
                                 <span class="help-block-none">Informe o cartório do cliente.</span>
-	                      	</div>
-	                    </div>
-                      	<div class="form-group row tableClients hide">
-	                		<div class="offset-sm-1 col-sm-11" style="height: 250px; overflow: auto;">
-		                        <table name="tableWithData" class="table table-sm table-hover">
-									<thead>
-										<tr>
-										  <th scope="col">Cliente</th>
-										  <th scope="col">Usuário</th>
-										  <th scope="col">Email</th>
-										  <th scope="col">Cartório</th>
-										  <th scope="col">Enviar</th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
-	                      	</div>
-                      	</div>
-                		<div class="form-group row">
-                			<label class="col-sm-1 pt-2 form-control-label">Anexo(s):</label>
-                			<div class="col-sm-3">
-                				<input type="file" name="file[]" multiple="multiple" class="multi" accept="png|jpg|pdf|txt"/>
-                			</div>
-                		</div>
-                		<div class="form-group row">
-                			<label class="col-sm-1 pt-2 form-control-label">Mensagem</label>
-                			<div class="col-sm-11">
-                				<textarea name="message" id="message" rows="10" cols="80"></textarea>
+                          </div>
+                      </div>
+                        <div class="form-group row tableClients hide">
+                      <div class="offset-sm-1 col-sm-11" style="height: 250px; overflow: auto;">
+                            <table name="tableWithData" class="table table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Cliente</th>
+                      <th scope="col">Usuário</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Cartório</th>
+                      <th scope="col">Enviar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+                          </div>
+                        </div>
+                    <div class="form-group row">
+                      <label class="col-sm-1 pt-2 form-control-label">Anexo(s):</label>
+                      <div class="col-sm-3">
+                        <input type="file" name="file[]" multiple="multiple" class="multi" accept="png|jpg|pdf|txt"/>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-1 pt-2 form-control-label">Mensagem</label>
+                      <div class="col-sm-11">
+                        <textarea name="message" id="message" rows="10" cols="80"></textarea>
                                 <span style="color: #000000;"><strong class="var">$nome:</strong> Nome completo do usuário &nbsp;|&nbsp; <strong class="var">$cartorio:</strong> Nome do cartório do usuário &nbsp;|&nbsp; <strong class="var">$usuario:</strong> Nome do usuário para acesso ao sistema &nbsp;|&nbsp; <strong class="var">$senha:</strong> Senha temporária do usuário para acesso ao sistema</span>
-                			</div>
-                		</div>
-                		<div class="form-group row">
-                			<div class="offset-sm-11 col-sm-1">
-                				<button type="submit" name="submit" class="btn btn-primary btnAction">Enviar!</button>
-                			</div>
-                		</div>
-			        </form>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="offset-sm-11 col-sm-1">
+                        <button type="submit" name="submit" class="btn btn-primary btnAction">Enviar!</button>
+                      </div>
+                    </div>
+              </form>
                 </div>
               </div>
             </div>
