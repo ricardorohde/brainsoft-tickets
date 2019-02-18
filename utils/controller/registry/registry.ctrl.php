@@ -41,6 +41,13 @@ class RegistryController
         return $registry->findById();
     }
 
+    public function findIdByName($name)
+    {
+        $registry = new Registry($this, $this->prepareInstance);
+        $registry->setName($name);
+        return $registry->findIdByName();
+    }
+
 	public function findCityById($id)
 	{
 		return $this->cityController->findById($id);
