@@ -184,7 +184,7 @@
                     <div class="form-group row <?php if(isset($row_sql_user['name'])){echo 'control';}?>">
                       <label class="col-sm-2 form-control-label">Senha</label>
                       <div class="col-sm-10">
-                        <input type="text" name="password" class="form-control" value="sistemabrain" required><span class="help-block-none">Crie uma senha de acesso para o usuário.</span>
+                        <input type="text" name="password" class="form-control" value="temp123" required><span class="help-block-none">Crie uma senha de acesso para o usuário.</span>
                       </div>
                     </div>
                     <div class="line"></div>
