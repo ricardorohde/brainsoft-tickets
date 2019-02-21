@@ -22,7 +22,7 @@ class SenderMail
 	function __construct($recipient, $destiny, $subject, $message, $totalUp, $path)
 	{
 		$this->recipientId = $recipient;
-
+		
 		$this->mail = new PHPMailer;
 		$this->destiny = $destiny;
 		$this->subject = $subject;
@@ -38,8 +38,11 @@ class SenderMail
 		$status = 0;
 		$info = "";
 
+		echo $this->subject;
+
 		try {
 			//Server settings
+			$this->mail->CharSet = 'UTF-8';
 			$this->mail->SMTPDebug = 0;
 			$this->mail->isSMTP();
 			$this->mail->Host = 'smtp.brainsoftsistemas.com.br';
