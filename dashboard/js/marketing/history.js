@@ -34,6 +34,7 @@ $(document).ready(function () {
 function convertDate(userDate) {
 	var date = new Date(userDate);
 	date.setDate(date.getDate() + 1);
+	date.setMonth(date.getMonth() + 1);
 	
     yr = date.getFullYear();
     month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
