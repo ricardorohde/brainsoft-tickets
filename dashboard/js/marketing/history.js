@@ -19,6 +19,7 @@ $(document).ready(function () {
 						$("table[name=tableHistoryEmail]").show();
 					} else {
 						$(".divTableHistory").show();
+						$("#resultHistory").remove();
 						$("table[name=tableHistoryEmail]").hide();
 						$(".divTableHistory").append("<div class='text-center mt-2' id='resultHistory'>Nenhum email enviado em " + convertDate(date) + "</div>");
 					}
@@ -31,10 +32,12 @@ $(document).ready(function () {
 });
 
 function convertDate(userDate) {
-	var date = new Date(userDate),
-    yr = date.getFullYear(),
-    month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth(),
-    day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate(),
+	var date = new Date(userDate);
+	date.setDate(date.getDate() + 1);
+	
+    yr = date.getFullYear();
+    month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
+    day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate();
     newDate = day + '/' + month + '/' + yr;
 	
 	return newDate;
