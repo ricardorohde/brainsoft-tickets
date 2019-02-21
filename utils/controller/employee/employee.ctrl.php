@@ -27,6 +27,13 @@ class EmployeeController
         return $employee->findById();
     }
 
+    public function findByCredential($id)
+    {
+        $employee = new Employee($this, $this->prepareInstance);
+        $employee->setIdCredential($id);
+        return $employee->findByCredential();
+    }
+
     public function new($data) // NEW
     {  
         $employee = new Employee($this, $this->prepareInstance);

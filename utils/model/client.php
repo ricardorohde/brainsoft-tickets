@@ -129,6 +129,13 @@ class Client
         return $this->prepareInstance->prepare($query, $element, "");
 	}
 
+	public function findByCredential()
+    {
+    	$element = $this->getIdCredential();
+        $query = "SELECT * FROM client WHERE id_credential = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
+    }
+
 	public function findIdRegistry()
     {
         $element = $this->getId();
@@ -160,21 +167,21 @@ class Client
 
 	public function findAllByEmailNotNull() //used by MARKETING
 	{
-        $query = "SELECT client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id ORDER BY registry.name";
+        $query = "SELECT client.id_credential as id, client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id ORDER BY registry.name";
         return $this->prepareInstance->prepare($query, "", "all");
 	}
 
 	public function findAllByStateEmailNotNull($state) //used by MARKETING
 	{
 		$element = $state;
-        $query = "SELECT client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry, city WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.id_city = city.id AND city.id_state = ? ORDER BY registry.name";
+        $query = "SELECT client.id_credential as id, client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry, city WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.id_city = city.id AND city.id_state = ? ORDER BY registry.name";
         return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
 	public function findAllByRegistryEmailNotNull($registry) //used by MARKETING
 	{
 		$element = $registry;
-        $query = "SELECT client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.name = ? ORDER BY registry.name";
+        $query = "SELECT client.id_credential as id, client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.name = ? ORDER BY registry.name";
         return $this->prepareInstance->prepare($query, $element, "all");
 	}
 }

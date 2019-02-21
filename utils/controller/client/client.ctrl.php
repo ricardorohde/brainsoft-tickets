@@ -32,6 +32,13 @@ class ClientController
         return $client->findAll();
     }
 
+    public function findByCredential($id)
+    {
+        $client = new Client($this, $this->prepareInstance);
+        $client->setIdCredential($id);
+        return $client->findByCredential();
+    }
+
     public function findIdRegistryByIdClient($idClient){      
       $client = new Client($this, $this->prepareInstance);
       $client->setId($idClient);

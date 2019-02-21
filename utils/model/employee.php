@@ -136,6 +136,13 @@ class Employee
         return $this->prepareInstance->prepare($query, $elements, "");
     }
 
+    public function findByCredential()
+    {
+    	$elements = $this->getIdCredential();
+    	$query = "SELECT * FROM employee WHERE id_credential = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
+    }
+
     public function findAttendants()
     {
     	$elements = [$this->getTGroup(), $this->getOnChat(), "aberto"];

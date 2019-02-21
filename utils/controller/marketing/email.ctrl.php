@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../navbar/navbar.ctrl.php";
 require_once __DIR__ . "/../state/state.ctrl.php";
 require_once __DIR__ . "/../client/client.ctrl.php";
+require_once __DIR__ . "/../../model/emailMarketing.php";
 
 class EmailController
 {
@@ -20,6 +21,18 @@ class EmailController
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
     }
 
+    public function new($idSender, $idRecipient, $subject, $message, $status, $info)
+    {
+        $emailMarketing = new EmailMarketing($this, $this->prepareInstance);
+        $emailMarketing->setIdSender($idSender);
+        $emailMarketing->setIdRecipient($idRecipient);
+        $emailMarketing->setSubject($subject);
+        $emailMarketing->setMessage($message);
+        $emailMarketing->setStatus($status);
+        $emailMarketing->setInfo($info);
+        return $emailMarketing->register();
+    }
+
     public function findAllClients()
     {
         $clientController = new ClientController();
@@ -27,6 +40,7 @@ class EmailController
         $qtdClients = count($clients);
 
         for ($i = 0; $i < $qtdClients; $i++) {
+            $id = $clients[$i]['id'];
             $name = $clients[$i]['name'];
             $login = $clients[$i]['login'];
             $email = $clients[$i]['email'];
@@ -46,7 +60,8 @@ class EmailController
                               <label class='form-check-label' for='inlineRadioNo$i'>Não</label>
                             </div>
                         </td>
-                        <input type='hidden' name='nome[]' value='$name' />
+                        <input type='hidden' name='id[]' value='$id' />
+                        <input type='hidden' name='client[]' value='$name' />
                         <input type='hidden' name='login[]' value='$login' />
                         <input type='hidden' name='email[]' value='$email' />
                         <input type='hidden' name='registry[]' value='$registry' />
@@ -80,6 +95,7 @@ class EmailController
         $qtdClients = count($clients);
 
         for ($i = 0; $i < $qtdClients; $i++) {
+            $id = $clients[$i]['id'];
             $name = $clients[$i]['name'];
             $login = $clients[$i]['login'];
             $email = $clients[$i]['email'];
@@ -99,7 +115,8 @@ class EmailController
                               <label class='form-check-label' for='inlineRadioNo$i'>Não</label>
                             </div>
                         </td>
-                        <input type='hidden' name='nome[]' value='$name' />
+                        <input type='hidden' name='id[]' value='$id' />
+                        <input type='hidden' name='client[]' value='$name' />
                         <input type='hidden' name='login[]' value='$login' />
                         <input type='hidden' name='email[]' value='$email' />
                         <input type='hidden' name='registry[]' value='$registry' />
@@ -116,6 +133,7 @@ class EmailController
         $qtdClients = count($clients);
 
         for ($i = 0; $i < $qtdClients; $i++) {
+            $id = $clients[$i]['id'];
             $name = $clients[$i]['name'];
             $login = $clients[$i]['login'];
             $email = $clients[$i]['email'];
@@ -135,7 +153,8 @@ class EmailController
                               <label class='form-check-label' for='inlineRadioNo$i'>Não</label>
                             </div>
                         </td>
-                        <input type='hidden' name='nome[]' value='$name' />
+                        <input type='hidden' name='id[]' value='$id' />
+                        <input type='hidden' name='client[]' value='$name' />
                         <input type='hidden' name='login[]' value='$login' />
                         <input type='hidden' name='email[]' value='$email' />
                         <input type='hidden' name='registry[]' value='$registry' />

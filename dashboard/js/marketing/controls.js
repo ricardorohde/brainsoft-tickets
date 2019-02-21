@@ -20,7 +20,7 @@ $(document).ready(function () {
 	            	hideElement("#status");
 				   	$(".tableClients").show();
 				}, 2000);
-			} else if(destinySelected == "state") {
+			} else if (destinySelected == "state") {
 				$("select[name=allStates]").html();
 				$("table[name=tableWithData] > tbody").html("");
 				addElement("#sendEmail > div:eq(1)", '<div id="status" class="form-group row"><div id="searching" class="offset-sm-2 col-sm-10">Buscando estados...</div></div>');
