@@ -121,7 +121,7 @@ $(document).ready(function () {
         };
     });
 
-    for (var i = 1; i < 9; i++) {
+    for (var i = 1; i < 50; i++) {
         var user = $(".user"+i).find("a").length;
         setBorderClass(user, ".user"+i);
     }
