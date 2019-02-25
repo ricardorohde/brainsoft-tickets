@@ -1,5 +1,4 @@
 <?php 
-  session_start();
   if (!isset($_SESSION['Billet'.'_page_'.$_SESSION['login']])) {
     header("Location:../dashboard");
   }

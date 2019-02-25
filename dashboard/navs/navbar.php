@@ -1,8 +1,12 @@
 <?php 
-  include_once __DIR__.'/../../utils/controller/navbar/navbar.ctrl.php';
+    include_once __DIR__ . '/../../utils/controller/navbar/navbar.ctrl.php';
+    include_once __DIR__ . '/../../utils/controller/navbar/isOnChat.ctrl.php';
 
-  $navBarController = new NavBarController();
-  $id = $navBarController->getIdInSession();
+    $isOnChatController = IsOnChatController::getInstance();
+    $isOnChatController->checkOnChatToLogout($_SESSION['login']);
+
+    $navBarController = new NavBarController();
+    $id = $navBarController->getIdInSession();
 ?>
 
 <!-- Side Navbar -->
@@ -12,8 +16,7 @@
           <div class="sidenav-header-inner text-center"><img src="/dashboard/img/avatar-1.jpg" alt="person" class="img-fluid rounded-circle">
             <h2 class="h5 text-uppercase"><?= $navBarController->findRoleById()['name']; ?></h2>
             <span class="text-uppercase">
-              <?= $navBarController->findRoleById()['role'] == "supportBrain" ? "Suporte Brain" : 
-                                                                           $navBarController->findRoleById()['role']?>       
+              <?= $navBarController->findRoleById()['role'] == "supportBrain" ? "Suporte Brain" : $navBarController->findRoleById()['role']?>       
             </span>
           </div>
           <div class="sidenav-header-logo">

@@ -8,17 +8,11 @@ class NavBarController
 	private $prepareInstance;
 
 	private $session;
-	private $connection;
 	private $idInSession;
 
 	function getPrepareInstance()
 	{
     	return $this->prepareInstance;
-	}
-
-	function getConnection()
-	{
-    	return $this->connection;
 	}
 
 	function getIdInSession()
@@ -29,19 +23,13 @@ class NavBarController
 	function __construct()
 	{
 		$this->setInstances();
-		$this->setPrepareAndConnection();
 		$this->setIdLoginInSession();
 	}
 
 	function setInstances()
 	{
-		$this->prepareInstance = new PrepareQuery();
+		$this->prepareInstance = PrepareQuery::getInstance();
 		$this->session = new Session("");
-	}
-
-	function setPrepareAndConnection()
-	{
-		$this->connection = $this->prepareInstance->getConnToDatabase();
 	}
 
 	function setIdLoginInSession()

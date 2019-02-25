@@ -1,5 +1,4 @@
-<?php 
-  session_start();
+<?php
   if (!isset($_SESSION['Module'.'_page_'.$_SESSION['login']])) {
     header("Location:../dashboard");
   }

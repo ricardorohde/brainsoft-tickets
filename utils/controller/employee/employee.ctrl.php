@@ -76,6 +76,13 @@ class EmployeeController
         return $employee->findToForward();
     }
 
+    public function verifyOnChatToSetSession($idCredential)
+    {
+        $employee = new employee($this, $this->prepareInstance);
+        $employee->setIdCredential($idCredential);
+        return $employee->verifyOnChat();
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {

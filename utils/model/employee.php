@@ -170,4 +170,11 @@ class Employee
 		$query = "SELECT id, name, id_credential FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
 		return $this->prepareInstance->prepare($query, $elements, "all");
 	}
+
+	public function verifyOnChat()
+	{
+		$element = [$this->getIdCredential()];
+		$query = "SELECT on_chat FROM employee WHERE id_credential = ?";
+		return $this->prepareInstance->prepare($query, $element, "");
+	}
 }

@@ -3,6 +3,7 @@ include_once 'config.php';
 
 class PrepareQuery
 {
+	private static $instance;
 	private $connectionToDatabase;
 
 	function __construct()
@@ -64,5 +65,13 @@ class PrepareQuery
 			$openConnection = null;
 			return $result;
 		}
+	}
+
+	public static function getInstance()
+	{
+		if (!self::$instance) {
+      		self::$instance = new PrepareQuery();
+		}
+    	return self::$instance;
 	}
 }

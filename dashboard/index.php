@@ -185,7 +185,7 @@
                   "data": [
                       {
                           "label": "Solucionados",
-                          "value": "<?= $dashboardController->getSolvedTickets()['total'] ?>"
+                          "value": "<?= $dashboardController->getSolvedTickets() ?>"
                       },
                       {
                           "label": "Abertos",
