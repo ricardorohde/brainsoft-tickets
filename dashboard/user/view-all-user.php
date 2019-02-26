@@ -47,18 +47,6 @@
                     <a class="btn btn-default" href="usuarios"><i class="fa fa-refresh"></i> Atualizar</a>
                 </div>
             </div>
-
-            <?php if(isset($_SESSION['userOk'])) : ?>
-                <div id="status-sql" class="alert alert-success" style="display:block;">
-                    <?php echo @$_SESSION['userOk']; unset($_SESSION['userOk']); ?>
-                </div>
-            <?php endif ?>
-
-            <?php if(isset($_SESSION['userNo'])) : ?>
-                <div id="status-sql" class="alert alert-danger" style="display:block;">
-                    <?php echo @$_SESSION['userNo']; unset($_SESSION['userNo']);?>
-                </div>
-            <?php endif ?>
           </header>
 
           <hr>
@@ -122,18 +110,18 @@
                 <?php if (!empty($employees)) : ?>
                     <?php foreach ($allUserController->findDataOfEmployees() as $employee) : ?>
                         <tr>
-                            <td>00<?=$employee['id'] ?></td>
-                            <td><?=$employee['name'] ?></td>
-                            <td><?=$employee['email'] ?></td>
+                            <td>00<?= $employee['id'] ?></td>
+                            <td><?= $employee['name'] ?></td>
+                            <td><?= $employee['email'] ?></td>
                             <td class="actions text-right">
                                 <a href="user/view-new-user.php?type=employee&id=<?= $employee['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
-                  <tr>
-                    <td colspan="6">Nenhum funcionário encontrado.</td>
-                  </tr>
+                    <tr>
+                        <td colspan="6">Nenhum funcionário encontrado.</td>
+                    </tr>
                 <?php endif; ?>
                 </tbody>
                 </table>

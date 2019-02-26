@@ -180,7 +180,7 @@ class Employee
 
 	public function findDataBySqlIds($sqlIds)
 	{
-		$query = sprintf("SELECT id, name, email FROM employee WHERE id IN(%s)", $sqlIds);
+		$query = sprintf("SELECT id, name, email FROM employee WHERE id IN(%s) ORDER BY id DESC", $sqlIds);
 		return $this->prepareInstance->prepare($query, "", "all");
 	}
 }
