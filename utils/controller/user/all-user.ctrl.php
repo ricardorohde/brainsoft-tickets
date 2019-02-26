@@ -15,6 +15,19 @@ class AllUserController
     private $registryController;
     private $cityController;
 
+    private $sqlClientIds;
+    private $sqlEmployeeIds;
+
+    public function getSqlClientIds() 
+    {
+        return $this->sqlClientIds;
+    }
+    
+    public function setSqlClientIds($sqlClientIds) 
+    {
+        $this->sqlClientIds = $sqlClientIds;
+    }
+
     function __construct()
     {
         $this->navBarController = NavBarController::getInstance();
@@ -25,22 +38,30 @@ class AllUserController
         $this->cityController = CityController::getInstance();
     }
 
-    function findAllClients()
+    public function findAllClients()
     {
-        return $this->clientController->findAll();
+        $clients = $this->clientController->findAll();
+        $clientIds = array_column($clients, 'id');
+        $this->sqlClientIds = implode(',', $clientIds);
+        return $clients;
     }
 
-    function findAllEmployees()
+    public function findDataOfClients()
     {
-        return $this->employeeController->findAll();
+        return $this->clientController->findDataOfClients($this->sqlClientIds);
     }
 
-    function cityOfClient($id_registry)
+    public function findAllEmployees()
     {
-        $registry = $this->registryController->findById($id_registry);
-        $city = $this->cityController->findById($registry['id_city']);
+        $employees = $this->employeeController->findAll();
+        $employeeIds = array_column($employees, 'id');
+        $this->sqlEmployeeIds = implode(',', $employeeIds);
+        return $employees;
+    }
 
-        return $city['description'];
+    public function findDataOfEmployees()
+    {
+        return $this->employeeController->findDataOfEmployees($this->sqlEmployeeIds);
     }
     
     function verifyPermission()

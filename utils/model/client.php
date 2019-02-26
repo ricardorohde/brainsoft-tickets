@@ -184,4 +184,10 @@ class Client
         $query = "SELECT client.id_credential as id, client.name, credential.login, client.email, registry.name as registry FROM client, credential, registry WHERE client.id_credential = credential.id AND client.email != '' AND client.id_registry = registry.id AND registry.name = ? ORDER BY registry.name";
         return $this->prepareInstance->prepare($query, $element, "all");
 	}
+
+	public function findDataBySqlIds($sqlIds)
+	{
+		$query = sprintf("SELECT client.id, client.name, email, city.description as city FROM client, registry, city WHERE client.id IN(%s) AND client.id_registry = registry.id AND registry.id_city = city.id", $sqlIds);
+		return $this->prepareInstance->prepare($query, "", "all");
+	}
 }

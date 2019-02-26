@@ -177,4 +177,10 @@ class Employee
 		$query = "SELECT on_chat FROM employee WHERE id_credential = ?";
 		return $this->prepareInstance->prepare($query, $element, "");
 	}
+
+	public function findDataBySqlIds($sqlIds)
+	{
+		$query = sprintf("SELECT id, name, email FROM employee WHERE id IN(%s)", $sqlIds);
+		return $this->prepareInstance->prepare($query, "", "all");
+	}
 }

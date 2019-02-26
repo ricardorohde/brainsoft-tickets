@@ -2,6 +2,9 @@
     include_once __DIR__ . '/../../utils/controller/user/all-user.ctrl.php';
     $allUserController = AllUserController::getInstance();  
     $allUserController->verifyPermission();
+
+    $clients = $allUserController->findAllClients();
+    $employees = $allUserController->findAllEmployees();
 ?>
 
 <!DOCTYPE html>
@@ -28,37 +31,33 @@
   </head>
 
   <body>
-    <?php include ("../navs/navbar.php");?>
+    <?php require_once ('../navs/navbar.php'); ?>
     <div class="root-page forms-page">
-      <?php include ("../navs/header.php");?>
-      <?php
-        $clients = $allUserController->findAllClients();
-        $employees = $allUserController->findAllEmployees();
-      ?>
+      <?php require_once ('../navs/header.php'); ?>
       <section class="forms">
         <div class="container-fluid">
           <header>
             <div class="row">
-              <div class="col-sm-6">
-                <h1 class="h3 display">Usuários</h1>
-              </div>
+                <div class="col-sm-6">
+                    <h1 class="h3 display">Usuários</h1>
+                </div>
 
-              <div class="col-sm-6 text-right h2">
-                  <a class="btn btn-primary" href="usuarios/novo"><i class="fa fa-plus"></i> Novo Usuário</a>
-                  <a class="btn btn-default" href="usuarios"><i class="fa fa-refresh"></i> Atualizar</a>
-              </div>
+                <div class="col-sm-6 text-right h2">
+                    <a class="btn btn-primary" href="usuarios/novo"><i class="fa fa-plus"></i> Novo Usuário</a>
+                    <a class="btn btn-default" href="usuarios"><i class="fa fa-refresh"></i> Atualizar</a>
+                </div>
             </div>
 
             <?php if(isset($_SESSION['userOk'])) : ?>
-              <div id="status-sql" class="alert alert-success" style="display:block;">
-                <?php echo @$_SESSION['userOk']; unset($_SESSION['userOk']); ?>
-              </div>
+                <div id="status-sql" class="alert alert-success" style="display:block;">
+                    <?php echo @$_SESSION['userOk']; unset($_SESSION['userOk']); ?>
+                </div>
             <?php endif ?>
 
             <?php if(isset($_SESSION['userNo'])) : ?>
-              <div id="status-sql" class="alert alert-danger" style="display:block;">
-                <?php echo @$_SESSION['userNo']; unset($_SESSION['userNo']);?>
-              </div>
+                <div id="status-sql" class="alert alert-danger" style="display:block;">
+                    <?php echo @$_SESSION['userNo']; unset($_SESSION['userNo']);?>
+                </div>
             <?php endif ?>
           </header>
 
@@ -88,18 +87,17 @@
                 </thead>
                 <tbody>
                 <?php if (!empty($clients)) : ?>
-                  <?php foreach ($clients as $client) : ?>
-                    <?php $city = $allUserController->cityOfClient($client['id_registry']); ?>
-                    <tr>
-                      <td>00<?= $client['id']; ?></td>
-                      <td><?= $client['name']; ?></td>
-                      <td><?= $client['email']; ?></td>
-                      <td><?= $city; ?></td>
-                      <td class="actions text-right">
-                        <a href="user/view-new-user.php?type=client&id=<?= $client[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
+                    <?php foreach ($allUserController->findDataOfClients() as $client) : ?>
+                        <tr>
+                            <td>00<?= $client['id'] ?></td>
+                            <td><?= $client['name'] ?></td>
+                            <td><?= $client['email'] ?></td>
+                            <td><?= $client['city'] ?></td>
+                            <td class="actions text-right">
+                                <a href="user/view-new-user.php?type=client&id=<?= $client['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>                                 
                 <?php else : ?>
                   <tr>
                     <td colspan="6">Nenhum cliente encontrado.</td>
@@ -122,16 +120,16 @@
                 </thead>
                 <tbody>
                 <?php if (!empty($employees)) : ?>
-                  <?php foreach ($employees as $employee) : ?>
-                    <tr>
-                      <td>00<?=$employee['id']; ?></td>
-                      <td><?=$employee['name']; ?></td>
-                      <td><?=$employee['email']; ?></td>
-                      <td class="actions text-right">
-                        <a href="user/view-new-user.php?type=employee&id=<?= $employee[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
+                    <?php foreach ($allUserController->findDataOfEmployees() as $employee) : ?>
+                        <tr>
+                            <td>00<?=$employee['id'] ?></td>
+                            <td><?=$employee['name'] ?></td>
+                            <td><?=$employee['email'] ?></td>
+                            <td class="actions text-right">
+                                <a href="user/view-new-user.php?type=employee&id=<?= $employee['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php else : ?>
                   <tr>
                     <td colspan="6">Nenhum funcionário encontrado.</td>

@@ -71,7 +71,14 @@ class ClientController
         return $client->findAllByRegistryEmailNotNull($registry);
     }
 
-    function new($data){ // NEW
+    public function findDataOfClients($sqlIds)
+    {
+        $client = new Client($this, $this->prepareInstance);
+        return $client->findDataBySqlIds($sqlIds);
+    }
+
+    function new($data)
+    { // NEW
         $client = new Client($this, $this->prepareInstance);
         $client->setName($data['name']);
         $client->setEmail($data['email']);
@@ -82,7 +89,8 @@ class ClientController
         $client->register();
     }
 
-    function update($data){ // NEW
+    function update($data)
+    { // NEW
         $client = new Client($this->getInstance(), $this->prepareInstance);
         $client->setName($data['name']);
         $client->setEmail($data['email']);

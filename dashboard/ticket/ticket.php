@@ -129,7 +129,7 @@
                       <label class="col-sm-2 pt-2 form-control-label">Prioridade</label>
                       <div class="col-sm-3 select">
                         <select name="priority" class="form-control" id="priority" required>
-                          <?php switch($row_ticket['priority']){
+                          <?php switch($row_ticket['priority']) {
                             case "baixa":
                               echo "<option value='baixa' selected>Baixa</option>";
                               echo "<option value='media'>Média</option>";

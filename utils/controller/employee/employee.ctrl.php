@@ -34,6 +34,12 @@ class EmployeeController
         return $employee->findByCredential();
     }
 
+    public function findDataOfEmployees($sqlIds)
+    {
+        $employee = new Employee($this, $this->prepareInstance);
+        return $employee->findDataBySqlIds($sqlIds);
+    }
+
     public function new($data) // NEW
     {  
         $employee = new Employee($this, $this->prepareInstance);
