@@ -71,26 +71,25 @@
           <div class="table-responsive">
             <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
-              <tr>
-                <th>Cod.</th>
-                <th>Nome</th>      
-                <th>Cidade</th>
-                <th></th>
-              </tr>
+                <tr>
+                    <th>Cod.</th>
+                    <th>Nome</th>      
+                    <th>Cidade</th>
+                    <th></th>
+                 </tr>
             </thead>
             <tbody>
             <?php if (!empty($registryController->getAllRegistries())) : ?>
-              <?php foreach ($registryController->getAllRegistries() as $registry) : ?>
-                <?php $city = $registryController->findCityById($registry['id_city']); ?>
-                <tr>
-                  <td>00<?= $registry['id']; ?></td>
-                  <td><?= $registry['name']; ?></td>
-                  <td><?= $city['description']; ?></td>
-                  <td class="actions text-right">
-                    <a href="registry/view-new-registry.php?id=<?= $registry[0]; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
+                <?php foreach ($registryController->findDataOfRegistries() as $registry) : ?>
+                    <tr>
+                        <td>00<?= $registry['id'] ?></td>
+                        <td><?= $registry['name'] ?></td>
+                        <td><?= $registry['city'] ?></td>
+                        <td class="actions text-right">
+                            <a href="registry/view-new-registry.php?id=<?= $registry['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             <?php else : ?>
               <tr>
                 <td colspan="6">Nenhum cartório encontrado.</td>

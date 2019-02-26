@@ -32,7 +32,11 @@ class RegistryController
 	public function findAll()
 	{
 		$registry = new Registry($this, $this->prepareInstance);
-		$this->allRegistries = $registry->findAll();
+
+		$registries = $registry->findAll();
+        $registryIds = array_column($registries, 'id');
+        $this->sqlRegistryIds = implode(',', $registryIds);
+        $this->allRegistries = $registries;
 	}
 
     public function findById($id){
@@ -48,10 +52,11 @@ class RegistryController
         return $registry->findIdByName();
     }
 
-	public function findCityById($id)
-	{
-		return $this->cityController->findById($id);
-	}
+    public function findDataOfRegistries()
+    {
+        $registry = new Registry($this, $this->prepareInstance);
+        return $registry->findDataBySqlIds($this->sqlRegistryIds);
+    }
 
     public function verifyPermission()
     {

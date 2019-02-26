@@ -93,7 +93,7 @@ class Registry
         return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
-	function verifyIfExists()
+	public function verifyIfExists()
 	{
 		$registry = utf8_decode($this->getName());
 
@@ -101,5 +101,11 @@ class Registry
         $query = "SELECT COUNT(*) as total FROM registry WHERE name LIKE ?";
         $total = $this->prepareInstance->prepare($query, $element, "all");
         return $total['total'];
+	}
+
+	public function findDataBySqlIds($sqlIds)
+	{
+		$query = sprintf("SELECT registry.id, registry.name, city.description as city FROM registry, city WHERE registry.id IN(%s) AND registry.id_city = city.id ORDER BY id DESC", $sqlIds);
+		return $this->prepareInstance->prepare($query, "", "all");
 	}
 }
