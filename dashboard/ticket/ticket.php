@@ -5,6 +5,8 @@
 
   $ticketController->setIdChat($_GET["id_chat"]);
   $connection = $ticketController->getConn();
+
+  $ticketController->getHistoryOfChat();
 ?>
 
 <!DOCTYPE html>
