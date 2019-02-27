@@ -1,7 +1,7 @@
 <?php 
 	date_default_timezone_set('America/Sao_Paulo');
 
-  	include_once __DIR__.'/../../utils/controller/ctrl-queue.php';
+  	include_once __DIR__ . '/../../utils/controller/ctrl-queue.php';
 	$queueController = QueueController::getInstance(); 	
 	$queueController->verifyPermission();
 ?>

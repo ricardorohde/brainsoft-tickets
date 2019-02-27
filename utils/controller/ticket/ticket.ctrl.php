@@ -10,7 +10,10 @@ class TicketController
     private $navBarController;
 
     private $apiPct;
+    private $openedAt;
     private $transferedAt;
+    private $lastMessageByReceptionAt;
+    private $afterTransferStartAt;
 
     public function getApiPct()
     {
@@ -22,6 +25,16 @@ class TicketController
         $this->apiPct = $apiPct;
     }
 
+    public function getOpenedAt() 
+    {
+        return $this->openedAt;
+    }
+    
+    public function setOpenedAt($openedAt) 
+    {
+        $this->openedAt = $openedAt;
+    }
+
     public function getTransferedAt()
     {
       return $this->transferedAt;
@@ -30,6 +43,26 @@ class TicketController
     public function setTransferedAt($transferedAt)
     {
       $this->transferedAt = $transferedAt;
+    }
+
+    public function getLastMessageByReceptionAt() 
+    {
+        return $this->lastMessageByReceptionAt;
+    }
+    
+    public function setLastMessageByReceptionAt($lastMessageByReceptionAt) 
+    {
+        $this->lastMessageByReceptionAt = $lastMessageByReceptionAt;
+    }
+
+    public function getAfterTransferStartAt() 
+    {
+        return $this->afterTransferStartAt;
+    }
+    
+    public function setAfterTransferStartAt($afterTransferStartAt) 
+    {
+        $this->afterTransferStartAt = $afterTransferStartAt;
     }
 
     function __construct()
@@ -60,11 +93,6 @@ class TicketController
         $this->apiPct->consultAllChats();
         $this->apiPct->putFeaturesOfChatInVariables();
         return $this->apiPct->getDataOfEspecificChat();
-    }
-
-    function getOpenedAt()
-    {
-        return $this->apiPct->getOpenedAt();
     }
 
     function getAttendant()

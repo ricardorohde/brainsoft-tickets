@@ -15,7 +15,6 @@ class ApiPct
 	private $start;
 	private $final;
 	private $rating;
-	private $openedAt;
 	private $transferedAt;
 	private $dataOfAllChats;
 	private $dataOfEspecificChat;
@@ -60,29 +59,24 @@ class ApiPct
 		return $this->attendant;
 	}
 
-	public function getClient() 
+	public function getClient()
 	{
 		return $this->client;
 	}
 
-	public function getStart() 
+	public function getStart()
 	{
 		return $this->start;
 	}
 
-	public function getFinal() 
+	public function getFinal()
 	{
 		return $this->final;
 	}
 
-	public function getRating() 
+	public function getRating()
 	{
 		return $this->rating;
-	}
-
-	public function getOpenedAt() 
-	{
-		return $this->openedAt;
 	}
 
 	public function getDataOfAllChats() 
