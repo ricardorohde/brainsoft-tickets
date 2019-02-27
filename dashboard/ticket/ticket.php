@@ -410,7 +410,7 @@
                         <textarea class="form-control yourMessage" id="resolution" name="resolution" rows="8" placeholder="Escreva sua mensagem"><?= $row_ticket['resolution'];?></textarea>
                       </div>
                     </div>
-                    <?php if ($_GET['id_chat'] > 100000 || $row_ticket['t_status'] != "aberto") : ?>
+                    <?php if ($_GET['id_chat'] > 100000 && $row_ticket['t_status'] != "aberto") : ?>
                     <div class="row text-center">
                       <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         Histórico e Relatório do Chat
