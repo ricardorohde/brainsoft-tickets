@@ -357,7 +357,7 @@
                                         $json_dec_children = json_decode($json_children);
 
                                         foreach ($json_dec_children as $key => $c_value) {
-                                          echo '<li id="$value->category/$c_value->description">$c_value->description</li>';
+                                          echo "<li id='$value->category/$c_value->description'>$c_value->description</li>";
                                         }
                                       ?>
                                     </ul>
