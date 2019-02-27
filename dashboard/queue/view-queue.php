@@ -97,7 +97,7 @@
 								<?php foreach ($queueGroup1 as $newQueue) {
 									echo "<th class='place_in_line'>" . $placeInLine1 . "º </th>";
 									$placeInLine1++;
-								}?>
+								} ?>
 							</tr>
 							<tr>
 								<?php foreach ($queueGroup1 as $newQueue) : ?>	
@@ -216,16 +216,16 @@
 			<?php
 				$attendants = $queueController->dataToTable();
 			?>
-			<div class="row" id="internal-row">
-				<table id="report" class="table table-sm table-bordered" align="center">
+			<div class="row col-md-12" id="internal-row" style="overflow: auto; width: 100%;">
+				<table id="report" class="table table-sm table-bordered table-hover" align="center">
 					<tr>
-						<td></td>
-						<td>Atendente</td>
-						<?php for ($i = 0; $i < 8; $i++) : ?>
+						<td style="min-width: 50px;"></td>
+						<td style="min-width: 150px;">Atendente</td>
+						<?php for ($i = 0; $i < 20; $i++) : ?>
 							<?php if($i == 0) : ?>
-								<td>Hoje</td>
+								<td style="min-width: 150px;">Hoje</td>
 							<?php else : ?>
-								<td><?= date('d/m', strtotime('-' .$i. ' days')); ?></td>
+								<td style="min-width: 150px;"><?= date('d/m', strtotime('-' .$i. ' days')); ?></td>
 							<?php endif;?>
 						<?php endfor; ?>
 					</tr>
@@ -243,11 +243,10 @@
 							<?php
 							if (!isset($_SESSION['user' . $key])) {
 								$dataOfUser = array();
-								for ($j=1; $j<8; $j++) : ?>
-
+								for ($j = 1; $j < 20; $j++) : ?>
 									<?php 
-									$totalCalls = $queueController->totalCalls($attendant, date('Y-m-d', strtotime('-' . $j . ' days')));
-									array_push($dataOfUser, $totalCalls);
+										$totalCalls = $queueController->totalCalls($attendant, date('Y-m-d', strtotime('-' . $j . ' days')));
+										array_push($dataOfUser, $totalCalls);
 	        						?>
 
 		      						<td><?= $totalCalls['total']; ?></td>
@@ -256,15 +255,16 @@
 							<?php 
 							} else {
 								$data = $_SESSION['user' . $key];
-								for ($j=0; $j<7; $j++) : ?>
+								for ($j = 0; $j < 19; $j++) : ?>
 									<td><?= $data[$j]['total']; ?></td>
-							<?php endfor; } ?>
+								<?php endfor; ?>
+							<?php } ?>
 						</tr>
 					<?php endforeach; ?>
 					<tr>
 						<td></td>
 						<td><strong>TOTAL</strong></td>
-						<?php for ($j = 0; $j < 8; $j++) : ?>
+						<?php for ($j = 0; $j < 20; $j++) : ?>
 							<td id="<?= $j+2?>"></td>
 						<?php endfor; ?>
 					</tr>

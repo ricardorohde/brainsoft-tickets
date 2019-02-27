@@ -320,6 +320,12 @@ class Ticket
         return $this->prepareInstance->prepare($query, $element, "");
     }
 
+    public function findDataBySqlIds($sqlIds)
+    {
+        $query = sprintf("SELECT ticket_module.description as module, employee.name, chat.id_chat as chat, ticket.t_status, ticket.registered_at FROM ticket, ticket_module, employee, chat WHERE ticket.id IN (%s) AND ticket.id_module = ticket_module.id AND ticket.id_attendant = employee.id AND ticket.id_chat = chat.id ORDER BY ticket.id DESC", $sqlIds);
+        return $this->prepareInstance->prepare($query, "", "all");
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {

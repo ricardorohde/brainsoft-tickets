@@ -17,6 +17,19 @@ class NewFindTicketController
 
 	private $apiPct;
 
+	private $sqlCallIds;
+	private $allCalls;
+
+	public function setNavBarController($navBarController)
+	{
+	  	$this->navBarController = $navBarController;
+	}
+
+	public function setPrepareInstance($prepareInstance)
+	{
+		$this->prepareInstance = $prepareInstance;
+	}
+
 	public function getApiPct()
 	{
 	 	return $this->apiPct;
@@ -27,14 +40,24 @@ class NewFindTicketController
 	 	$this->apiPct = $apiPct;
 	}
 
-	public function setNavBarController($navBarController)
+	public function getSqlCallIds() 
 	{
-	  	$this->navBarController = $navBarController;
+		return $this->sqlCallIds;
+	}
+	
+	public function setSqlCallIds($sqlCallIds) 
+	{
+		$this->sqlCallIds = $sqlCallIds;
 	}
 
-	public function setPrepareInstance($prepareInstance)
+	public function getAllCalls() 
 	{
-		$this->prepareInstance = $prepareInstance;
+		return $this->allCalls;
+	}
+	
+	public function setAllCalls($allCalls) 
+	{
+		$this->allCalls = $allCalls;
 	}
 
 	function __construct()
@@ -77,8 +100,18 @@ class NewFindTicketController
 	{
 		$ticket = new Ticket($this->getInstance(), $this->prepareInstance);
 		$ticket->setSource("telefone");
-		return $ticket->findBySource();
+		$calls = $ticket->findBySource();
+	
+		$callIds = array_column($calls, 'id');
+        $this->sqlCallIds = implode(',', $callIds);
+        $this->allCalls = $calls;
 	}
+
+	public function findDataOfCalls()
+    {
+        $call = new Ticket($this, $this->prepareInstance);
+        return $call->findDataBySqlIds($this->sqlCallIds);
+    }
 
 	public function findModule($idModule)
 	{

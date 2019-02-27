@@ -42,7 +42,8 @@
 
       <?php
         $attendants = $ticketController->findAttendantsInQueue();
-        $calls = $ticketController->findCalls();
+        $ticketController->findCalls();
+        $calls = $ticketController->findDataOfCalls();
       ?>
 
       <section class="forms">
@@ -68,9 +69,8 @@
                       <div class="col-sm-10 mt-3" style="padding-left: 0px!important;">
                         <?php foreach ($attendants as $attendant) : ?>
                           <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="attendant<?= $attendant['id'] ?>" name="id_attendant" value="<?= $attendant['id'] ?>" 
-                            class="custom-control-input" <?= $attendant['id_credential'] == $id ? "checked" : "" ?>>
-                            <label class="custom-control-label" for="attendant<?= $attendant['id'] ?>"><?= $attendant['name'] ?></label>
+                            <input type="radio" id="attendant<?= $attendant['id'] ?>" name="id_attendant" value="<?= $attendant['id'] ?>" class="custom-control-input" <?= $attendant['id_credential'] == $id ? "checked" : "" ?>>
+                            <label class="custom-control-label" for="attendant<?= $attendant['id'] ?>"><?= explode(' ', $attendant['name'])[0]; ?></label>
                           </div>
                         <?php endforeach; ?>
                       </div>
@@ -158,17 +158,11 @@
                         <tbody>
                         <?php if (!empty($calls)) : ?>
                           <?php foreach ($calls as $call) : ?>
-                            <?php 
-                                $module = $ticketController->findModule($call['id_module']);
-                                $attendant = $ticketController->findEmployee($call['id_attendant']);
-                                $chat = $ticketController->findChat($call['id_chat']);
-                            ?>
-
                             <tr>
-                              <td><?= $chat['id_chat']; ?></td>
+                              <td><?= $call['chat']; ?></td>
                               <td><?= ucfirst($call['t_status']); ?></td>
-                              <td><?= $module['description']; ?></td>
-                              <td><?= explode(" ", $attendant['name'])[0]; ?></td>
+                              <td><?= $call['module']; ?></td>
+                              <td><?= explode(' ', $call['name'])[0]; ?></td>
                               <td><?= date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
                             </tr>
                           <?php endforeach; ?>

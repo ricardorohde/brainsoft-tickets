@@ -11,6 +11,7 @@ class RegistryController
     private $cityController;
 
     private $allRegistries;
+    private $sqlRegistryIds;
 
     public function getAllRegistries() 
     {
