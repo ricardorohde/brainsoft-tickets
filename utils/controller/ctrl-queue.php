@@ -93,12 +93,12 @@ class QueueController
 	{
 		$finalized_queue_group_1 = array();
 
-		for ($i = 0; $i <= $qtd_attendants + 1; $i++) { 
-			if (!in_array($i+$plus, $new_queue_group)) { 
+		for ($i = 0; $i <= $qtd_attendants + 7; $i++) { 
+			if (!in_array($i + $plus, $new_queue_group)) { 
 				$finded = 0;
 				foreach ($queue_according_date as $key => $value) {
-					if ($value[0] == $i+$plus && $finded == 0) {
-						$finalized_queue_group_1[$key] = $i+$plus;
+					if ($value == $i + $plus && $finded == 0) {
+						$finalized_queue_group_1[$key] = $i + $plus;
 						$finded = 1;
 					}
 				}

@@ -5,3 +5,11 @@ span > .MultiFile-title {
 .var {
 	text-decoration: underline;
 }
+
+#divBtnSendEmail {
+	padding-right: 25px;
+}
+
+.btnSendEmail {
+	width: 100%;
+}

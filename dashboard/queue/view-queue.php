@@ -225,7 +225,7 @@
 							<?php if($i == 0) : ?>
 								<td style="min-width: 150px;">Hoje</td>
 							<?php else : ?>
-								<td style="min-width: 150px;"><?= date('d/m', strtotime('-' .$i. ' days')); ?></td>
+								<td style="min-width: 150px;"><?= date('d/m', strtotime('-' . $i . ' days')); ?></td>
 							<?php endif;?>
 						<?php endfor; ?>
 					</tr>
