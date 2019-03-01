@@ -16,16 +16,66 @@ class QueueController
 	private $finalizedQueueOfGroup2;
 
 	private $navBarController;
+
+	private $groupOne;
+	private $groupTwo;
+	private $countGroupOne;
+	private $countGroupTwo;
 	
 	public function setNavBarController($navBarController)
 	{
-	  $this->navBarController = $navBarController;
+	  	$this->navBarController = $navBarController;
+	}
+
+	public function getGroupOne() 
+	{
+		return $this->groupOne;
+	}
+	
+	public function setGroupOne($groupOne) 
+	{
+		$this->groupOne = $groupOne;
+	}
+
+	public function getGroupTwo() 
+	{
+		return $this->groupTwo;
+	}
+	
+	public function setGroupTwo($groupTwo) 
+	{
+		$this->groupTwo = $groupTwo;
+	}
+
+	public function getCountGroupOne() 
+	{
+		return $this->countGroupOne;
+	}
+	
+	public function setCountGroupOne($countGroupOne) 
+	{
+		$this->countGroupOne = $countGroupOne;
+	}
+
+	public function getCountGroupTwo() 
+	{
+		return $this->countGroupTwo;
+	}
+	
+	public function setCountGroupTwo($countGroupTwo) 
+	{
+		$this->countGroupTwo = $countGroupTwo;
 	}
 
 	function __construct()
 	{
 		$this->setNavBarController(new NavBarController());
 		$this->setPrepareInstance($this->navBarController->getPrepareInstance());
+
+		$this->groupOne = $this->attendantsOnGroup("nivel1");
+		$this->groupTwo = $this->attendantsOnGroup("nivel2");
+		$this->countGroupOne = count($this->groupOne);
+		$this->countGroupTwo = count($this->groupTwo);
 		$this->cleanDataInTable();
 	}
 
@@ -112,7 +162,7 @@ class QueueController
 	function openChats()
 	{
 	    $elements = "aberto";
-	    $query = "SELECT id_module, t_group, id_chat, id_attendant as id, registered_at FROM ticket WHERE t_status = ? ORDER BY id_chat desc";
+	    $query = "SELECT id_module, t_group, id_attendant as id, registered_at, chat.id_chat FROM ticket, chat WHERE t_status = ? AND ticket.id_chat = chat.id ORDER BY ticket.id_chat DESC";
 	    $this->allOpenChats = $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
@@ -185,20 +235,6 @@ class QueueController
 			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup2OnChat, $updatedQueue, $queueAccordingDate, 5);
 		}
 		return array_merge($finalQueue, $updatedQueue);
-	} 
-
-	function chatNumberToUseInLink($idChat)
-	{
-		$element = $idChat;
-		$query = "SELECT id_chat FROM chat WHERE id = ?";	
-		return $this->prepareInstance->prepare($query, $element, "all");
-	}
-
-	function timeOfTicket($idChat)
-	{
-		$element = $idChat;
-		$query = "SELECT registered_at FROM ticket WHERE id_chat = ?"; 	
-		return $this->prepareInstance->prepare($query, $element, "all");
 	}
 
 	function progressBar($registeredAt)

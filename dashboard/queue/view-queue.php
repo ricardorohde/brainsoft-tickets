@@ -36,7 +36,7 @@
 			{
 			  	var timer = duration, minutes, seconds;
 			  	setInterval(function () {
-			    	minutes = parseInt(timer / 60, 10)
+			    	minutes = parseInt(timer / 60, 10);
 			    	seconds = parseInt(timer % 60, 10);
 
 			    	minutes = minutes < 10 ? "0" + minutes : minutes;
@@ -86,15 +86,11 @@
 	        	<hr>
 	        	<h1>Disponibilidade Grupo 1</h1>  	
 		    		<div class="row" id="internal-row">
-		    		
 					<?php if ($queueGroup1 != null) : ?>
-						<?php 
-							$groupOne = $queueController->attendantsOnGroup("nivel1");
-							$placeInLine1 = 1;
-						?>
+						<?php $placeInLine1 = 1; ?>
 						<table align="center">
 							<tr>
-								<?php foreach ($queueGroup1 as $newQueue) {
+								<?php for ($i = 0; $i < $queueController->getCountGroupOne(); $i++) {
 									echo "<th class='place_in_line'>" . $placeInLine1 . "º </th>";
 									$placeInLine1++;
 								} ?>
@@ -103,36 +99,30 @@
 								<?php foreach ($queueGroup1 as $newQueue) : ?>	
 									<td class="colum_of_place">
 										<div class="card mb-3 user<?=$newQueue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
-											<div class="card-header"><?=$groupOne[$newQueue]; ?></div>
+											<div class="card-header"><?= $queueController->getGroupOne()[$newQueue]; ?></div>
 											<div class="card-body nivel1">
-					            	<?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
-					            		<?php if ($chat['t_group'] == "nivel1") : ?>
-					            			<?php 
-					            				$chatNumber = $queueController->chatNumberToUseInLink($chat['id_chat']);
-				            					$ticketTime = $queueController->timeOfTicket($chat['id_chat']);
-					            			?>
-			           		
-					            			<?php if ($chat['id'] == $newQueue) : ?>
-					            				<div>
-						            				<?php $minutos = $queueController->progressBar($ticketTime[0]['registered_at']); ?>
+								            	<?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
+								            		<?php if ($chat['t_group'] == "nivel1") : ?>						           		
+								            			<?php if ($chat['id'] == $newQueue) : ?>
+								            				<div>
+									            				<?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
 
-						            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-															   	<p><strong>Ticket: </strong><?= $chatNumber[0]['id_chat'] ?></p>
-															   	<p><strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($ticketTime[0]['registered_at'])) ?></p>
-															   	<button id='btn-modal' class='btn btn-primary' value='<?= $chatNumber[0]['id_chat'];?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
-																	</div>"><?= $chatNumber[0]['id_chat'];?></button>
+									            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
+																   	<p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
+																   	<p><strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?></p>
+																   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
 
-							            			<a href="#"></a>
-							            			<input type="hidden" name="startedTime<?= $rand ?>" value="<?php $ticketTime[0]['registered_at']?>">
+										            			<a href="#"></a>
+										            			<input type="hidden" name="startedTime<?= $rand ?>" value="<?php $chat['registered_at'] ?>">
 
-						            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
+									            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
-						            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time']?>">
+									            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time']?>">
 																	<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time']?>"></progress> 
 																</div>
-						            			</div>
-						            		<?php endif; ?>
-					            		<?php endif; ?>
+									            			</div>
+									            		<?php endif; ?>
+								            		<?php endif; ?>
 												<?php endforeach; ?>
 											</div>
 										</div>
@@ -151,58 +141,48 @@
 			<h1>Disponibilidade Grupo 2</h1>
 			<div class="row" id="internal-row">
 				<?php if ($queueGroup2 != null) : ?>
-					<?php 
-						$groupTwo = $queueController->attendantsOnGroup("nivel2");
-						$placeInLine2 = 1;
-					?>
+					<?php $placeInLine2 = 1; ?>
 					<table align="center">
 						<tr>
-							<?php foreach ($queueGroup2 as $newQueue) {
-								echo "<th class='place_in_line'>" . $placeInLine2 . "º </th>";
+							<?php for ($i = 0; $i < $queueController->getCountGroupTwo(); $i++) {
+								echo '<th class="place_in_line">' . $placeInLine2 . 'º </th>';
 								$placeInLine2++;
 							}?>
 						</tr>
 						<tr>
-							<?php foreach ($queueGroup2 as $newQueue) : ?>	
-								<?php $position = 0; ?>
-								<td class="colum_of_place">	
-									<div class="card mb-3 user<?=$newQueue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
-										<div class="card-header"><?= $groupTwo[$newQueue]; ?></div>
-										<div class="card-body nivel2">
-				            	<?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
-				            		<?php if ($chat['t_group'] == "nivel2") : ?>
-				            			<?php 
-				            				$chatNumber = $queueController->chatNumberToUseInLink($chat['id_chat']);
-				            				$ticketTime = $queueController->timeOfTicket($chat['id_chat']);
-			            				?>
-		           		
-				            			<?php if ($chat['id'] == $newQueue) : ?>
-				            				<div>
-				            					<?php $minutos = $queueController->progressBar($ticketTime[0]['registered_at']); ?>
+						<?php foreach ($queueGroup2 as $newQueue) : ?>	
+							<td class="colum_of_place">	
+								<div class="card mb-3 user<?=$newQueue?>" style="max-width: 18rem; float: left; margin-left: 3%;">
+									<div class="card-header"><?= $queueController->getGroupTwo()[$newQueue]; ?></div>
+									<div class="card-body nivel2">
+						            	<?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
+						            		<?php if ($chat['t_group'] == "nivel2") : ?>		           		
+						            			<?php if ($chat['id'] == $newQueue) : ?>
+						            				<div>
+						            					<?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
 
-					            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-												<p><strong>Chat / Ticket: </strong><?= $chatNumber[0]['id_chat'];?></p>
-									   			<p><strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($ticketTime[0]['registered_at']));?></p>
-									   			<button id='btn-modal' class='btn btn-primary' value='<?= $chatNumber[0]['id_chat'];?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
-												</div>"><?= $chatNumber[0]['id_chat'] ?></button>
+							            				<button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
+														<p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
+											   			<p><strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?></p>
+											   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
+														</div>"><?= $chat['id_chat'] ?></button>
 
-						            			<a href="#"></a>
-						            			<input type="hidden" name="startedTime<?= $rand ?>" value="<?php $ticketTime[0]['registered_at']?>">
+								            			<a href="#"></a>
+								            			<input type="hidden" name="startedTime<?= $rand ?>" value="<?php $chat['registered_at'] ?>">
 
-					            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
+							            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
-					            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time']?>">
-																<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time']?>"></progress>
-															</div>
+							            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time'] ?>">
+															<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time'] ?>"></progress>
 														</div>
-					            		<?php endif; ?>
-				            		<?php endif; ?>
-											<?php endforeach; ?>
-										</div>
+													</div>
+							            		<?php endif; ?>
+						            		<?php endif; ?>
+										<?php endforeach; ?>
 									</div>
-								</td>
-								<?php $position++; ?>
-							<?php endforeach; ?>
+								</div>
+							</td>
+						<?php endforeach; ?>
 						</tr>
 					</table>
 				<?php else : ?>
