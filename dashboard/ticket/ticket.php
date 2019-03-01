@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="../../css/fontastic.css">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
     <link rel="stylesheet" href="../../css/grasp_mobile_progress_circle-1.0.0.min.css">
     <link rel="stylesheet" href="../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" href="../../css/style.default.css" id="theme-stylesheet">
@@ -38,25 +37,15 @@
     <div class="root-page forms-page">
       <?php include ("../navs/header.php");?>
 
-      <?php 
-        $sql_id_chat = $connection->getConnection()->prepare("SELECT chat.id FROM chat, ticket WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat");
-        $sql_id_chat->execute(array($_GET["id_chat"], $_GET["id_attendant"])); $row_id_chat = $sql_id_chat->fetch();
-
-        $sql_ticket = $connection->getConnection()->prepare("SELECT id, id_registry, id_client, priority, t_status, source, type, t_group, id_module, id_attendant, resolution, id_who_closed, is_repeated FROM ticket WHERE id_chat = ?");
-        $sql_ticket->execute(array($row_id_chat['id'])); $row_ticket = $sql_ticket->fetch();
-
-        $sql_registry = $connection->getConnection()->prepare("SELECT id, name FROM registry WHERE id = ?");
-        $sql_registry->execute(array($row_ticket['id_registry'])); $row_registry = $sql_registry->fetch();
-
-        $sql_client = $connection->getConnection()->prepare("SELECT id, name FROM client WHERE id = ?");
-        $sql_client->execute(array($row_ticket['id_client'])); $row_client = $sql_client->fetch();
-
-        $sql_m_ticket = $connection->getConnection()->prepare("SELECT ticket_module.description as module, category_module.description as category FROM ticket_module, category_module WHERE ticket_module.id = ? AND ticket_module.id_category = category_module.id");
-        $sql_m_ticket->execute(array($row_ticket['id_module'])); $row_m_ticket = $sql_m_ticket->fetch();
+      <?php
+        $sql_id_chat = $connection->getConnection()->prepare("SELECT ticket.id, priority, t_status, ticket.source, type, ticket.t_group, id_attendant, resolution, id_who_closed, is_repeated, registry.name as registry, client.id as id_client, client.name as client, ticket_module.description as module, category_module.description as category FROM chat, ticket, registry, client, ticket_module, category_module WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat AND ticket.id_registry = registry.id AND ticket.id_client = client.id AND ticket_module.id = ticket.id_module AND ticket_module.id_category = category_module.id");
+        $sql_id_chat->execute(array($_GET["id_chat"], $_GET["id_attendant"]));
+        $row_id_chat = $sql_id_chat->fetch();
 
         $sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?");
-        if ($row_ticket['id_attendant'] != NULL) {
-          $sql_attendant->execute(array($row_ticket['id_attendant'])); $row_attendant = $sql_attendant->fetch();
+        if ($row_id_chat['id_attendant'] != NULL) {
+          $sql_attendant->execute(array($row_id_chat['id_attendant']));
+          $row_attendant = $sql_attendant->fetch();
         } else {
           $sql_attendant->execute(array($_GET['id_attendant'])); $targetAttendant = $sql_attendant->fetch();
         }
@@ -108,19 +97,19 @@
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Reincidente</label>
                       <div class="col-sm-1 select ui-widget">
-                        <input type="checkbox" name="is_repeated" id="is_repeated" class="form-control repeated" <?= $row_ticket['is_repeated'] == 1 ? "checked" : " "?>>
+                        <input type="checkbox" name="is_repeated" id="is_repeated" class="form-control repeated" <?= $row_id_chat['is_repeated'] == 1 ? "checked" : " "?>>
                       </div>
                     </div> 
                     <div class="form-group row">
                       <label class="col-sm-2 pt-2 form-control-label">Cartório</label>
                       <div class="col-sm-4 select ui-widget">
-                        <input type="text" name="registry" id="registry" class="form-control" value= <?= '"'.$row_registry['name'].'"'; ?> required><span class="help-block-none">Informe o cartório do cliente.</span>
+                        <input type="text" name="registry" id="registry" class="form-control" value= <?= '"'.$row_id_chat['registry'].'"'; ?> required><span class="help-block-none">Informe o cartório do cliente.</span>
                       </div>
                       <label class="col-sm-2 pt-2 form-control-label text-center">Usuário</label>
                       <div class="col-sm-4 select">
                         <select name="client" class="form-control" id="client">
-                          <?php if ($row_client != NULL): ?>
-                            <option value=<?= '"'.$row_client['id'].'"';?>><?= $row_client['name'];?></option>
+                          <?php if ($row_id_chat != NULL): ?>
+                            <option value=<?= '"'.$row_id_chat['id_client'].'"';?>><?= $row_id_chat['client'];?></option>
                           <?php else: ?>
                             <option >Primeiramente, informe o cartório...</option>
                           <?php endif; ?>
@@ -131,7 +120,7 @@
                       <label class="col-sm-2 pt-2 form-control-label">Prioridade</label>
                       <div class="col-sm-3 select">
                         <select name="priority" class="form-control" id="priority" required>
-                          <?php switch($row_ticket['priority']) {
+                          <?php switch($row_id_chat['priority']) {
                             case "baixa":
                               echo "<option value='baixa' selected>Baixa</option>";
                               echo "<option value='media'>Média</option>";
@@ -168,7 +157,7 @@
                       <label class="col-sm-3 pt-2 form-control-label text-center">Status</label>
                       <div class="col-sm-4 select">
                         <select name="status" class="form-control" id="status" required>
-                          <?php switch($row_ticket['t_status']){
+                          <?php switch($row_id_chat['t_status']){
                             case "aberto":
                               echo "<option value='aberto' selected>Aberto</option>";
                               echo "<option value='pendente'>Pendente</option>";
@@ -212,7 +201,7 @@
                               echo "<option value='telefone' selected>Telefone</option>";
                               echo "<option value='email'>Email</option>";
                             } else {
-                              switch ($row_ticket['source']) {
+                              switch ($row_id_chat['source']) {
                                 case "chat":
                                   echo "<option value='chat' selected>Chat</option>";
                                   echo "<option value='telefone'>Telefone</option>";
@@ -240,7 +229,7 @@
                       <label class="col-sm-3 pt-2 form-control-label text-center">Tipo</label>
                       <div class="col-sm-4 select">
                         <select name="type" class="form-control" id="type" required>
-                          <?php switch ($row_ticket['type']) {
+                          <?php switch ($row_id_chat['type']) {
                             case "solicitacao":
                               echo "<option value='solicitacao' selected>Solicitação</option>";
                               echo "<option value='duvida'>Dúvida</option>";
@@ -307,7 +296,7 @@
                     <div class="form-group row">
                       <label class="col-sm-2 pt-2 form-control-label">Módulo</label>
                       <div class="col-sm-3 select">
-                         <input type="text" name="module" id="module" class="form-control" value="<?= $row_m_ticket['category'] == NULL ? "" : $row_m_ticket['category']."/".$row_m_ticket['module']; ?>" disabled>
+                         <input type="text" name="module" id="module" class="form-control" value="<?= $row_id_chat['category'] == NULL ? "" : $row_id_chat['category']."/".$row_id_chat['module']; ?>" disabled>
                       </div>
                       <label class="col-sm-3 pt-2 form-control-label text-center">Filtro</label>
                       <div class="col-sm-4 select">
@@ -374,7 +363,7 @@
                       <label class="col-sm-2 pt-2 form-control-label">Grupo</label>
                       <div class="col-sm-3 select">
                         <select name="group" class="form-control" id="group" required>
-                          <?php switch ($row_ticket['t_group']) {
+                          <?php switch ($row_id_chat['t_group']) {
                             case "nivel1":
                               echo "<option value='nivel1' selected>Nível 1</option>";
                               echo "<option value='nivel2'>Nível 2</option>";
@@ -409,10 +398,10 @@
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">Resolução</label>
                       <div class="col-sm-10 select">
-                        <textarea class="form-control yourMessage" id="resolution" name="resolution" rows="8" placeholder="Escreva sua mensagem"><?= $row_ticket['resolution'];?></textarea>
+                        <textarea class="form-control yourMessage" id="resolution" name="resolution" rows="8" placeholder="Escreva sua mensagem"><?= $row_id_chat['resolution'];?></textarea>
                       </div>
                     </div>
-                    <?php if ($_GET['id_chat'] > 100000 && $row_ticket['t_status'] != "aberto") : ?>
+                    <?php if ($_GET['id_chat'] > 100000 && $row_id_chat['t_status'] != "aberto") : ?>
                     <div class="row text-center">
                       <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         Histórico e Relatório do Chat
@@ -558,9 +547,9 @@
                         <input type="hidden" name="id_chat" value="<?php echo $_GET['id_chat']; ?>">
                         <input type="hidden" name="opening_time" value="<?php echo $ticketController->getStart() == "" ? "0000-00-00 00:00:00" : $ticketController->getStart() ?>">
                         <input type="hidden" name="final_time" value="<?php echo $ticketController->getFinal() == "" ? "0000-00-00 00:00:00" : $ticketController->getFinal() ?>">
-                        <input type="hidden" name="duration_in_minutes" value="<?php if($totalTimeInMinutes < 1){echo 1;} else{echo $totalTimeInMinutes;} ?>">
-                        <input type='hidden' name='selected_category' value="<?php if(!is_null($row_m_ticket['category'])){echo $row_m_ticket['category'];} ?>">
-                        <input type='hidden' name='selected_module' value="<?php if(!is_null($row_m_ticket['module'])){echo $row_m_ticket['module'];} ?>">
+                        <input type="hidden" name="duration_in_minutes" value="<?php echo $totalTimeInMinutes < 1 ? "1" : $totalTimeInMinutes ?>">
+                        <input type='hidden' name='selected_category' value="<?php echo !is_null($row_id_chat['category']) ? $row_id_chat['category'] : "" ?>">
+                        <input type='hidden' name='selected_module' value="<?php echo !is_null($row_id_chat['module']) ? $row_id_chat['module'] : "" ?>">
 
                         <?php
                           if($ticketController->getIpClient() != NULL || $_GET['id_chat'] < 100000) {
@@ -568,7 +557,7 @@
 
                             if(@$row_attendant['name'] != NULL){
                               echo '<button type="submit" name="submit" class="btn btn-primary btnAction">Salvar Alterações!</button>';
-                              if(!($row_ticket['id_who_closed'] != NULL)){
+                              if(!($row_id_chat['id_who_closed'] != NULL)){
                                 echo '<button type="submit" name="finishTicket" class="btn btn-danger btnAction">Finalizar Ticket!</button>';
                               }
                             } else{
