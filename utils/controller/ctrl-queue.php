@@ -254,9 +254,9 @@ class QueueController
 
 	function attendantsOnGroup($group)
 	{
-		$element = $group;
-		$query = "SELECT id, name FROM employee WHERE t_group = ?";
-		$data = $this->prepareInstance->prepare($query, $element, "all"); 
+		$elements = [$group, "yes"];
+		$query = "SELECT id, name FROM employee WHERE t_group = ? AND on_chat = ?";
+		$data = $this->prepareInstance->prepare($query, $elements, "all"); 
 	
 		$group = array();
 		foreach ($data as $g) {
