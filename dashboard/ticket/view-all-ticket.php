@@ -213,12 +213,12 @@
                           <i class="material-icons" style="padding-top: 10px;">forward</i>
                         </button>
                         <div class="dropdown-menu">
-                          <?php foreach ($allTicketCtrl->getAttendantsToForward() as $at) : ?>
+                        <?php foreach ($allTicketCtrl->getAttendantsToForward() as $at) : ?>
                             <?php if($allTicketCtrl->getEmployee()['name'] != $at['name']) : ?>
-                              <a class="dropdown-item" href="ticket/<?= $allTicketCtrl->getChat()['id_chat'] ?>/<?= $at['id'] ?>"><?= $at['name'] ?></a>
-                              <div class="dropdown-divider"></div> 
+                            <a class="dropdown-item" href="ticket/<?= $allTicketCtrl->getChat()['id_chat'] ?>/<?= $at['id'] ?>"><?= $at['name'] ?></a>
+                            <div class="dropdown-divider"></div> 
                             <?php endif; ?>
-                          <?php endforeach; ?>
+                        <?php endforeach; ?>
                         </div>
                       </div>
                     </div>

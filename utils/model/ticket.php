@@ -326,6 +326,13 @@ class Ticket
         return $this->prepareInstance->prepare($query, "", "all");
     }
 
+    public function findOpenedTicketsByAttendant()
+    {
+        $elements = [$this->getIdAttendant(), "aberto"];
+        $query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND t_status = ?";
+        return $this->prepareInstance->prepare($query, $elements, "");
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {

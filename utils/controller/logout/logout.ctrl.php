@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__ . "/../employee/employee.ctrl.php";
-include_once __DIR__ . "../../../commmon/session.php";
+include_once __DIR__ . "/../ticket/ticket.ctrl.php";
+include_once __DIR__ . "/../../../common/session.php";
 
 new LogoutController();
 
@@ -9,20 +10,27 @@ class LogoutController
 	private static $instance;
     private $navBarController;
 	private $employeeController;
+	private $ticketController;
 	private $sessionInstance;
 
 	function __construct()
 	{
 		$this->employeeController = new EmployeeController();
+		$this->ticketController = new TicketController();
 		$this->sessionInstance = new Session("");
 		$this->logout();
 	}
 
 	function logout()
-	{ 
-		$this->employeeController->isOnChat($_SESSION['login'], "no");
-		$this->sessionInstance->destroy();
-		header("Location:/");
+	{
+		$id = $this->employeeController->findByCredential($_SESSION['login']);
+		if ($this->ticketController->checkIfHasOpenTicketByEmployee($id)['total'] < 1) {
+			$this->employeeController->isOnChat($_SESSION['login'], "no");
+			$this->sessionInstance->destroy();
+			header("Location:/");
+		}else {
+			header("Location:/dashboard/fila-interna");
+		}
 	}
 
 	public static function getInstance()

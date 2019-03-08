@@ -145,6 +145,13 @@ class TicketController
         return $ticket->findPendingTickets();
     }
 
+    public function checkIfHasOpenTicketByEmployee($idEmployee)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setIdAttendant($idEmployee);
+        return $ticket->findOpenedTicketsByAttendant();
+    }
+
     public function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
