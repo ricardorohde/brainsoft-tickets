@@ -23,12 +23,12 @@ class LogoutController
 
 	function logout()
 	{
-		$id = $this->employeeController->findByCredential($_SESSION['login']);
+		$id = $this->employeeController->findByCredential($_SESSION['login'])['id'];
 		if ($this->ticketController->checkIfHasOpenTicketByEmployee($id)['total'] < 1) {
 			$this->employeeController->isOnChat($_SESSION['login'], "no");
 			$this->sessionInstance->destroy();
 			header("Location:/");
-		}else {
+		} else {
 			header("Location:/dashboard/fila-interna");
 		}
 	}

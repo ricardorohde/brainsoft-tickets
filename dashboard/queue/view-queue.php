@@ -117,8 +117,8 @@
 
 									            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
-									            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time']?>">
-																	<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time']?>"></progress> 
+									            				<div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time']?>">
+																	<progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time']?>"></progress> 
 																</div>
 									            			</div>
 									            		<?php endif; ?>
@@ -172,8 +172,8 @@
 
 							            				<?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
-							            				<div class="progress" title="<?= (int)$minutos?> minuto(s) de <?= $time[0]['limit_time'] ?>">
-															<progress id="pg" value="<?= (int)$minutos?>" max="<?= $time[0]['limit_time'] ?>"></progress>
+							            				<div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time'] ?>">
+															<progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
 														</div>
 													</div>
 							            		<?php endif; ?>
