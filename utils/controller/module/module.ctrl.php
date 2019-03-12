@@ -32,11 +32,18 @@ class ModuleController
         return $module->findById();
     }
 
-    function findIdByDescriptionAndCategory($description, $idCategory){
+    function findIdByDescriptionAndCategory($description, $idCategory)
+    {
         $module = new Module($this, $this->prepareInstance);
         $module->setDescription($description);
         $module->setIdCategory($idCategory);
         return $module->findIdByDescriptionAndCategory();
+    }
+
+    public function findDataOfCategories($sqlIds)
+    {
+        $module = new Module($this, $this->prepareInstance);
+        return $module->findDataBySqlIds($sqlIds);
     }
     
     public static function getInstance()

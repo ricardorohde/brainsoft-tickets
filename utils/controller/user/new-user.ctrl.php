@@ -174,53 +174,22 @@ class NewUserController
     public function verifyCurrentType()
     {
         if($this->currentType == "client") {
-            /*$sql_user = $connection->getConnection()->prepare("SELECT name, email, id_credential, id_registry, id_role FROM client WHERE id = ?");
-            $sql_user->execute(array($id));
-            $row_sql_user = $sql_user->fetch();*/
             $this->findClientById();
-
-            /*$sql_registry = $connection->getConnection()->prepare("SELECT * FROM registry WHERE id = ?");
-            $sql_registry->execute(array($row_sql_user['id_registry']));
-            $row_sql_registry = $sql_registry->fetch();*/
             $this->findRegistryById();
-
-            /*$sql_city = $connection->getConnection()->prepare("SELECT * FROM city WHERE id = ?");
-            $sql_city->execute(array($row_sql_registry['id_city']));
-            $row_sql_city = $sql_city->fetch();*/
             $this->findCityById();
-
-            /*$sql_state = $connection->getConnection()->prepare("SELECT * FROM state WHERE id = ?");
-            $sql_state->execute(array($row_sql_city['id_state']));
-            $row_sql_state = $sql_state->fetch();*/
             $this->findStateById();
-
-            /*$sql_role = $connection->getConnection()->prepare("SELECT * FROM role WHERE status = ? AND id = ?");
-            $sql_role->execute(array("ativo", $row_sql_user['id_role']));
-            $row_sql_role = $sql_role->fetch();*/
             $this->findRoleByStatusAndId();
-
             $this->findAllRoles("1");
         } else if ($this->currentType == "employee") {
             $this->inputHasEmployee = "<input type='hidden' id='hasEmployee'>";
 
-            /*$sql_user = $connection->getConnection()->prepare("SELECT name, email, t_group, id_credential, id_role FROM employee WHERE id = ?");
-            $sql_user->execute(array($id)); 
-            $row_sql_user = $sql_user->fetch();*/
             $this->findEmployeeById();
-
-            /*$sql_role = $connection->getConnection()->prepare("SELECT * FROM role WHERE status = ? AND id = ?"); 
-            $sql_role->execute(array("ativo", $row_sql_user['id_role'])); 
-            $row_sql_role = $sql_role->fetch();*/
             $this->findRoleByStatusAndId();
-
             $this->findAllRoles("0");
         } else {
             $this->thereIsProblem = true;
         }
 
-        /*$sql_credential = $connection->getConnection()->prepare("SELECT login FROM credential WHERE id = ?"); 
-        $sql_credential->execute(array(@$row_sql_user['id_credential'])); 
-        $row_sql_credential = $sql_credential->fetch();*/
         $this->findCredentialBydId();
     }
 

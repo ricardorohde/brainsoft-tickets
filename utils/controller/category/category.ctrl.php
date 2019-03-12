@@ -35,6 +35,13 @@ class CategoryController{
         return $category->findCategoryByIdAndOrder();
     }
 
+    public function findByGroup($group)
+    {
+        $category = new CategoryModule($this, $this->prepareInstance);
+        $category->setTGroup($group);
+        return $category->findByGroup();
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {

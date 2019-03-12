@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__ . "/../../pct-chat/api.php";
 include_once __DIR__ . "/../navbar/navbar.ctrl.php";
+include_once __DIR__ . "/../category/category.ctrl.php";
+include_once __DIR__ . "/../module/module.ctrl.php";
 require_once __DIR__ . "/../../model/ticket.php";
 
 class TicketController
@@ -8,12 +10,19 @@ class TicketController
     private static $instance;
     private $prepareInstance;
     private $navBarController;
+    private $categoryController;
+    private $moduleController;
 
     private $apiPct;
     private $openedAt;
     private $transferedAt;
     private $lastMessageByReceptionAt;
     private $afterTransferStartAt;
+
+    private $categoriesGroup1;
+    private $categoriesGroup2;
+    private $sqlCategoriesGroup1;
+    private $sqlCategoriesGroup2;
 
     public function getApiPct()
     {
@@ -65,10 +74,42 @@ class TicketController
         $this->afterTransferStartAt = $afterTransferStartAt;
     }
 
+    public function getCategoriesGroup1() 
+    {
+        return $this->categoriesGroup1;
+    }
+    
+    public function setCategoriesGroup1($categoriesGroup1) 
+    {
+        $this->categoriesGroup1 = $categoriesGroup1;
+    }
+
+    public function getCategoriesGroup2() 
+    {
+        return $this->categoriesGroup2;
+    }
+    
+    public function setCategoriesGroup2($categoriesGroup2) 
+    {
+        $this->categoriesGroup2 = $categoriesGroup2;
+    }
+
+    public function getSqlCategoriesGroup1() 
+    {
+        return $this->sqlCategoriesGroup1;
+    }
+    
+    public function setSqlCategoriesGroup1($sqlCategoriesGroup1) 
+    {
+        $this->sqlCategoriesGroup1 = $sqlCategoriesGroup1;
+    }
+
     function __construct()
     {
         $this->navBarController = NavBarController::getInstance();
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
+        $this->categoryController = CategoryController::getInstance();
+        $this->moduleController = ModuleController::getInstance();
 
         $this->setApiPct(new ApiPct());
     }
@@ -150,6 +191,34 @@ class TicketController
         $ticket = new Ticket($this, $this->prepareInstance);
         $ticket->setIdAttendant($idEmployee);
         return $ticket->findOpenedTicketsByAttendant();
+    }
+
+    public function findAllCategoryModule()
+    {
+        $rawCategoriesGroup1 = $this->categoryController->findByGroup("nivel1");
+        $rawCategoriesGroup2 = $this->categoryController->findByGroup("nivel2");
+
+        $encodeCategoriesGroup1 = json_encode($rawCategoriesGroup1);
+        $encodeCategoriesGroup2 = json_encode($rawCategoriesGroup2);
+        $this->categoriesGroup1 = json_decode($encodeCategoriesGroup1);
+        $this->categoriesGroup2 = json_decode($encodeCategoriesGroup2);
+
+        $categoriesIdsGroup1 = array_column($rawCategoriesGroup1, 'id');
+        $categoriesIdsGroup2 = array_column($rawCategoriesGroup2, 'id');
+        $this->sqlCategoriesGroup1 = implode(',', $categoriesIdsGroup1);
+        $this->sqlCategoriesGroup2 = implode(',', $categoriesIdsGroup2);
+    }
+
+    public function findDataOfCategoriesGroup1()
+    {
+        $enconde = json_encode($this->moduleController->findDataOfCategories($this->sqlCategoriesGroup1));
+        return json_decode($enconde);
+    }
+
+    public function findDataOfCategoriesGroup2()
+    {
+        $encode = json_encode($this->moduleController->findDataOfCategories($this->sqlCategoriesGroup2));
+        return json_decode($encode);
     }
 
     public function verifyPermission()

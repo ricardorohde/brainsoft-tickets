@@ -140,4 +140,11 @@ class Module
 		$query = "UPDATE ticket_module SET limit_time = ? WHERE id = ?";
 		return $this->prepareInstance->prepare($query, $elements, "");
 	}
+
+	public function findDataBySqlIds($sqlIds)
+    {
+    	$element = ['ativo'];
+        $query = sprintf("SELECT description, id_category FROM ticket_module WHERE id_category IN (%s) AND status = ? ORDER BY id_category asc", $sqlIds);
+        return $this->prepareInstance->prepare($query, $element, "all");
+    }
 }

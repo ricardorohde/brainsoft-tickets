@@ -51,28 +51,12 @@
         }
       ?>
 
-      <?php 
-        //NÍVEL 1
-        $sql_category_module_nivel1 = $connection->getConnection()->prepare("SELECT id, description as category FROM 
-          category_module WHERE t_group = ? ORDER BY description");
-        $sql_category_module_nivel1->execute(array("nivel1"));
-        $row_category_module_nivel1 = $sql_category_module_nivel1->fetchAll();
-
-        $json_str_nivel1 = json_encode($row_category_module_nivel1);
-        $json_obj_nivel1 = json_decode($json_str_nivel1);
-
-        //NÍVEL 2
-        $sql_category_module_nivel2 = $connection->getConnection()->prepare("SELECT id, description as category FROM 
-          category_module WHERE t_group = ? ORDER BY description");
-        $sql_category_module_nivel2->execute(array("nivel2"));
-        $row_category_module_nivel2 = $sql_category_module_nivel2->fetchAll();
-
-        $json_str_nivel2 = json_encode($row_category_module_nivel2);
-        $json_obj_nivel2 = json_decode($json_str_nivel2);
+    <?php
+        $ticketController->findAllCategoryModule();
 
         $sql_all_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee ORDER BY name"); 
         $sql_all_attendant->execute();
-      ?>
+    ?>
 
       <section class="forms">
         <div class="container-fluid">
@@ -308,51 +292,35 @@
                         <div id="jstree">
                           <ul>
                             <li>Grupo 1
-                              <ul>
-                                <?php foreach ($json_obj_nivel1 as $key => $value) { ?>
-                                  <li id='<?= $value->category ?>'><?= $value->category ?>
-                                     <ul>
-                                      <?php 
-                                        $sql_children = $connection->getConnection()->prepare("SELECT description FROM ticket_module 
-                                          WHERE status = ? AND id_category = ?"); 
-                                        $sql_children->execute(array("ativo", $value->id)); 
-                                        $row_children = $sql_children->fetchAll();
-                                    
-                                        $json_children = json_encode($row_children);
-                                        $json_dec_children = json_decode($json_children);
-
-                                        foreach ($json_dec_children as $key => $c_value) {
-                                          echo "<li id='$value->category/$c_value->description'>$c_value->description</li>";
-                                        }
-                                      ?>
-                                    </ul>
-                                  </li>
-                                <?php } ?>
-                              </ul>
+                                <ul>
+                                    <?php foreach ($ticketController->getCategoriesGroup1() as $key => $value) { ?>
+                                        <li id='<?= $value->category ?>'><?= $value->category?>
+                                            <ul>
+                                                <?php foreach ($ticketController->findDataOfCategoriesGroup1() as $key => $c_value): ?>
+                                                    <?php if ($value->id == $c_value->id_category) : ?>
+                                                        <?php echo "<li id='$value->category/$c_value->description'>$c_value->description</li>"; ?>
+                                                    <?php endif; ?>    
+                                                <?php endforeach ?>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
                             </li>
 
                             <li>Grupo 2
-                              <ul>
-                                <?php foreach ($json_obj_nivel2 as $key => $value) { ?>
-                                  <li id='<?= $value->category ?>'><?= $value->category ?>
-                                    <ul>
-                                      <?php 
-                                        $sql_children = $connection->getConnection()->prepare("SELECT description FROM ticket_module
-                                          WHERE status = ? AND id_category = ?"); 
-                                        $sql_children->execute(array("ativo", $value->id)); 
-                                        $row_children = $sql_children->fetchAll();
-                                    
-                                        $json_children = json_encode($row_children);
-                                        $json_dec_children = json_decode($json_children);
-
-                                        foreach ($json_dec_children as $key => $c_value) {
-                                          echo "<li id='$value->category/$c_value->description'>$c_value->description</li>";
-                                        }
-                                      ?>
-                                    </ul>
-                                  </li>
-                                <?php } ?>
-                              </ul>
+                                <ul>
+                                    <?php foreach ($ticketController->getCategoriesGroup2() as $key => $value) { ?>
+                                        <li id='<?= $value->category ?>'><?= $value->category?>
+                                            <ul>
+                                                <?php foreach ($ticketController->findDataOfCategoriesGroup2() as $key => $c_value): ?>
+                                                    <?php if ($value->id == $c_value->id_category) : ?>
+                                                        <?php echo "<li id='$value->category/$c_value->description'>$c_value->description</li>"; ?>
+                                                    <?php endif; ?>    
+                                                <?php endforeach ?>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
                             </li>
                           </ul>
                         </div>

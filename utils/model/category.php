@@ -97,4 +97,11 @@ class CategoryModule
 		$query = "SELECT * FROM category_module WHERE id = ? ORDER BY id DESC";
 		return $this->prepareInstance->prepare($query, $element, "");
 	}
+
+	public function findByGroup()
+	{
+		$element = [$this->tGroup];
+		$query = "SELECT id, description as category FROM category_module WHERE t_group = ? ORDER BY id asc";
+		return $this->prepareInstance->prepare($query, $element, "all");
+	}
 }
