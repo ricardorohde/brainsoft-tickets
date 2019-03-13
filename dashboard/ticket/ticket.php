@@ -520,7 +520,7 @@
                         <input type='hidden' name='selected_module' value="<?php echo !is_null($row_id_chat['module']) ? $row_id_chat['module'] : "" ?>">
 
                         <?php
-                          if($ticketController->getIpClient() != NULL || $_GET['id_chat'] < 100000) {
+                          if($_GET['id_chat'] < 100000) {
                             echo '<button type="reset" class="btn btn-secondary">Limpar</button>';
 
                             if(@$row_attendant['name'] != NULL){
