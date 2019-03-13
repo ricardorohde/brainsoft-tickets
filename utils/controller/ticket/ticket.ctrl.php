@@ -129,9 +129,11 @@ class TicketController
         $this->apiPct->assignIdChatInSession($id);
     }
 
-    function getHistoryOfChat()
+    function getHistoryOfChat($date)
     {
-        $this->apiPct->consultAllChats();
+        $registered_at = date("Y/m/d", strtotime($date));
+
+        $this->apiPct->consultAllChats($registered_at);
         $this->apiPct->putFeaturesOfChatInVariables();
         return $this->apiPct->getDataOfEspecificChat();
     }

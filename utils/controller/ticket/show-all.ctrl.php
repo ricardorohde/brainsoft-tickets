@@ -243,7 +243,7 @@ class AllTicketController
 
             	$this->actualDateToFind = date('Y-m-d', strtotime("-1 day", strtotime($this->actualDateToFind)));
             	$this->filterToShow = "de " . date('d/m/Y', strtotime($this->initialDateToFind)) . " até " . date('d/m/Y', strtotime($this->actualDateToFind));
-          	} elseif (isset($post['filter-by-attendant'])) {
+          	} else if (isset($post['filter-by-attendant'])) {
             	$this->attendantIdOfFilter = $post['attendant'];
            		$this->statusOfFilter = $post['status'];
            		$this->tickets = $this->ticketInstance->filterByPeriodAndAttendant($this->initialDateToFind, $this->actualDateToFind, $this->attendantIdOfFilter, $this->statusOfFilter);

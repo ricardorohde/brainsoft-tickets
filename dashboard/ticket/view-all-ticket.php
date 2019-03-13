@@ -98,10 +98,10 @@
                 <div class="col col-lg-3">
                   <select name="status" class="form-control" id="status" required>
                     <option>Selecione o status...</option>
-                    <option value="aberto" <?= @$allTicketCtrl->getStatusOfFilter() == "aberto" ? "selected" : ""?>>Aberto</option>
-                    <option value="pendente" <?= @$allTicketCtrl->getStatusOfFilter() == "pendente" ? "selected" : ""?>>Pendente</option>
-                    <option value="solucionado" <?= @$allTicketCtrl->getStatusOfFilter() == "solucionado" ? "selected" : ""?>>Solucionado</option>
-                    <option value="fechado" <?= @$allTicketCtrl->getStatusOfFilter() == "fechado" ? "selected" : ""?>>Fechado</option>
+                    <option value="aberto" <?= @$allTicketCtrl->getStatusOfFilter() == "aberto" ? "selected" : "" ?>>Aberto</option>
+                    <option value="pendente" <?= @$allTicketCtrl->getStatusOfFilter() == "pendente" ? "selected" : "" ?>>Pendente</option>
+                    <option value="solucionado" <?= @$allTicketCtrl->getStatusOfFilter() == "solucionado" ? "selected" : "" ?>>Solucionado</option>
+                    <option value="fechado" <?= @$allTicketCtrl->getStatusOfFilter() == "fechado" ? "selected" : "" ?>>Fechado</option>
                   </select>
                 </div>
                 <div class="col col-lg-3">
@@ -127,34 +127,11 @@
 
                 <?php foreach ($allTicketCtrl->getTickets() as $ticket) : ?>
                   <?php 
-                    /*$sql_module = $connection->getConnection()->prepare("SELECT description, id_category FROM ticket_module WHERE id = ?"); 
-                    $sql_module->execute(array($ticket['id_module'])); 
-                    $module = $sql_module->fetch();*/
                     $allTicketCtrl->findModule($ticket['id_module']);
-
-                    /*$sql_category_module = $connection->getConnection()->prepare("SELECT description FROM category_module WHERE id = ?"); 
-                    $sql_category_module->execute(array($module['id_category'])); 
-                    $category_module = $sql_category_module->fetch();*/
                     $allTicketCtrl->findCategoryModule($allTicketCtrl->getModuleOfTicket()['id_category']);
-
-                    /*$sql_registry = $connection->getConnection()->prepare("SELECT name FROM registry WHERE id = ?"); 
-                    $sql_registry->execute(array($ticket['id_registry'])); 
-                    $registry = $sql_registry->fetch();*/
                     $allTicketCtrl->findRegistry($ticket['id_registry']);
-
-                    /*$sql_client = $connection->getConnection()->prepare("SELECT name FROM client WHERE id = ?"); 
-                    $sql_client->execute(array($ticket['id_client'])); 
-                    $client = $sql_client->fetch();*/
                     $allTicketCtrl->findClient($ticket['id_client']);
-
-                    /*$sql_attendant = $connection->getConnection()->prepare("SELECT id, name FROM employee WHERE id = ?"); 
-                    $sql_attendant->execute(array($ticket['id_attendant'])); 
-                    $attendant = $sql_attendant->fetch();*/
                     $allTicketCtrl->findEmployee($ticket['id_attendant']);
-
-                    /*$sql_chat = $connection->getConnection()->prepare("SELECT id_chat, opening_time, final_time FROM chat WHERE id = ?"); 
-                    $sql_chat->execute(array($ticket['id_chat'])); 
-                    $id_chat = $sql_chat->fetch();*/
                     $allTicketCtrl->findChat($ticket['id_chat']);
                   ?>
 

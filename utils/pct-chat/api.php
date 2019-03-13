@@ -184,12 +184,12 @@ class ApiPct
 	  	}
 	}
 
-	function consultAllChats()
+	function consultAllChats($date)
 	{
 		$ch1 = curl_init();
 		$ch2 = curl_init();
 
-		$urlAllChats = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats';
+		$urlAllChats = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/' . $date;
 		$urlEspecificChat = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/'.$this->idChatInSession; 
 
 		curl_setopt($ch1, CURLOPT_URL, $urlAllChats);

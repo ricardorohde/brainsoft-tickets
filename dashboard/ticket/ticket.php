@@ -1,12 +1,10 @@
 <?php 
-  include_once "../../utils/controller/ticket/ticket.ctrl.php";
-  $ticketController = TicketController::getInstance();
-  $ticketController->verifyPermission();
+    include_once "../../utils/controller/ticket/ticket.ctrl.php";
+    $ticketController = TicketController::getInstance();
+    $ticketController->verifyPermission();
 
-  $ticketController->setIdChat($_GET["id_chat"]);
-  $connection = $ticketController->getConn();
-
-  $ticketController->getHistoryOfChat();
+    $ticketController->setIdChat($_GET["id_chat"]);
+    $connection = $ticketController->getConn();
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +36,7 @@
       <?php include ("../navs/header.php");?>
 
       <?php
-        $sql_id_chat = $connection->getConnection()->prepare("SELECT ticket.id, priority, t_status, ticket.source, type, ticket.t_group, id_attendant, resolution, id_who_closed, is_repeated, registry.name as registry, client.id as id_client, client.name as client, ticket_module.description as module, category_module.description as category FROM chat, ticket, registry, client, ticket_module, category_module WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat AND ticket.id_registry = registry.id AND ticket.id_client = client.id AND ticket_module.id = ticket.id_module AND ticket_module.id_category = category_module.id");
+        $sql_id_chat = $connection->getConnection()->prepare("SELECT ticket.id, priority, t_status, ticket.source, type, ticket.t_group, id_attendant, resolution, id_who_closed, is_repeated, registry.name as registry, client.id as id_client, client.name as client, ticket_module.description as module, category_module.description as category, ticket.registered_at FROM chat, ticket, registry, client, ticket_module, category_module WHERE chat.id_chat = ? AND ticket.id_attendant = ? AND chat.id = ticket.id_chat AND ticket.id_registry = registry.id AND ticket.id_client = client.id AND ticket_module.id = ticket.id_module AND ticket_module.id_category = category_module.id");
         $sql_id_chat->execute(array($_GET["id_chat"], $_GET["id_attendant"]));
         $row_id_chat = $sql_id_chat->fetch();
 
@@ -64,7 +62,7 @@
             <?php if (!isset($_GET["id_chat"])) { ?>   
               <h1 class="h3 display">Cadastro de Tickets</h1>
             <?php } else { ?>
-              <h1 class="h3 display">Ticket do chat #<?= $_GET["id_chat"]?></h1>
+              <h1 class="h3 display">Ticket do chat #<?= $_GET["id_chat"] ?></h1>
             <?php } ?>
           </header>
           <div class="row">    
@@ -288,43 +286,43 @@
                       </div>
                     </div>
                     <div class="form-group row">
-                      <div class="offset-sm-2 col-sm-5">
-                        <div id="jstree">
-                          <ul>
-                            <li>Grupo 1
+                        <div class="offset-sm-2 col-sm-5">
+                            <div id="jstree">
                                 <ul>
-                                    <?php foreach ($ticketController->getCategoriesGroup1() as $key => $value) { ?>
-                                        <li id='<?= $value->category ?>'><?= $value->category?>
-                                            <ul>
-                                                <?php foreach ($ticketController->findDataOfCategoriesGroup1() as $key => $c_value): ?>
-                                                    <?php if ($value->id == $c_value->id_category) : ?>
-                                                        <?php echo "<li id='$value->category/$c_value->description'>$c_value->description</li>"; ?>
-                                                    <?php endif; ?>    
-                                                <?php endforeach ?>
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                </ul>
-                            </li>
+                                    <li>Grupo 1
+                                        <ul>
+                                            <?php foreach ($ticketController->getCategoriesGroup1() as $key => $value) { ?>
+                                                <li id='<?= $value->category ?>'><?= $value->category ?>
+                                                    <ul>
+                                                        <?php foreach ($ticketController->findDataOfCategoriesGroup1() as $key => $c_value): ?>
+                                                            <?php if ($value->id == $c_value->id_category) : ?>
+                                                                <?php echo "<li id='$value->category/$c_value->description'>$c_value->description</li>"; ?>
+                                                            <?php endif; ?>    
+                                                        <?php endforeach ?>
+                                                    </ul>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </li>
 
-                            <li>Grupo 2
-                                <ul>
-                                    <?php foreach ($ticketController->getCategoriesGroup2() as $key => $value) { ?>
-                                        <li id='<?= $value->category ?>'><?= $value->category?>
-                                            <ul>
-                                                <?php foreach ($ticketController->findDataOfCategoriesGroup2() as $key => $c_value): ?>
-                                                    <?php if ($value->id == $c_value->id_category) : ?>
-                                                        <?php echo "<li id='$value->category/$c_value->description'>$c_value->description</li>"; ?>
-                                                    <?php endif; ?>    
-                                                <?php endforeach ?>
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
+                                    <li>Grupo 2
+                                        <ul>
+                                            <?php foreach ($ticketController->getCategoriesGroup2() as $key => $value) { ?>
+                                                <li id='<?= $value->category ?>'><?= $value->category ?>
+                                                    <ul>
+                                                        <?php foreach ($ticketController->findDataOfCategoriesGroup2() as $key => $c_value): ?>
+                                                            <?php if ($value->id == $c_value->id_category) : ?>
+                                                                <?php echo "<li id='$value->category/$c_value->description'>$c_value->description</li>"; ?>
+                                                            <?php endif; ?>    
+                                                        <?php endforeach ?>
+                                                    </ul>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </li>
                                 </ul>
-                            </li>
-                          </ul>
+                            </div>
                         </div>
-                      </div>
                     </div>
 
                     <div class="form-group row">
@@ -369,6 +367,7 @@
                         <textarea class="form-control yourMessage" id="resolution" name="resolution" rows="8" placeholder="Escreva sua mensagem"><?= $row_id_chat['resolution'];?></textarea>
                       </div>
                     </div>
+                    <?php $ticketController->getHistoryOfChat($row_id_chat['registered_at']); ?>
                     <?php if ($_GET['id_chat'] > 100000 && $row_id_chat['t_status'] != "aberto") : ?>
                     <div class="row text-center">
                       <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -381,7 +380,7 @@
                           <label class="col-sm-2 form-control-label">Histórico do chat</label>
                           <div class="col-sm-10 select" style="height: 400px; overflow: auto;">
 
-                            <?php foreach ($ticketController->getHistoryOfChat() as $key => $value) : 
+                            <?php foreach ($ticketController->getHistoryOfChat($row_id_chat['registered_at']) as $key => $value) : 
                               $date = strtotime($value->timestamp); 
 
                               if (empty($ticketController->getOpenedAt())) {
