@@ -367,7 +367,8 @@
                         <textarea class="form-control yourMessage" id="resolution" name="resolution" rows="8" placeholder="Escreva sua mensagem"><?= $row_id_chat['resolution'];?></textarea>
                       </div>
                     </div>
-                    <?php $ticketController->getHistoryOfChat($row_id_chat['registered_at']); ?>
+                    <?php $dateToGetChats = is_null($row_id_chat['registered_at']) ? date('Y/m/d') : $row_id_chat['registered_at'] ?>
+                    <?php $ticketController->getHistoryOfChat($dateToGetChats); ?>
                     <?php if ($_GET['id_chat'] > 100000 && $row_id_chat['t_status'] != "aberto") : ?>
                     <div class="row text-center">
                       <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -380,7 +381,7 @@
                           <label class="col-sm-2 form-control-label">Histórico do chat</label>
                           <div class="col-sm-10 select" style="height: 400px; overflow: auto;">
 
-                            <?php foreach ($ticketController->getHistoryOfChat($row_id_chat['registered_at']) as $key => $value) : 
+                            <?php foreach ($ticketController->getHistoryOfChat($dateToGetChats) as $key => $value) : 
                               $date = strtotime($value->timestamp); 
 
                               if (empty($ticketController->getOpenedAt())) {
