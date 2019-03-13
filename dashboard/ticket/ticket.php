@@ -520,20 +520,16 @@
                         <input type='hidden' name='selected_module' value="<?php echo !is_null($row_id_chat['module']) ? $row_id_chat['module'] : "" ?>">
 
                         <?php
-                          if($_GET['id_chat'] < 100000) {
                             echo '<button type="reset" class="btn btn-secondary">Limpar</button>';
 
-                            if(@$row_attendant['name'] != NULL){
+                            if (@$row_attendant['name'] != NULL) {
                               echo '<button type="submit" name="submit" class="btn btn-primary btnAction">Salvar Alterações!</button>';
-                              if(!($row_id_chat['id_who_closed'] != NULL)){
+                              if (!($row_id_chat['id_who_closed'] != NULL)) {
                                 echo '<button type="submit" name="finishTicket" class="btn btn-danger btnAction">Finalizar Ticket!</button>';
                               }
-                            } else{
+                            } else {
                               echo '<button type="submit" name="submit" class="btn btn-primary btnAction">Cadastrar!</button>';
                             }
-                          } else{
-                            echo '<span id="wrongIdChat"><strong>Erro!</strong> Número do chat informado não existe. Contate o Administrador ou informe outro chat.</span>';
-                          }
                         ?>       
                       </div>
                     </div>
