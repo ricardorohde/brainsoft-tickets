@@ -7,6 +7,7 @@ include_once __DIR__ . "/../city/city.ctrl.php";
 include_once __DIR__ . "/../state/state.ctrl.php";
 include_once __DIR__ . "/../role/role.ctrl.php";
 include_once __DIR__ . "/../credential/credential.ctrl.php";
+include_once __DIR__ . "/../ticket/ticket.ctrl.php";
 
 class NewUserController
 {
@@ -20,6 +21,7 @@ class NewUserController
     private $stateController;
     private $roleController;
     private $credentialController;
+    private $ticketController;
 
     private $thereIsProblem;
     private $currentType;
@@ -37,112 +39,112 @@ class NewUserController
 
     public function getThereIsProblem()
     {
-      return $this->thereIsProblem;
+        return $this->thereIsProblem;
     }
-    
+
     public function setThereIsProblem($thereIsProblem)
     {
-      $this->thereIsProblem = $thereIsProblem;
+        $this->thereIsProblem = $thereIsProblem;
     }
 
     public function getCurrentType()
     {
-      return $this->currentType;
+        return $this->currentType;
     }
-    
+
     public function setCurrentType($currentType)
     {
-      $this->currentType = $currentType;
+        $this->currentType = $currentType;
     }
 
     public function getUser()
     {
-      return $this->user;
+        return $this->user;
     }
-    
+
     public function setUser($user)
     {
-      $this->user = $user;
+        $this->user = $user;
     }
 
     public function getRegistry()
     {
-      return $this->registry;
+        return $this->registry;
     }
-    
+
     public function setRegistry($registry)
     {
-      $this->registry = $registry;
+        $this->registry = $registry;
     }
 
     public function getCity()
     {
-      return $this->city;
+        return $this->city;
     }
-    
+
     public function setCity($city)
     {
-      $this->city = $city;
+        $this->city = $city;
     }
 
     public function getState()
     {
-      return $this->state;
+        return $this->state;
     }
-    
+
     public function setState($state)
     {
-      $this->state = $state;
+        $this->state = $state;
     }
 
     public function getRole()
     {
-      return $this->role;
+        return $this->role;
     }
-    
+
     public function setRole($role)
     {
-      $this->role = $role;
+        $this->role = $role;
     }
 
     public function getInputHasEmployee()
     {
-      return $this->inputHasEmployee;
+        return $this->inputHasEmployee;
     }
-    
+
     public function setInputHasEmployee($inputHasEmployee)
     {
-      $this->inputHasEmployee = $inputHasEmployee;
+        $this->inputHasEmployee = $inputHasEmployee;
     }
 
     public function getCredential()
     {
-      return $this->credential;
+        return $this->credential;
     }
-    
+
     public function setCredential($credential)
     {
-      $this->credential = $credential;
+        $this->credential = $credential;
     }
 
     public function getAllStates()
     {
-      return $this->allStates;
+        return $this->allStates;
     }
-    
+
     public function setAllStates($allStates)
     {
-      $this->allStates = $allStates;
+        $this->allStates = $allStates;
     }
 
     public function getAllRoles()
     {
-      return $this->allRoles;
+        return $this->allRoles;
     }
-    
+
     public function setAllRoles($allRoles)
     {
-      $this->allRoles = $allRoles;
+        $this->allRoles = $allRoles;
     }
 
     function __construct()
@@ -156,24 +158,25 @@ class NewUserController
         $this->stateController = StateController::getInstance();
         $this->roleController = RoleController::getInstance();
         $this->credentialController = CredentialController::getInstance();
+        $this->ticketController = TicketController::getInstance();
     }
 
     public function verifyGet($get)
     {
         $this->thereIsProblem = false;
         if ((isset($get['type']) && $get['type'] != "") && (isset($get['id']) && $get['id'] != "")) {
-          $this->currentType = $get['type'];
-          $this->currentId = $get['id'];
+            $this->currentType = $get['type'];
+            $this->currentId = $get['id'];
 
-          $this->verifyCurrentType();
+            $this->verifyCurrentType();
         } else {
-          $this->thereIsProblem = true;
+            $this->thereIsProblem = true;
         }
     }
 
     public function verifyCurrentType()
     {
-        if($this->currentType == "client") {
+        if ($this->currentType == "client") {
             $this->findClientById();
             $this->findRegistryById();
             $this->findCityById();
@@ -237,10 +240,15 @@ class NewUserController
     {
         $this->allRoles = $this->roleController->findAllByType($type);
     }
-    
+
+    public function getTickets($currentId)
+    {
+        return $this->ticketController->findByClient($currentId);
+    }
+
     public function verifyPermission()
     {
-        if (!isset($_SESSION['User'.'_page_'.$_SESSION['login']])) {
+        if (!isset($_SESSION['User' . '_page_' . $_SESSION['login']])) {
             header("Location:../dashboard");
         }
     }

@@ -4,6 +4,8 @@ $newUserController = NewUserController::getInstance();
 $newUserController->verifyPermission();
 
 $newUserController->verifyGet($_GET);
+
+$tickets = $newUserController->getTickets($_GET['id']);
 ?>
 
 <!DOCTYPE html>
@@ -189,7 +191,47 @@ $newUserController->verifyGet($_GET);
                                     </div>
                                     <div class="line"></div>
                                     <div class="form-group row">
-                                        <div class="col-sm-4 offset-sm-2">
+                                        <div class="col-sm-12">
+                                            <div class="table-responsive">
+                                                <table id="ticketListOfClient" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Chat</th>
+                                                            <th>Data</th>
+                                                            <th>Origem</th>
+                                                            <th>Grupo</th>
+                                                            <th>Categoria / Módulo</th>
+                                                            <th>Atendente</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php if (!empty($tickets)) : ?>
+                                                        <?php foreach ($tickets as $ticket) : ?>
+                                                        <tr>
+                                                            <td><?= $ticket['chat'] ?></td>
+                                                            <td><?= date('d/m/Y', strtotime($ticket['registered_at'])) ?></td>
+                                                            <td><?= $ticket['source'] ?></td>
+                                                            <td><?= $ticket['t_group'] ?></td>
+                                                            <td><?= $ticket['module'] ?> / <?= $ticket['category'] ?></td>
+                                                            <td><?= $ticket['attendant'] ?></td>
+                                                            <td class="actions text-center">
+                                                                <a href="../ticket/<?= $ticket['chat'] ?>/<?= $ticket['attendant_id'] ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        <?php endforeach; ?>
+                                                        <?php else : ?>
+                                                        <tr>
+                                                            <td colspan="7">Nenhum ticket registrado.</td>
+                                                        </tr>
+                                                        <?php endif; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-2 offset-sm-10">
                                             <?php 
                                             if ((isset($_GET['id']) && @$row_sql_user['name'] == null) || (isset($_GET['type']) && !isset($_GET['id']))) {
                                                 echo '<span id="wrongIdChat"><strong>Erro!</strong> Tipo e/ou usuário informado não existe. Contate o Administrador.</span>';

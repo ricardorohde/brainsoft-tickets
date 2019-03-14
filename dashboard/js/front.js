@@ -184,6 +184,13 @@ $(document).ready(function () {
         }
     });
 
+    $('#ticketListOfClient').dataTable( {
+        "order": [[ 0, "desc" ]],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+        }
+    });
+
     $(".control").remove();
 
     $("#table input").keyup(function () {       

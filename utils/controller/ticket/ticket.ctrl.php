@@ -223,6 +223,13 @@ class TicketController
         return json_decode($encode);
     }
 
+    public function findByClient($id)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setIdClient($id);
+        return $ticket->findByClient();
+    }
+
     public function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {

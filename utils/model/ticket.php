@@ -333,11 +333,10 @@ class Ticket
         return $this->prepareInstance->prepare($query, $elements, "");
     }
 
-    public static function getInstance()
+    public function findByClient()
     {
-        if (!self::$instance) {
-            self::$instance = new Ticket();
-        }
-        return self::$instance;
+        $element = $this->getIdClient();
+        $query = "SELECT chat.id_chat as chat, ticket.registered_at, ticket.source, ticket_module.description as module, category_module.description as category, ticket.t_group, ticket.id_attendant as attendant_id, employee.name as attendant FROM ticket, chat, ticket_module, category_module, employee WHERE ticket.id_client = ? AND ticket.id_chat = chat.id AND ticket.id_module = ticket_module.id AND ticket_module.id_category = category_module.id AND ticket.id_attendant = employee.id ORDER BY chat.id_chat DESC";
+        return $this->prepareInstance->prepare($query, $element, "all");
     }
 }
