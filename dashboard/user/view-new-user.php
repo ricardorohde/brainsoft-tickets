@@ -213,7 +213,7 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                                             <td><?= date('d/m/Y', strtotime($ticket['registered_at'])) ?></td>
                                                             <td><?= $ticket['source'] ?></td>
                                                             <td><?= $ticket['t_group'] ?></td>
-                                                            <td><?= $ticket['module'] ?> / <?= $ticket['category'] ?></td>
+                                                            <td><?= $ticket['category'] ?> / <?= $ticket['module'] ?></td>
                                                             <td><?= $ticket['attendant'] ?></td>
                                                             <td class="actions text-center">
                                                                 <a href="../ticket/<?= $ticket['chat'] ?>/<?= $ticket['attendant_id'] ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
@@ -230,8 +230,8 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-2 offset-sm-10">
+                                    <div class="form-group row text-right">
+                                        <div class="offset-sm-10 offset-md-8 col-sm-2 col-md-4">
                                             <?php 
                                             if ((isset($_GET['id']) && @$row_sql_user['name'] == null) || (isset($_GET['type']) && !isset($_GET['id']))) {
                                                 echo '<span id="wrongIdChat"><strong>Erro!</strong> Tipo e/ou usuário informado não existe. Contate o Administrador.</span>';
@@ -242,6 +242,10 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                                     echo '<button type="submit" name="submit" value="alterUser" class="btn btn-primary btnAction">Salvar!</button>';
                                                 } else {
                                                     echo '<button type="submit" name="submit" value="newUser" class="btn btn-primary btnAction">Cadastrar!</button>';
+                                                }
+
+                                                if (empty($tickets)) {
+                                                    echo '<button type="submit" name="submit" value="removeUser" class="btn btn-danger btnAction">Excluir!</button>';
                                                 }
                                             }
                                             ?>

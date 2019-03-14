@@ -48,6 +48,10 @@ class NewUserDataController
             if ($this->dataReceived['submit'] == 'alterUser') {
                 $this->update();
             }
+
+            if ($this->dataReceived['submit'] == 'removeUser') {
+                $this->remove();
+            }
         }
     }
 
@@ -71,6 +75,17 @@ class NewUserDataController
             $result = $this->clientController->update($this->dataReceived);
         } else {
             $result = $this->employeeController->update($this->dataReceived);
+        }
+
+        $this->setSession($result, "update", "atualizado", "atualizar");
+    }
+
+    public function remove()
+    {
+        if ($this->dataReceived['typeUser'] == 'client') {
+            $result = $this->clientController->remove($this->dataReceived);
+        } else {
+            $result = $this->employeeController->remove($this->dataReceived);
         }
 
         $this->setSession($result, "update", "atualizado", "atualizar");

@@ -114,6 +114,13 @@ class Client
         $query = "UPDATE client SET name = ?, email = ?, id_registry = ?, id_role = ? WHERE id = ?";
         $result = $this->prepareInstance->prepare($query, $elements, "");
         //$this->getMyController()->verifyResult("update", $result);
+	}
+	
+	public function remove()
+    {
+    	$element = $this->getId();
+        $query = "DELETE FROM client WHERE id = ?";
+        $result = $this->prepareInstance->prepare($query, $element, "");
     }
 
 	public function findAll()

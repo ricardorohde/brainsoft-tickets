@@ -78,7 +78,7 @@ class ClientController
     }
 
     function new($data)
-    { // NEW
+    {
         $client = new Client($this, $this->prepareInstance);
         $client->setName($data['name']);
         $client->setEmail($data['email']);
@@ -90,7 +90,7 @@ class ClientController
     }
 
     function update($data)
-    { // NEW
+    {
         $client = new Client($this->getInstance(), $this->prepareInstance);
         $client->setName($data['name']);
         $client->setEmail($data['email']);
@@ -99,6 +99,14 @@ class ClientController
         $client->setId($data['id_user']);
 
         $client->update();
+    }
+
+    function remove($data)
+    {
+        $client = new Client($this->getInstance(), $this->prepareInstance);
+        $client->setId($data['id_user']);
+
+        $client->remove();
     }
 
     public static function getInstance()
