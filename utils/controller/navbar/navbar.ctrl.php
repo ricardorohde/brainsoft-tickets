@@ -13,17 +13,17 @@ class NavBarController
 
 	function getPrepareInstance()
 	{
-    	return $this->prepareInstance;
+		return $this->prepareInstance;
 	}
 
 	function getConnection()
 	{
-    	return $this->connection;
+		return $this->connection;
 	}
 
 	function getIdInSession()
 	{
-	    return $this->idInSession;
+		return $this->idInSession;
 	}
 
 	function __construct()
@@ -46,7 +46,7 @@ class NavBarController
 
 	function setIdLoginInSession()
 	{
-		session_start();
+		@session_start();
 		$this->idInSession = $_SESSION['login'];
 	}
 
@@ -61,12 +61,12 @@ class NavBarController
 		$query = "SELECT client.name as name, role.description as role FROM client, role WHERE client.id_credential = ? AND client.id_role = role.id";
 		$resultDb = $this->prepareInstance->prepare($query, $element, "all");
 
-	  	if (!$resultDb) {
-	  		$element = $this->idInSession;
-	  		$query = "SELECT employee.name as name, role.description as role FROM employee, role WHERE employee.id_credential = ? AND employee.id_role = role.id";
-	    	$resultDb = $this->prepareInstance->prepare($query, $element, "all");
-	  	}
-	  	return $resultDb[0];
+		if (!$resultDb) {
+			$element = $this->idInSession;
+			$query = "SELECT employee.name as name, role.description as role FROM employee, role WHERE employee.id_credential = ? AND employee.id_role = role.id";
+			$resultDb = $this->prepareInstance->prepare($query, $element, "all");
+		}
+		return $resultDb[0];
 	}
 
 	function makeMenu($targets)
@@ -78,11 +78,11 @@ class NavBarController
 			$target = explode(" ", $target);
 
 			if (@$target[1] == "Conta") {
-				$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span> Minha " . $target[1] . "</span></a></li><hr>";
+				$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span> Minha " . $target[1] . "</span></a></li><hr>\n";
 			}
 
-			if (isset($_SESSION[$name.'_page_'.$id])) {
-				$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fas " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>";
+			if (isset($_SESSION[$name . '_page_' . $id])) {
+				$menu = $menu . "				<li><a href='" . $target[0] . "'><i class='fas " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>\n";
 			}
 		}
 		return $menu;
@@ -91,8 +91,8 @@ class NavBarController
 	public static function getInstance()
 	{
 		if (!self::$instance) {
-      		self::$instance = new NavBarController();
+			self::$instance = new NavBarController();
 		}
-    	return self::$instance;
+		return self::$instance;
 	}
 }

@@ -71,7 +71,7 @@ class SendEmail
 	{
 		$qtdRecipientRaw = count($this->recipientEmail);
 
-		for ($i=0; $i < $qtdRecipientRaw; $i++) {
+		for ($i = 0; $i < $qtdRecipientRaw; $i++) {
 			if ($_POST['radio' . $i] == "send") {
 				$this->changeNameVariableInMessage($i);
 				$this->changeRegistryVariableInMessage($i);
@@ -92,25 +92,25 @@ class SendEmail
 	{
 		if (isset($_FILES['file'])) {
 			$name = $_FILES['file']['name'];
-		    $tmp_name = $_FILES['file']['tmp_name'];
-		    $this->totalUploads = count($tmp_name);
+			$tmp_name = $_FILES['file']['tmp_name'];
+			$this->totalUploads = count($tmp_name);
 
-		    $allowedExts = array(".jpg", ".png", ".pdf", ".gif");
+			$allowedExts = array(".jpg", ".png", ".pdf", ".gif");
 
-		    $dir = 'uploadedFiles/';
+			$dir = 'uploadedFiles/';
 
-		    for($i = 0; $i < $this->totalUploads; $i++) {
-		    	$ext = strtolower(substr($name[$i],-4));
+			for ($i = 0; $i < $this->totalUploads; $i++) {
+				$ext = strtolower(substr($name[$i], -4));
 
-		        if(in_array($ext, $allowedExts)) {
-		           $name_of_raw_file = strtolower(substr($name[$i],0,-4));
-		           $new_name = $name_of_raw_file . $ext;
+				if (in_array($ext, $allowedExts)) {
+					$name_of_raw_file = strtolower(substr($name[$i], 0, -4));
+					$new_name = $name_of_raw_file . $ext;
 
-		           move_uploaded_file($_FILES['file']['tmp_name'][$i], $dir.$new_name);
+					move_uploaded_file($_FILES['file']['tmp_name'][$i], $dir . $new_name);
 
-		           array_push($this->pathOfUploads, $dir.$new_name);
-		        }
-		    }
+					array_push($this->pathOfUploads, $dir . $new_name);
+				}
+			}
 		}
 	}
 

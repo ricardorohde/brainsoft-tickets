@@ -1,15 +1,16 @@
 <?php 
-    include_once __DIR__ . '/../../utils/controller/user/all-user.ctrl.php';
-    $allUserController = AllUserController::getInstance();  
-    $allUserController->verifyPermission();
+include_once __DIR__ . '/../../utils/controller/user/all-user.ctrl.php';
+$allUserController = AllUserController::getInstance();
+$allUserController->verifyPermission();
 
-    $clients = $allUserController->findAllClients();
-    $employees = $allUserController->findAllEmployees();
+$clients = $allUserController->findAllClients();
+$employees = $allUserController->findAllEmployees();
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Brainsoft Sistemas - Listagem de Usuários</title>
@@ -28,121 +29,121 @@
     <link rel="stylesheet" href="css/custom.css">
 
     <link rel="shortcut icon" href="favicon.png">
-  </head>
+</head>
 
-  <body>
-    <?php require_once ('../navs/navbar.php'); ?>
+<body>
+    <?php require_once('../navs/navbar.php'); ?>
     <div class="root-page forms-page">
-      <?php require_once ('../navs/header.php'); ?>
-      <section class="forms">
-        <div class="container-fluid">
-          <header>
-            <div class="row">
-                <div class="col-sm-6">
-                    <h1 class="h3 display">Usuários</h1>
+        <?php require_once('../navs/header.php'); ?>
+        <section class="forms">
+            <div class="container-fluid">
+                <header>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h1 class="h3 display">Usuários</h1>
+                        </div>
+
+                        <div class="col-sm-6 text-right h2">
+                            <a class="btn btn-primary" href="usuarios/novo"><i class="fa fa-plus"></i> Novo Usuário</a>
+                            <a class="btn btn-default" href="usuarios"><i class="fa fa-refresh"></i> Atualizar</a>
+                        </div>
+                    </div>
+                </header>
+
+                <hr>
+
+                <ul class="nav nav-tabs menu-users">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#first-tab" data-toggle="tab">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#second-tab" data-toggle="tab">Funcionários</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active in" id="first-tab">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Cod.</th>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Cidade</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($clients)) : ?>
+                                    <?php foreach ($allUserController->findDataOfClients() as $client) : ?>
+                                    <tr>
+                                        <td>00<?= $client['id'] ?></td>
+                                        <td><?= $client['name'] ?></td>
+                                        <td><?= $client['email'] ?></td>
+                                        <td><?= $client['city'] ?></td>
+                                        <td class="actions text-right">
+                                            <a href="user/view-new-user.php?type=client&id=<?= $client['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                    <?php else : ?>
+                                    <tr>
+                                        <td colspan="6">Nenhum cliente encontrado.</td>
+                                    </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="second-tab">
+                        <div class="table-responsive">
+                            <table id="example2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Cod.</th>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($employees)) : ?>
+                                    <?php foreach ($allUserController->findDataOfEmployees() as $employee) : ?>
+                                    <tr>
+                                        <td>00<?= $employee['id'] ?></td>
+                                        <td><?= $employee['name'] ?></td>
+                                        <td><?= $employee['email'] ?></td>
+                                        <td class="actions text-right">
+                                            <a href="user/view-new-user.php?type=employee&id=<?= $employee['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                    <?php else : ?>
+                                    <tr>
+                                        <td colspan="6">Nenhum funcionário encontrado.</td>
+                                    </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-sm-6 text-right h2">
-                    <a class="btn btn-primary" href="usuarios/novo"><i class="fa fa-plus"></i> Novo Usuário</a>
-                    <a class="btn btn-default" href="usuarios"><i class="fa fa-refresh"></i> Atualizar</a>
+            </div>
+        </section>
+        <footer class="main-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>Your company &copy; 2017-2019</p>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
+                        <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+                    </div>
                 </div>
             </div>
-          </header>
-
-          <hr>
-
-          <ul class="nav nav-tabs menu-users">
-            <li class="nav-item">
-              <a class="nav-link active" href="#first-tab" data-toggle="tab">Clientes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#second-tab" data-toggle="tab">Funcionários</a>
-            </li>
-          </ul>
-           
-          <div class="tab-content">
-            <div class="tab-pane active in" id="first-tab">
-              <div class="table-responsive">
-                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                <thead>
-                  <tr>
-                    <th>Cod.</th>
-                    <th>Nome</th>      
-                    <th>Email</th>
-                    <th>Cidade</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php if (!empty($clients)) : ?>
-                    <?php foreach ($allUserController->findDataOfClients() as $client) : ?>
-                        <tr>
-                            <td>00<?= $client['id'] ?></td>
-                            <td><?= $client['name'] ?></td>
-                            <td><?= $client['email'] ?></td>
-                            <td><?= $client['city'] ?></td>
-                            <td class="actions text-right">
-                                <a href="user/view-new-user.php?type=client&id=<?= $client['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>                                 
-                <?php else : ?>
-                  <tr>
-                    <td colspan="6">Nenhum cliente encontrado.</td>
-                  </tr>
-                <?php endif; ?>
-                </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="tab-pane" id="second-tab">
-              <div class="table-responsive">
-                <table id="example2" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                <thead>
-                  <tr>
-                    <th>Cod.</th>
-                    <th>Nome</th>      
-                    <th>Email</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php if (!empty($employees)) : ?>
-                    <?php foreach ($allUserController->findDataOfEmployees() as $employee) : ?>
-                        <tr>
-                            <td>00<?= $employee['id'] ?></td>
-                            <td><?= $employee['name'] ?></td>
-                            <td><?= $employee['email'] ?></td>
-                            <td class="actions text-right">
-                                <a href="user/view-new-user.php?type=employee&id=<?= $employee['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <tr>
-                        <td colspan="6">Nenhum funcionário encontrado.</td>
-                    </tr>
-                <?php endif; ?>
-                </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <footer class="main-footer">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-6">
-              <p>Your company &copy; 2017-2019</p>
-            </div>
-            <div class="col-sm-6 text-right">
-              <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
-              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
-            </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
     </div>
     <!-- Javascript files-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
@@ -160,5 +161,6 @@
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
     <!---->
-  </body>
-</html>
+</body>
+
+</html> 

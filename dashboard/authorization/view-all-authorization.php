@@ -1,16 +1,16 @@
 <?php
-  session_start();
-  if (!isset($_SESSION['Authorization'.'_page_'.$_SESSION['login']])) {
+if (!isset($_SESSION['Authorization' . '_page_' . $_SESSION['login']])) {
     header("Location:../dashboard");
-  }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Brainsoft Sistemas - Listagem de Tickets</title>
+    <title>Brainsoft Sistemas - Autorizações</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -35,78 +35,82 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
-  </head>
-  <body>
-    <?php include ("../navs/navbar.php");?>
+</head>
+
+<body>
+    <?php include("../navs/navbar.php"); ?>
     <div class="root-page forms-page">
-      <?php include ("../navs/header.php");?>
+        <?php include("../navs/header.php"); ?>
 
-      <?php
+        <?php
         $sql_type_user = $connection->getConnection()->prepare("SELECT role.description FROM role, client, employee WHERE (client.id_credential = ? AND client.id_role = role.id) OR (employee.id_credential = ? AND employee.id_role = role.id) LIMIT 1");
-        $sql_type_user->execute(array($id, $id)); $type_user = $sql_type_user->fetch();
+        $sql_type_user->execute(array($id, $id));
+        $type_user = $sql_type_user->fetch();
 
-        if ($type_user['description'] == "adm" || $type_user['description'] == "supportBrain"){
-          $sql_list_employee = $connection->getConnection()->prepare("SELECT id_credential, name FROM employee");
-          $sql_list_employee->execute(array($id)); $list_user = $sql_list_employee->fetchAll();
+        if ($type_user['description'] == "adm" || $type_user['description'] == "supportBrain") {
+            $sql_list_employee = $connection->getConnection()->prepare("SELECT id_credential, name FROM employee");
+            $sql_list_employee->execute(array($id));
+            $list_user = $sql_list_employee->fetchAll();
         }
 
-        if ($type_user['description'] == "Oficial"){
-          $sql_list_user_registry = $connection->getConnection()->prepare("SELECT id_credential, name FROM client WHERE id_registry = (SELECT id_registry FROM client WHERE id = ?)");
-          $sql_list_user_registry->execute(array($id)); $list_user = $sql_list_user_registry->fetchAll();
+        if ($type_user['description'] == "Oficial") {
+            $sql_list_user_registry = $connection->getConnection()->prepare("SELECT id_credential, name FROM client WHERE id_registry = (SELECT id_registry FROM client WHERE id = ?)");
+            $sql_list_user_registry->execute(array($id));
+            $list_user = $sql_list_user_registry->fetchAll();
         }
-      ?>
+        ?>
 
-      <section class="forms">
-        <div class="container-fluid">
-          <header>
-            <div class="row">
-              <div class="col-sm-6 title">
-                <h1 class="h3 display">Controle de Acesso</h1>
-              </div>
-            </div>
-          </header>
+        <section class="forms">
+            <div class="container-fluid">
+                <header>
+                    <div class="row">
+                        <div class="col-sm-6 title">
+                            <h1 class="h3 display">Controle de Acesso</h1>
+                        </div>
+                    </div>
+                </header>
 
-          <hr>
+                <hr>
 
-          <div id="conteudo">
-            <div class="form-group row">
-              <label class="col-sm-2 form-control-label">Usuário</label>
-              <div class="col-sm-10 select">
-                <select name="listUser" class="form-control" id="listUser">
-                  <option value="">Selecione um usuário...</option>
-                  <?php if (@$list_user != NULL): ?>
-                    <?php foreach ($list_user as $user) : ?>
-                      <option value=<?php echo '"'.$user['id_credential'].'"';?>><?php echo $user['name'];?></option>
-                    <?php endforeach ?>
-                  <?php endif; ?>
-                </select>
-              </div>
-            </div>
+                <div id="conteudo">
+                    <div class="form-group row">
+                        <label class="col-sm-2 form-control-label">Usuário</label>
+                        <div class="col-sm-10 select">
+                            <select name="listUser" class="form-control" id="listUser">
+                                <option value="">Selecione um usuário...</option>
+                                <?php if (@$list_user != null) : ?>
+                                <?php foreach ($list_user as $user) : ?>
+                                <option value=<?php echo '"' . $user['id_credential'] . '"'; ?>><?php echo $user['name']; ?></option>
+                                <?php endforeach ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                    </div>
 
-          	<div style="margin-left: 45%;">
-    					<div class="row" id="internal-row" style="margin-top: 15px;">
-    						<div class="auth">
-    						</div>
-    					</div>
-      			</div>
-          </div>
-        </div>
-      </section>
-      <footer class="main-footer">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-6">
-              <p>Brainsoft &copy; 2017-2019</p>
+                    <div style="margin-left: 45%;">
+                        <div class="row" id="internal-row" style="margin-top: 15px;">
+                            <div class="auth">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6 text-right">
-              <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
-              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+        </section>
+        <footer class="main-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>Brainsoft &copy; 2017-2019</p>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
+                        <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
     </div>
-    <!-- Javascript files-->  
+    <!-- Javascript files-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="./js/jquery-3.2.1.min.js"></script>
     <script src="./../js/jquery.mask.js"></script>
@@ -122,5 +126,6 @@
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
     <!---->
-  </body>
-</html>
+</body>
+
+</html> 

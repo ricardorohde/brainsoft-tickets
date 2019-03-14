@@ -78,7 +78,6 @@
       }
 
       function setSession($result){
-         session_start();
          if ($result == 1) {
             $_SESSION['resultSaveFiles'] = "<strong>Sucesso!</strong> Boleto(s) registrado(s) com êxito.";
          } else{
