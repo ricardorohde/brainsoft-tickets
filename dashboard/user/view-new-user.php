@@ -245,7 +245,7 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                                 }
 
                                                 if (empty($tickets)) {
-                                                    echo '<button type="submit" name="submit" value="removeUser" class="btn btn-danger btnAction">Excluir!</button>';
+                                                    echo '<button type="submit" name="submit" value="removeUser" class="btn btn-danger btnAction" onclick="return confirm(\'Deseja realmente excluir?\')">Excluir!</button>';
                                                 }
                                             }
                                             ?>
