@@ -42,6 +42,12 @@
 
 	  	RewriteRule ^dashboard/marketing?$ dashboard/marketing/email.php [NC]
 
+		
+		RewriteRule ^dashboard/estados?$ dashboard/state/view-all-state.php [NC]
+		
+
+		RewriteRule ^dashboard/cidades?$ dashboard/city/view-all-city.php [NC]
+
 
 	  	RewriteRule ^dashboard/autorizacoes?$ dashboard/authorization/view-all-authorization.php [NC]
 
