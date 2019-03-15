@@ -37,6 +37,8 @@ class NewUserController
     private $allStates;
     private $allRoles;
 
+    private $allTickets;
+
     public function getThereIsProblem()
     {
         return $this->thereIsProblem;
@@ -147,6 +149,16 @@ class NewUserController
         $this->allRoles = $allRoles;
     }
 
+    public function getAllTickets()
+    {
+        return $this->allTickets;
+    }
+
+    public function setAllTickets($allTickets)
+    {
+        $this->allTickets = $allTickets;
+    }
+
     function __construct()
     {
         $this->navBarController = NavBarController::getInstance();
@@ -169,6 +181,7 @@ class NewUserController
             $this->currentId = $get['id'];
 
             $this->verifyCurrentType();
+            $this->getTickets();
         } else {
             $this->thereIsProblem = true;
         }
@@ -241,9 +254,9 @@ class NewUserController
         $this->allRoles = $this->roleController->findAllByType($type);
     }
 
-    public function getTickets($currentId)
+    public function getTickets()
     {
-        return $this->ticketController->findByClient($currentId);
+        $this->allTickets = $this->ticketController->findByClient($this->currentId);
     }
 
     public function verifyPermission()

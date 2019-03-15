@@ -6,5 +6,5 @@ $(document).ready(function(){
     setTimeout(function() {
         $("#example_filter > label > input").focus();
         $("#ticketListOfClient_filter > label > input").focus();
-    }, 2000);
+    }, 1000);
 });

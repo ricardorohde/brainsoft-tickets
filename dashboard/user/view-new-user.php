@@ -4,8 +4,6 @@ $newUserController = NewUserController::getInstance();
 $newUserController->verifyPermission();
 
 $newUserController->verifyGet($_GET);
-
-$tickets = $newUserController->getTickets($_GET['id']);
 ?>
 
 <!DOCTYPE html>
@@ -183,6 +181,7 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                         </div>
                                     </div>
                                     <div class="line"></div>
+                                    <?php if (isset($_GET['id'])) : ?>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
                                             <div class="table-responsive">
@@ -198,8 +197,8 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php if (!empty($tickets)) : ?>
-                                                        <?php foreach ($tickets as $ticket) : ?>
+                                                        <?php if (!empty($newUserController->getAlltickets())) : ?>
+                                                        <?php foreach ($newUserController->getAlltickets() as $ticket) : ?>
                                                         <tr>
                                                             <td><?= $ticket['chat'] ?></td>
                                                             <td><?= date('d/m/Y', strtotime($ticket['registered_at'])) ?></td>
@@ -221,6 +220,7 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                             </div>
                                         </div>
                                     </div>
+                                    <?php endif ?>
                                     <div class="form-group row text-right">
                                         <div class="offset-sm-10 offset-md-8 col-sm-2 col-md-4">
                                             <?php 
@@ -231,12 +231,12 @@ $tickets = $newUserController->getTickets($_GET['id']);
 
                                                 if (isset($_GET['id'])) {
                                                     echo '<button type="submit" name="submit" value="alterUser" class="btn btn-primary btnAction">Salvar!</button>';
+
+                                                    if (empty($newUserController->getAlltickets())) {
+                                                        echo '<button type="submit" name="submit" value="removeUser" class="btn btn-danger btnAction" onclick="return confirm(\'Deseja realmente excluir?\')">Excluir!</button>';
+                                                    }
                                                 } else {
                                                     echo '<button type="submit" name="submit" value="newUser" class="btn btn-primary btnAction">Cadastrar!</button>';
-                                                }
-
-                                                if (empty($tickets)) {
-                                                    echo '<button type="submit" name="submit" value="removeUser" class="btn btn-danger btnAction" onclick="return confirm(\'Deseja realmente excluir?\')">Excluir!</button>';
                                                 }
                                             }
                                             ?>
