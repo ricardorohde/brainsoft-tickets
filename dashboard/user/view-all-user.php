@@ -149,6 +149,7 @@ $employees = $allUserController->findAllEmployees();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="./js/front.js"></script>
+    <script src="./js/user.js"></script>
     <script src="./jquery-ui.js"></script>
     <script src="../js/jquery.mask.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>

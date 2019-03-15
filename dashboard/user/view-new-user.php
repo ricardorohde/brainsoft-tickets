@@ -18,25 +18,18 @@ $tickets = $newUserController->getTickets($_GET['id']);
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <!-- Custom icon font-->
-    <link rel="stylesheet" href="../css/fontastic.css">
-    <!-- Google fonts - Roboto -->
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- jQuery Circle-->
-    <link rel="stylesheet" href="../css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <!-- Custom Scrollbar-->
-    <link rel="stylesheet" href="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <!-- theme stylesheet-->
-    <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="../css/custom.css">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
 
+    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="../css/fontastic.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="../css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+
+    <link rel="shortcut icon" href="favicon.png">
 </head>
 
 <body>
@@ -199,7 +192,6 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                                             <th>Chat</th>
                                                             <th>Data</th>
                                                             <th>Origem</th>
-                                                            <th>Grupo</th>
                                                             <th>Categoria / Módulo</th>
                                                             <th>Atendente</th>
                                                             <th></th>
@@ -211,8 +203,7 @@ $tickets = $newUserController->getTickets($_GET['id']);
                                                         <tr>
                                                             <td><?= $ticket['chat'] ?></td>
                                                             <td><?= date('d/m/Y', strtotime($ticket['registered_at'])) ?></td>
-                                                            <td><?= $ticket['source'] ?></td>
-                                                            <td><?= $ticket['t_group'] ?></td>
+                                                            <td><?= ucfirst($ticket['source']) ?></td>
                                                             <td><?= $ticket['category'] ?> / <?= $ticket['module'] ?></td>
                                                             <td><?= $ticket['attendant'] ?></td>
                                                             <td class="actions text-center">
