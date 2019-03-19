@@ -113,13 +113,14 @@ $queueController->verifyPermission();
 																   	<p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
 																   	<p>
                                                                         <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
-                                                                        <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?> <br>
-                                                                        <?= ucfirst($chat['source']) ?> - <?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
-                                                                    </p>
+                                                                        <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
+                                                                        <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
+                                                                        <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
+                                                                    </p>F
 																   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
 
                                                 <a href="#"></a>
-                                                <input type="hidden" name="startedTime<?= $rand ?>" value="<?php $chat['registered_at'] ?>">
+                                                <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
 
                                                 <?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
@@ -171,14 +172,15 @@ $queueController->verifyPermission();
 														<p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
 											   			<p>
                                                             <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
-                                                            <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?> <br>
-                                                            <?= ucfirst($chat['source']) ?> - <?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
+                                                            <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
+                                                            <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
+                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
                                                         </p>
 											   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
 														</div>"><?= $chat['id_chat'] ?></button>
 
                                                 <a href="#"></a>
-                                                <input type="hidden" name="startedTime<?= $rand ?>" value="<?php $chat['registered_at'] ?>">
+                                                <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
 
                                                 <?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
 
