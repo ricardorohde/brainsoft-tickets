@@ -116,7 +116,7 @@ $queueController->verifyPermission();
                                                                         <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
                                                                         <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
                                                                         <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
-                                                                    </p>F
+                                                                    </p>
 																   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
 
                                                 <a href="#"></a>
