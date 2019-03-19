@@ -31,6 +31,8 @@
 		RewriteRule ^dashboard/estado/remover/([0-9]+)?$ utils/controller/state/state.ctrl.php [NC]
 
 		RewriteRule ^dashboard/cidades?$ dashboard/city/view-all-city.php [NC]
+		RewriteRule ^dashboard/cidade/([0-9]+)?$ dashboard/city/view-edit-city.php [NC]
+		RewriteRule ^dashboard/cidade/remover/([0-9]+)?$ utils/controller/city/city.ctrl.php [NC]
 
 	  	RewriteRule ^dashboard/autorizacoes?$ dashboard/authorization/view-all-authorization.php [NC]
 
