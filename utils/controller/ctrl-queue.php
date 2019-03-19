@@ -1,5 +1,9 @@
 <?php
 include_once "navbar/navbar.ctrl.php";
+include_once __DIR__ . "/client/client.ctrl.php";
+include_once __DIR__ . "/registry/registry.ctrl.php";
+include_once __DIR__ . "/module/module.ctrl.php";
+include_once __DIR__ . "/category/category.ctrl.php";
 
 class QueueController
 {
@@ -16,6 +20,10 @@ class QueueController
 	private $finalizedQueueOfGroup2;
 
 	private $navBarController;
+	private $clientController;
+	private $registryController;
+	private $moduleController;
+	private $categoryController;
 
 	private $groupOne;
 	private $groupTwo;
@@ -71,6 +79,10 @@ class QueueController
 	{
 		$this->setNavBarController(new NavBarController());
 		$this->setPrepareInstance($this->navBarController->getPrepareInstance());
+		$this->clientController = ClientController::getInstance();
+		$this->registryController = RegistryController::getInstance();
+		$this->moduleController = ModuleController::getInstance();
+		$this->categoryController = CategoryController::getInstance();
 
 		$this->groupOne = $this->attendantsOnGroup("nivel1");
 		$this->groupTwo = $this->attendantsOnGroup("nivel2");
@@ -162,7 +174,7 @@ class QueueController
 	function openChats()
 	{
 	    $elements = "aberto";
-	    $query = "SELECT id_module, t_group, id_attendant as id, registered_at, chat.id_chat FROM ticket, chat WHERE t_status = ? AND ticket.id_chat = chat.id ORDER BY ticket.id_chat DESC";
+	    $query = "SELECT id_registry as registry, id_client as client, source, id_module, t_group, id_attendant as id, registered_at, chat.id_chat FROM ticket, chat WHERE t_status = ? AND ticket.id_chat = chat.id ORDER BY ticket.id_chat DESC";
 	    $this->allOpenChats = $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
@@ -229,9 +241,9 @@ class QueueController
 				array_push($stepQueue, $row['id_attendant']);
 			} 
 
-			$count = array_count_values($stepQueue); 
-			$updatedQueue = $this->orderByQuantity($count); 
-			$queueAccordingDate = $this->orderByDate($this->finalizedQueueOfGroup2);							
+			$count = array_count_values($stepQueue);
+			$updatedQueue = $this->orderByQuantity($count);
+			$queueAccordingDate = $this->orderByDate($this->finalizedQueueOfGroup2);
 			$finalQueue = $this->findUserInQueue($this->allAttendantsOfGroup2OnChat, $updatedQueue, $queueAccordingDate, 5);
 		}
 		return array_merge($finalQueue, $updatedQueue);
@@ -283,6 +295,23 @@ class QueueController
 	function cleanDataInTable()
 	{
 		$this->navBarController->cleanDataOfCall();
+	}
+
+	public function findClientOfTicketById($id)
+	{
+		return $this->clientController->findById($id)['name'];
+	}
+
+	public function findRegistryOfTicketById($id)
+	{
+		return $this->registryController->findById($id)['name'];
+	}
+
+	public function findModuleOfTicketById($id)
+	{
+		$module = $this->moduleController->findById($id);
+		$category = $this->categoryController->findById($module['id_category']);
+		return $category['description'] . "/" . $module['description'];
 	}
 
 	function verifyPermission()
