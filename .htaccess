@@ -1,60 +1,40 @@
 <IfModule mod_rewrite.c>
   	RewriteEngine On
-
 		RewriteRule ^dashboard/conta?$ dashboard/account/account.php [NC]
-
 
   		RewriteRule ^dashboard/?$ dashboard/index.php [NC,L]
 
 	  	RewriteRule ^dashboard/administrativo/?$ dashboard/administrative.php [NC,L]
 
 	  	RewriteRule ^dashboard/tickets/?$ dashboard/ticket/view-all-ticket.php [NC,L]
-
-	  	RewriteRule ^dashboard/([a-z0-9-]+)/([0-9]+)?$ dashboard/$1/ticket.php?id_chat=$2 [NC]
-
 	  	RewriteRule ^dashboard/([a-z0-9-]+)/([0-9]+)/([0-9]+)?$ dashboard/$1/ticket.php?id_chat=$2&id_attendant=$3 [NC]
-
 	  	RewriteRule ^dashboard/ticket/novo-busca/?$ dashboard/ticket/view-new-find-ticket.php [NC]
 
-	  
 	  	RewriteRule ^dashboard/user/novo/?$ dashboard/user/view-new-user.php [NC]
 
-
 	  	RewriteRule ^dashboard/cartorio/novo/?$ dashboard/registry/view-new-registry.php [NC]
-
 	  	RewriteRule ^dashboard/cartorios?$ dashboard/registry/view-all-registry.php [NC]
 
-
 	  	RewriteRule ^dashboard/usuarios?$ dashboard/user/view-all-user.php [NC]
-
 	  	RewriteRule ^dashboard/usuarios/novo?$ dashboard/user/view-new-user.php [NC]
 
-
 	  	RewriteRule ^dashboard/cadastros?$ dashboard/registration-forms/view-all-registration-forms.php [NC]
-
 	  	RewriteRule ^dashboard/cargos/novo?$ dashboard/registration-forms/view-new-role.php [NC]
-
 	  	RewriteRule ^dashboard/categorias-e-modulos/novo?$ dashboard/registration-forms/view-new-category-module.php [NC]
-
 
 	  	RewriteRule ^dashboard/fila-interna?$ dashboard/queue/view-queue.php [NC]
 
-
 	  	RewriteRule ^dashboard/marketing?$ dashboard/marketing/email.php [NC]
 
-		
 		RewriteRule ^dashboard/estados?$ dashboard/state/view-all-state.php [NC]
-		
+		RewriteRule ^dashboard/estado/([0-9]+)?$ dashboard/state/view-edit-state.php [NC]
+		RewriteRule ^dashboard/estado/remover/([0-9]+)?$ utils/controller/state/state.ctrl.php [NC]
 
 		RewriteRule ^dashboard/cidades?$ dashboard/city/view-all-city.php [NC]
 
-
 	  	RewriteRule ^dashboard/autorizacoes?$ dashboard/authorization/view-all-authorization.php [NC]
-
 
 	 	RewriteRule ^dashboard/relatorios?$ dashboard/report/generate-report.php [NC]
 
-
 	  	RewriteRule ^dashboard/logout?$ utils/controller/logout/logout.ctrl.php [NC]
-
 </IfModule>

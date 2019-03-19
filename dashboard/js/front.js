@@ -130,6 +130,10 @@ $(document).ready(function () {
         $("#status-sql").alert('close');
     });
 
+    $("#statusState").fadeTo(4000, 500).slideUp(500, function () {
+        $("#statusState").alert('close');
+    });
+
     $("#txtBusca").keyup(function () {
         var texto = $(this).val();
         
@@ -185,6 +189,13 @@ $(document).ready(function () {
     });
 
     $('#ticketListOfClient').dataTable( {
+        "order": [[ 0, "desc" ]],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+        }
+    });
+
+    $('#stateList').dataTable( {
         "order": [[ 0, "desc" ]],
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"

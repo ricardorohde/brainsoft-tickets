@@ -3,11 +3,11 @@ include_once __DIR__ . "/../../../common/session.php";
 include_once __DIR__ . "/../navbar/navbar.ctrl.php";
 include_once __DIR__ . "/../../model/state.php";
 
-new StateController();
+new StateDataController();
 
-class StateController
+class StateDataController
 {
-	private static $instance;
+    private static $instance;
     private $prepareInstance;
     private $navBarController;
 
@@ -16,29 +16,6 @@ class StateController
     private $dataReceived;
     private $urlRequest;
 
-    private $allStates;
-    private $stateToEdit;
-
-    public function setPrepareInstance($prepareInstance)
-    {
-        $this->prepareInstance = $prepareInstance;
-    }
-
-    public function getAllStates()
-    {
-        return $this->allStates;
-    }
-
-    public function setAllStates($allStates)
-    {
-        $this->allStates = $allStates;
-    }
-
-    public function getStateToEdit()
-    {
-        return $this->stateToEdit;
-    }
-
     function __construct()
     {
         $this->sessionController = Session::getInstance();
@@ -46,9 +23,7 @@ class StateController
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
         $this->dataReceived = $_POST;
         $this->urlRequest = explode("/", $_SERVER["REQUEST_URI"]);
-
         $this->verifyDataReceived();
-        $this->findAllStates();
     }
 
     private function verifyDataReceived()
@@ -73,16 +48,11 @@ class StateController
     private function verifyUrlRequest()
     {
         if ($this->urlRequest[2] == 'estado') {
-            switch ($this->urlRequest[3]) {
-                case 'remover':
-                    $this->remove();
-                    break;
-                default:
-                    $this->show();
-                    break;
+            if ($this->urlRequest[3] == 'remover' && $this->urlRequest[4] != '') {
+                $this->remove();
             }
         }
-        //header("Location:../../../dashboard/estados");
+        header("Location:../../../dashboard/estados");
     }
 
     public function new()
@@ -104,31 +74,12 @@ class StateController
         $this->setSession($result, "state", "atualizado", "atualizar");
     }
 
-    public function show()
-    {
-        $this->stateToEdit = $this->findById($this->urlRequest[3]);
-    }
-
     public function remove()
     {
         $state = new State($this, $this->prepareInstance);
         $state->setId($this->urlRequest[4]);
         $result = $state->remove();
         $this->setSession($result, "state", "removido", "remover");
-    }
-
-    public function findAllStates()
-    {
-        $state = new State($this, $this->prepareInstance);
-        $this->allStates = $state->findAll();
-    	return $this->allStates;
-    }
-
-    public function findById($id)
-    {
-        $state = new State($this, $this->prepareInstance);
-        $state->setId($id);
-        return $state->findById();
     }
 
     public function setSession($result, $sender, $verbOk, $verbNo)
@@ -144,20 +95,5 @@ class StateController
         }
 
         header("Location:../../../dashboard/estados");
-    }
-
-    public function verifyPermission()
-    {
-        if (!isset($_SESSION['State'.'_page_'.$_SESSION['login']])) {
-            header("Location:../dashboard");
-        }
-    }
-
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new StateController();
-        }
-        return self::$instance;
     }
 }

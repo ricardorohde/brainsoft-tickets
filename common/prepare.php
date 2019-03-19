@@ -22,7 +22,7 @@ class PrepareQuery
     	$result = "";
 
     	if (gettype($elements) == "string") {
-      		$openConnection->execute(array($elements)); 
+      		$openConnection->execute(array($elements));
     	} else { 
     		$openConnection->execute($elements);
     	}
@@ -64,6 +64,19 @@ class PrepareQuery
 			$result = json_encode($openConnection->fetch());
 			$openConnection = null;
 			return $result;
+		}
+	}
+
+	public function prepareStatus($query, $elements)
+	{
+		$openConnection = $this->connectionToDatabase->getConnection()->prepare($query);
+
+		if (gettype($elements) == "string") {
+			$openConnection->execute(array($elements)); 
+			return $openConnection->rowCount();
+		} else {
+			$openConnection->execute($elements);
+			return $openConnection->rowCount();
 		}
 	}
 
