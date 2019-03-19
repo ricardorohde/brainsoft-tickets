@@ -112,7 +112,7 @@ $queueController->verifyPermission();
                                                 <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
 																   	<p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
 																   	<p>
-                                                                        <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?>
+                                                                        <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
                                                                         <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?> <br>
                                                                         <?= ucfirst($chat['source']) ?> - <?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
                                                                     </p>
@@ -170,7 +170,7 @@ $queueController->verifyPermission();
                                                 <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
 														<p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
 											   			<p>
-                                                            <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?>
+                                                            <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
                                                             <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?> <br>
                                                             <?= ucfirst($chat['source']) ?> - <?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
                                                         </p>
