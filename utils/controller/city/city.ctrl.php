@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__ . "/../../../common/session.php";
 include_once __DIR__ . "/../navbar/navbar.ctrl.php";
+include_once __DIR__ . "/../log/log.ctrl.php";
 include_once __DIR__ . "/../state/state.ctrl.php";
 include_once __DIR__ . "/../../model/city.php";
 
@@ -13,6 +14,7 @@ class CityController
     private $navBarController;
 
     private $sessionController;
+    private $logController;
 
     private $dataReceived;
     private $urlRequest;
@@ -22,6 +24,8 @@ class CityController
     private $allStates;
     private $allCities;
     private $cityToEdit;
+    private $currentIdCity;
+    private $currentDescriptionCity;
 
     public function getAllStates()
     {
@@ -41,10 +45,15 @@ class CityController
     function __construct()
     {
         $this->sessionController = new Session("");
+        $this->logController = LogController::getInstance();
         $this->navBarController = NavBarController::getInstance();
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
         $this->dataReceived = $_POST;
         $this->urlRequest = explode("/", $_SERVER["REQUEST_URI"]);
+
+        $this->currentIdState = '';
+        $this->currentDescriptionState = '';
+
         $this->verifyDataReceived();
     }
 
@@ -86,7 +95,10 @@ class CityController
         $city->setDescription($this->dataReceived['descCity']);
         $city->setIdState($this->dataReceived['idState']);
         $result = $city->register();
-        $this->setSession($result, "city", "registrada", "registrar");
+
+        $this->currentDescriptionCity = $this->dataReceived['descCity'];
+
+        $this->setSession($result, 'new', 'registrada', 'registrar');
     }
 
     public function update()
@@ -96,7 +108,11 @@ class CityController
         $city->setDescription($this->dataReceived['descCity']);
         $city->setIdState($this->dataReceived['idState']);
         $result = $city->update();
-        $this->setSession($result, "city", "atualizada", "atualizar");
+
+        $this->currentIdCity = $this->dataReceived['idCity'];
+        $this->currentDescriptionCity = $this->dataReceived['descCity'];
+
+        $this->setSession($result, 'update', 'atualizada', 'atualizar');
     }
 
     public function show()
@@ -108,8 +124,13 @@ class CityController
     {
         $city = new City($this, $this->prepareInstance);
         $city->setId($this->urlRequest[4]);
+        $currentCity = $city->findById();
+        
+        $this->currentIdCity = $currentCity['id'];
+        $this->currentDescriptionCity = $currentCity['description'];
+
         $result = $city->remove();
-        $this->setSession($result, "city", "removida", "remover");
+        $this->setSession($result, 'remove', 'removida', 'remover');
     }
 
     function findById($id)
@@ -140,16 +161,20 @@ class CityController
     	$this->allStates = $stateController->findAllStates();
     }
 
-    public function setSession($result, $sender, $verbOk, $verbNo)
+    public function setSession($result, $action, $verbOk, $verbNo)
     {
         if ($result == 1) {
-            $this->sessionController->setSession($sender . "Ok");
+            $this->sessionController->setSession("cityOk");
             $this->sessionController->setContent("<strong>Sucesso!</strong> Cidade " . $verbOk . " com êxito.");
             $this->sessionController->set();
+
+            $this->logController->new('city', $action, $this->currentDescriptionCity, 'success', $this->currentIdCity);
         } else {
-            $this->sessionController->setSession($sender . "No");
+            $this->sessionController->setSession("cityNo");
             $this->sessionController->setContent("<strong>Erro!</strong> Problema ao " . $verbNo . " a cidade.");
             $this->sessionController->set();
+
+            $this->logController->new('city', $action, $this->currentDescriptionCity, 'fail', $this->currentIdCity);
         }
 
         header("Location:../../../dashboard/cidades");

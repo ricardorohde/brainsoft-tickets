@@ -67,7 +67,7 @@ $stateController->findAllStates();
                                 <h2 class="h5 display">Novo Estado</h2>
                             </div>
                             <div class="card-body">
-                                <form action="../../utils/controller/state/state-data.ctrl.php" method="POST">
+                                <form action="../../utils/controller/state/state.ctrl.php" method="POST">
                                     <div class="form-group">
                                         <label class="form-control-label">Descrição</label>
                                         <input type="text" id="descState" name="descState" class="form-control" autofocus=""><span class="help-block-none">Informe o nome do estado.</span>
