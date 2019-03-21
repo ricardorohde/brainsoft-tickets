@@ -1,7 +1,9 @@
 <?php 
-include_once __DIR__ . '/../../utils/controller/state/state.ctrl.php';
-$stateController = StateController::getInstance();
-$stateController->verifyPermission();
+include_once __DIR__ . '/../../utils/controller/city/city.ctrl.php';
+$cityController = CityController::getInstance();
+$cityController->verifyPermission();
+
+$cityController->findAllStates();
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +25,7 @@ $stateController->verifyPermission();
     <link rel="stylesheet" href="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="../css/state/style.css">
+    <link rel="stylesheet" href="../css/city/style.css">
     <link rel="stylesheet" href="../css/custom.css">
 
     <link rel="shortcut icon" href="favicon.png">
@@ -38,7 +40,7 @@ $stateController->verifyPermission();
                 <header>
                     <div class="row">
                         <div class="col-sm-6">
-                            <h1 class="h3 display">Estado</h1>
+                            <h1 class="h3 display">Cidade</h1>
                         </div>
                     </div>
                 </header>
@@ -49,26 +51,30 @@ $stateController->verifyPermission();
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header d-flex align-items-center">
-                                <h2 class="h5 display">Alterar Estado - <span><?= $stateController->getStateToEdit()['description'] ?></span></h2>
+                                <h2 class="h5 display">Alterar Cidade - <span><?= $cityController->getCityToEdit()['description'] ?></span></h2>
                             </div>
                             <div class="card-body">
-                                <form class="form-horizontal" action="../../utils/controller/state/state.ctrl.php" method="POST">
-                                    <input type="hidden" name="idState" value="<?= $stateController->getStateToEdit()['id'] ?>">
+                                <form class="form-horizontal" action="../../utils/controller/city/city.ctrl.php" method="POST">
+                                    <input type="hidden" name="idCity" value="<?= $cityController->getCityToEdit()['id'] ?>">
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Descrição</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="descState" name="descState" class="form-control" value="<?= $stateController->getStateToEdit()['description'] ?>"><span class="help-block-none">Informe o nome do estado.</span>
+                                            <input type="text" id="descCity" name="descCity" class="form-control" value="<?= $cityController->getCityToEdit()['description'] ?>"><span class="help-block-none">Informe o nome do estado.</span>
                                         </div>
-                                        <label class="col-sm-2 form-control-label">Sigla</label>
+                                        <label class="col-sm-2 form-control-label">Estado</label>
                                         <div class="col-sm-10 select">
-                                            <input type="text" id="descInitials" name="initialsState" class="form-control" maxlength="2" value="<?= $stateController->getStateToEdit()['initials'] ?>"><span class="help-block-none">Informe a sigla do estado.</span>
+                                            <select class="form-control" name="idState" id="idState">
+                                                <?php foreach ($cityController->getAllStates() as $state) : ?>
+                                                <option value="<?= $state['id'] ?>" <?= $cityController->getCityToEdit()['id_state'] == $state['id'] ? 'selected' : ''?>><?= $state['description'] ?></option>
+                                                <?php endforeach ?>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="line"></div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 text-right">
                                             <button type="reset" class="btn btn-secondary">Limpar</button>
-                                            <button type="submit" id="update" name="submitFromState" value="update" class="btn btn-primary btnAction">Salvar</button>
+                                            <button type="submit" id="update" name="submit" value="update" class="btn btn-primary btnAction">Salvar</button>
                                         </div>
                                     </div>
                                 </form>
@@ -96,7 +102,7 @@ $stateController->verifyPermission();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/front.js"></script>
-    <script src="../js/user.js"></script>
+    <script src="../js/city.js"></script>
     <script src="../jquery-ui.js"></script>
     <script src="../../js/jquery.mask.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>

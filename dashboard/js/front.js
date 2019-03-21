@@ -134,6 +134,10 @@ $(document).ready(function () {
         $("#statusState").alert('close');
     });
 
+    $("#statusCity").fadeTo(4000, 500).slideUp(500, function () {
+        $("#statusCity").alert('close');
+    });
+
     $("#txtBusca").keyup(function () {
         var texto = $(this).val();
         

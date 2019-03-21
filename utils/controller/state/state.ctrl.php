@@ -48,13 +48,12 @@ class StateController
         $this->urlRequest = explode("/", $_SERVER["REQUEST_URI"]);
 
         $this->verifyDataReceived();
-        $this->findAllStates();
     }
 
-    private function verifyDataReceived()
+    public function verifyDataReceived()
     {
-        if (isset($this->dataReceived['submit'])) {
-            switch ($this->dataReceived['submit']) {
+        if (isset($this->dataReceived['submitFromState'])) {
+            switch ($this->dataReceived['submitFromState']) {
                 case 'new':
                     $this->new();
                     break;
@@ -62,7 +61,6 @@ class StateController
                     $this->update();
                     break;
                 default:
-                    header("Location:../../../dashboard/estados");
                     break;
             }
         } else {
@@ -82,7 +80,6 @@ class StateController
                     break;
             }
         }
-        //header("Location:../../../dashboard/estados");
     }
 
     public function new()

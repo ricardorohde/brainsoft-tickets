@@ -2,6 +2,8 @@
 include_once __DIR__ . '/../../utils/controller/state/state.ctrl.php';
 $stateController = StateController::getInstance();
 $stateController->verifyPermission();
+
+$stateController->findAllStates();
 ?>
 
 <!DOCTYPE html>
@@ -59,28 +61,26 @@ $stateController->verifyPermission();
                 <?php endif ?>
 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-sm-5">
                         <div class="card">
                             <div class="card-header d-flex align-items-center">
                                 <h2 class="h5 display">Novo Estado</h2>
                             </div>
                             <div class="card-body">
-                                <form class="form-horizontal" action="../../utils/controller/state/state-data.ctrl.php" method="POST">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 form-control-label">Descrição</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" id="descState" name="descState" class="form-control"><span class="help-block-none">Informe o nome do estado.</span>
-                                        </div>
-                                        <label class="col-sm-2 form-control-label">Sigla</label>
-                                        <div class="col-sm-10 select">
-                                            <input type="text" id="descInitials" name="initialsState" class="form-control" maxlength="2"><span class="help-block-none">Informe a sigla do estado.</span>
-                                        </div>
+                                <form action="../../utils/controller/state/state-data.ctrl.php" method="POST">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Descrição</label>
+                                        <input type="text" id="descState" name="descState" class="form-control" autofocus=""><span class="help-block-none">Informe o nome do estado.</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label">Sigla</label>
+                                        <input type="text" id="descInitials" name="initialsState" class="form-control" maxlength="2"><span class="help-block-none">Informe a sigla do estado.</span>
                                     </div>
                                     <div class="line"></div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 text-right">
                                             <button type="reset" class="btn btn-secondary">Limpar</button>
-                                            <button type="submit" id="new" name="submit" value="new" class="btn btn-primary btnAction">Cadastrar</button>
+                                            <button type="submit" id="new" name="submitFromState" value="new" class="btn btn-primary btnAction">Cadastrar</button>
                                         </div>
                                     </div>
                                 </form>
@@ -88,7 +88,7 @@ $stateController->verifyPermission();
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-7">
                         <div class="table-responsive">
                             <table id="stateList" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead>

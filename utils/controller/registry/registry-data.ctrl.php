@@ -64,7 +64,7 @@ class RegistryDataController
         $name_registry = $_POST['registryToAdm'];
         $id_registry = $this->findIdByName($name_registry);
 
-        $registry = new Registry($this->getInstance());
+        $registry = new Registry($this, $this->getInstance());
         $registry->setId($id_registry[0]['id']);
 
         $files = $registry->findFiles();

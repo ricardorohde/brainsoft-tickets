@@ -1,7 +1,7 @@
 <?php
-if (!isset($_SESSION['Module' . '_page_' . $_SESSION['login']])) {
-    header("Location:../dashboard");
-}
+include_once __DIR__ . '/../../utils/controller/registration/registration.ctrl.php';
+$controller = RegistrationController::getInstance();
+$controller->verifyPermission();
 ?>
 
 <!DOCTYPE html>
