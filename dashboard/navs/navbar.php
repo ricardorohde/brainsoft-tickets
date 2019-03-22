@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once __DIR__ . '/../../utils/controller/navbar/navbar.ctrl.php';
 include_once __DIR__ . '/../../utils/controller/navbar/isOnChat.ctrl.php';
 

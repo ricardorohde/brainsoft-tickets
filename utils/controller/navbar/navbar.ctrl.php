@@ -11,6 +11,8 @@ class NavBarController
 	private $session;
 	private $idInSession;
 
+	private $currentUrl;
+
 	function getPrepareInstance()
 	{
 		return $this->prepareInstance;
@@ -37,6 +39,7 @@ class NavBarController
 	{
 		$this->prepareInstance = PrepareQuery::getInstance();
 		$this->session = new Session("");
+		$this->currentUrl = explode("/", $_SERVER["REQUEST_URI"]);
 	}
 
 	function setPrepareAndConnection()
@@ -78,11 +81,13 @@ class NavBarController
 			$target = explode(" ", $target);
 
 			if (@$target[1] == "Conta") {
-				$menu = $menu . "<li><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span> Minha " . $target[1] . "</span></a></li><hr>\n";
+				$class = $this->currentUrl[2] == explode('/', $target[0])[4] ? 'active' : '';
+				$menu = $menu . "<li class='" . $class . "'><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span> Minha " . $target[1] . "</span></a></li><hr>\n";
 			}
 
 			if (isset($_SESSION[$name . '_page_' . $id])) {
-				$menu = $menu . "				<li><a href='" . $target[0] . "'><i class='fas " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>\n";
+				$class = strstr(explode('/', $target[0])[4], $this->currentUrl[2]) ? 'active' : '';
+				$menu = $menu . "				<li class='" . $class . "'><a href='" . $target[0] . "'><i class='fas " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>\n";
 			}
 		}
 		return $menu;
