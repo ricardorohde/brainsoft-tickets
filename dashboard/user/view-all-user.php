@@ -28,7 +28,7 @@ $employees = $allUserController->findAllEmployees();
     <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 </head>
 
 <body>
@@ -44,7 +44,7 @@ $employees = $allUserController->findAllEmployees();
                         </div>
 
                         <div class="col-sm-6 text-right h2">
-                            <a class="btn btn-primary" href="usuarios/novo"><i class="fa fa-plus"></i> Novo Usuário</a>
+                            <a class="btn btn-primary" href="usuario/novo"><i class="fa fa-plus"></i> Novo Usuário</a>
                             <a class="btn btn-default" href="usuarios"><i class="fa fa-refresh"></i> Atualizar</a>
                         </div>
                     </div>
@@ -83,7 +83,7 @@ $employees = $allUserController->findAllEmployees();
                                         <td><?= $client['email'] ?></td>
                                         <td><?= $client['city'] ?></td>
                                         <td class="actions text-right">
-                                            <a href="user/view-new-user.php?type=client&id=<?= $client['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                                            <a href="usuario/client/<?= $client['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -115,7 +115,7 @@ $employees = $allUserController->findAllEmployees();
                                         <td><?= $employee['name'] ?></td>
                                         <td><?= $employee['email'] ?></td>
                                         <td class="actions text-right">
-                                            <a href="user/view-new-user.php?type=employee&id=<?= $employee['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
+                                            <a href="usuario/employee/<?= $employee['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

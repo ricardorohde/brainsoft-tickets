@@ -1,7 +1,7 @@
 <?php
-if (!isset($_SESSION['Module' . '_page_' . $_SESSION['login']])) {
-    header("Location:../dashboard");
-}
+include_once __DIR__ . '/../../utils/controller/registration/registration.ctrl.php';
+$controller = RegistrationController::getInstance();
+$controller->verifyPermission();
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +31,7 @@ if (!isset($_SESSION['Module' . '_page_' . $_SESSION['login']])) {
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="../css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 
     <!-- Tweaks for older IEs-->
     <!--[if lt IE 9]>

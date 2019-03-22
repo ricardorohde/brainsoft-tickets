@@ -28,7 +28,7 @@ $queueController->verifyPermission();
     <link rel="stylesheet" href="./css/custom.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 
     <script type="text/javascript">
         var contador = '60';

@@ -26,7 +26,7 @@ $stateController->verifyPermission();
     <link rel="stylesheet" href="../css/state/style.css">
     <link rel="stylesheet" href="../css/custom.css">
 
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 </head>
 
 <body>

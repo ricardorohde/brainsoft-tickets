@@ -33,7 +33,7 @@ $controller->verifyPermission();
 
     <link type="text/css" href="../css/jquery-ui.css" rel="stylesheet" />
     <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 
     <!-- Tweaks for older IEs-->
     <!--[if lt IE 9]>

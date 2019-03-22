@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
     <link rel="stylesheet" href="css/custom.css">
 
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../brain_icon">
   </head>
 
   <body>

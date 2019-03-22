@@ -26,7 +26,7 @@ $emailController->verifyPermission();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
     <link type="text/css" href="../css/jquery-ui.css" rel="stylesheet" />
 
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 </head>
 
 <body>

@@ -34,7 +34,7 @@ $controller->findAllRoles();
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="./css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="../../brain_icon">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
@@ -67,7 +67,7 @@ $controller->findAllRoles();
                                     <h1 class="h3 display"></h1>
                                 </div>
                                 <div class="col-sm-6 text-right h2">
-                                    <a class="btn btn-primary" href="categorias-e-modulos/novo"><i class="fa fa-plus"></i> Nova Categoria / Módulo</a>
+                                    <a class="btn btn-primary" href="categoria-e-modulo/novo"><i class="fa fa-plus"></i> Nova Categoria / Módulo</a>
                                     <a class="btn btn-default" href="cadastros"><i class="fa fa-refresh"></i> Atualizar</a>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@ $controller->findAllRoles();
                                     <h1 class="h3 display"></h1>
                                 </div>
                                 <div class="col-sm-6 text-right h2">
-                                    <a class="btn btn-primary" href="cargos/novo"><i class="fa fa-plus"></i> Novo Cargo</a>
+                                    <a class="btn btn-primary" href="cargo/novo"><i class="fa fa-plus"></i> Novo Cargo</a>
                                     <a class="btn btn-default" href="cadastros"><i class="fa fa-refresh"></i> Atualizar</a>
                                 </div>
                             </div>

@@ -17,14 +17,14 @@ $newUserController->verifyGet($_GET);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
 
-    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="../css/fontastic.css">
+    <link rel="stylesheet" href="../../css/fontastic.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" href="../css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <link rel="stylesheet" href="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <link rel="stylesheet" href="../css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="../../css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="../../css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../../css/custom.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
     <link rel="shortcut icon" href="../../brain_icon">
@@ -79,23 +79,21 @@ $newUserController->verifyGet($_GET);
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="line"></div>
-
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Nome Completo</label>
                                         <div class="col-sm-10">
                                             <input type="text" name="name" class="form-control" value="<?= isset($row_sql_user['name']) ? $row_sql_user['name'] : '' ?>"><span class="help-block-none">Informe o nome completo do usuário.</span>
                                         </div>
                                     </div>
-
+                                    <div class="line"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Email</label>
                                         <div class="col-sm-10">
                                             <input type="text" id="email" name="email" class="form-control" value="<?= isset($row_sql_user['email']) ? $row_sql_user['email'] : '' ?>"><span class="help-block-none">Informe o email do usuário.</span>
                                         </div>
                                     </div>
-
+                                    <div class="line"></div>
                                     <div class="form-group row dataOfClient">
                                         <label class="col-sm-2 form-control-label">Estado</label>
                                         <div class="col-sm-3 select">
@@ -122,7 +120,7 @@ $newUserController->verifyGet($_GET);
                                             </select>
                                         </div>
                                     </div>
-
+                                    <div class="line dataOfClient"></div>
                                     <div class="form-group row dataOfClient">
                                         <label class="col-sm-2 form-control-label">Cartório</label>
                                         <div class="col-sm-10 select">
@@ -135,14 +133,14 @@ $newUserController->verifyGet($_GET);
                                             </select>
                                         </div>
                                     </div>
-
+                                    <div class="line dataOfClient"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Cargo</label>
                                         <div class="col-sm-10 select">
                                             <select name="role" class="form-control"></select>
                                         </div>
                                     </div>
-
+                                    <div class="line dataOfEmployee"></div>
                                     <?php if (isset($_GET['type']) && $_GET['type'] == 'employee') : ?>
                                     <div class="form-group row dataOfEmployee">
                                         <label class="col-sm-2 form-control-label">Grupo</label>
@@ -167,7 +165,7 @@ $newUserController->verifyGet($_GET);
                                         </div>
                                     </div>
                                     <?php endif ?>
-                                    <div class="line <? isset($row_sql_user['name']) ? 'control' : '' ?>"></div>
+                                    <div class="line"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Nickname</label>
                                         <div class="col-sm-10">
@@ -175,6 +173,7 @@ $newUserController->verifyGet($_GET);
                                         </div>
                                         <input type="hidden" name="id_user" value="<?= isset($_GET['id']) ? $_GET['id'] : '' ?>">
                                     </div>
+                                    <div class="line <? isset($row_sql_user['name']) ? 'control' : '' ?>"></div>
                                     <div class="form-group row <? isset($row_sql_user['name']) ? 'control' : '' ?>">
                                         <label class="col-sm-2 form-control-label">Senha</label>
                                         <div class="col-sm-10">
@@ -265,18 +264,18 @@ $newUserController->verifyGet($_GET);
         </footer>
     </div>
     <!-- Javascript files-->
-    <script src="../js/jquery-3.2.1.min.js"></script>
-    <script src="../../js/jquery.mask.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/jquery.mask.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
-    <script src="../jquery-ui.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="../js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
-    <script src="../vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="../js/user.js"></script>
-    <script src="../js/front.js"></script>
-    <script src="../js/brain.js"></script>
+    <script src="../../jquery-ui.js"></script>
+    <script src="../../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="../../js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
+    <script src="../../vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../../js/user.js"></script>
+    <script src="../../js/front.js"></script>
+    <script src="../../js/brain.js"></script>
 
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>

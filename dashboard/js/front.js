@@ -334,12 +334,6 @@ $(document).ready(function () {
         )
     });
 
-    $('input[name=typeUser]').change(function () {
-        inputTypeUserChanged();
-    });
-
-    inputTypeUserChanged();
-
     $("select[name=state]").change(function(){
         $("select[name=city]").html('<option value="">aguarde...</option>');
         $("select[name=registry]").html('<option value="">Selecione uma cidade</option>');
@@ -389,7 +383,6 @@ $(document).ready(function () {
             });
         });
     }
-
 
     // ------------------------------------------------------- //
     // Side Navbar Functionality
@@ -481,44 +474,6 @@ $(document).ready(function () {
         return false;
     });
 });
-
-function inputTypeUserChanged(){
-    if ($('input[name="typeUser"]:checked').val() === "client") {
-        $("select[name=role] option").each(function() {
-            $(this).remove();
-        });
-        
-        if($("#userInformed").length){
-            $.post("../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
-              function(valor){
-                $("select[name=role]").append(valor);
-              }
-            )
-        }
-
-        $('.dataOfClient').slideDown("slow");
-    } else {
-        $('.dataOfClient').slideUp("slow");
-    }
-
-    if ($('input[name="typeUser"]:checked').val() === "employee") {
-        $("select[name=role] option").each(function() {
-            $(this).remove();
-        });
-        
-        if($("#userInformed").length){
-            $.post("../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
-              function(valor){
-                $("select[name=role]").append(valor);
-              }
-            )
-        }
-
-        $('.dataOfEmployee').slideDown("slow");
-    } else {
-        $('.dataOfEmployee').slideUp("slow");
-    }
-}
 
 function proximoCampo(atual, proximo){
     if(atual.value.length >= atual.maxLength){
