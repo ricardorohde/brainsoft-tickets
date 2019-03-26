@@ -50,7 +50,7 @@ class RoleController
     public function verifyPermission()
     {
         if (!isset($_SESSION['Role'.'_page_'.$_SESSION['login']])) {
-            header("Location:../painel");
+            header("Location:/painel/conta");
         }
     }
 

@@ -42,6 +42,13 @@ class CategoryController{
         return $category->findByGroup();
     }
 
+    public function verifyPermission()
+    {
+        if (!isset($_SESSION['Category'.'_page_'.$_SESSION['login']])) {
+            header("Location:../painel/conta");
+        }
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {

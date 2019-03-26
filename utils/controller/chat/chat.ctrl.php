@@ -28,7 +28,8 @@ class ChatController
         return $chat->findById();
     }
 
-    public function new($id, $openingTime, $finalTime, $durationInMinutes){
+    public function new($id, $openingTime, $finalTime, $durationInMinutes)
+    {
         $chat = new Chat($this, $this->prepareInstance);
         $chat->setId($id);
         $chat->setOpeningTime($openingTime);
@@ -37,13 +38,14 @@ class ChatController
         return $chat->register();
     }
 
-    public function searchChatIdCtrl($id){
-        $chat = new Chat($this->getInstance());
+    public function searchChatIdCtrl($id) {
+        $chat = new Chat();
 
         return $chat->searchChatId($id);
     }
 
-    public function update($idChat, $finalTime, $durationInMinutes){
+    public function update($idChat, $finalTime, $durationInMinutes)
+    {
         $chat = new Chat($this, $this->prepareInstance);
         $chat->setIdChat($idChat);
         $chat->setFinalTime($finalTime);

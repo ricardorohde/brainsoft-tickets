@@ -66,15 +66,14 @@ $connection = $ticketController->getConn();
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
-                            <?php if (!isset($_GET["id_chat"])) { ?>
+                            <?php if (!isset($_GET["id_chat"])) : ?>
                             <div class="card-header d-flex align-items-center">
                                 <h2 class="h5 display">Novo ticket</h2>
                             </div>
-                            <?php 
-                        } ?>
+                            <?php endif ?>
                             <div class="card-body">
                                 <input type="hidden" id="target-attendant" value="<?= isset($targetAttendant) ? $targetAttendant['name'] : $row_attendant['name'] ?>">
-                                <form id="ticket-form" class="form-horizontal" action="/painel/controller/ticket/data" method="POST">
+                                <form id="ticket-form" class="form-horizontal" action="/controller/ticket/data" method="POST">
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Reincidente</label>
                                         <div class="col-sm-1 select ui-widget">

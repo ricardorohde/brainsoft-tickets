@@ -499,7 +499,7 @@ class TicketControllerOld
 	function verifyPermission()
 	{
   		if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
-    		header("Location:../dashboard");
+    		header("Location:/painel/conta");
   		}
 	}
 

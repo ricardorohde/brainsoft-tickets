@@ -262,7 +262,7 @@ class NewUserController
     public function verifyPermission()
     {
         if (!isset($_SESSION['User' . '_page_' . $_SESSION['login']])) {
-            header("Location:../painel");
+            header("Location:/painel/conta");
         }
     }
 

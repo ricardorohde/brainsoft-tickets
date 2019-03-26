@@ -65,7 +65,7 @@ $newUserController->verifyGet($_GET);
                                 <h2 class="h5 display main-card-title"><?= isset($_GET['id']) ? "Visualizar/Alterar Usuário" : "Novo Usuário" ?></h2>
                             </div>
                             <div class="card-body">
-                                <form class="form-horizontal" id="formAdd" name="formAdd" action="/painel/controller/user/data" method="POST">
+                                <form class="form-horizontal" id="formAdd" name="formAdd" action="/controller/user/data" method="POST">
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Tipo</label>
                                         <div class="col-sm-10">

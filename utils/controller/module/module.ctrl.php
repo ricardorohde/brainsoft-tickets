@@ -45,6 +45,13 @@ class ModuleController
         $module = new Module($this, $this->prepareInstance);
         return $module->findDataBySqlIds($sqlIds);
     }
+
+    public function verifyPermission()
+    {
+        if (!isset($_SESSION['Module'.'_page_'.$_SESSION['login']])) {
+            header("Location:/painel/conta");
+        }
+    }
     
     public static function getInstance()
     {

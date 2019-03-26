@@ -109,6 +109,13 @@ class ClientController
         $client->remove();
     }
 
+    public function verifyPermission()
+    {
+        if (!isset($_SESSION['Client'.'_page_'.$_SESSION['login']])) {
+            header("Location:../painel/conta");
+        }
+    }
+
     public static function getInstance()
     {
         if (!self::$instance) {

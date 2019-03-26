@@ -62,7 +62,7 @@ class RegistryController
     public function verifyPermission()
     {
         if (!isset($_SESSION['Registry'.'_page_'.$_SESSION['login']])) {
-            header("Location:../painel");
+            header("Location:/painel/conta");
         }
     }
 
