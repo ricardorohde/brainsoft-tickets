@@ -18,14 +18,14 @@ $queueController->verifyPermission();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
 
-    <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./vendor/font-awesome/all.css">
-    <link rel="stylesheet" href="./css/fontastic.css">
+    <link rel="stylesheet" href="../../dashboard/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../dashboard/vendor/font-awesome/all.css">
+    <link rel="stylesheet" href="../../dashboard/css/fontastic.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" href="./css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <link rel="stylesheet" href="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-    <link rel="stylesheet" href="./css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="../../dashboard/css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="../../dashboard/css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../../dashboard/css/custom.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
     <link rel="shortcut icon" href="../../brain_icon">
@@ -223,7 +223,7 @@ $queueController->verifyPermission();
                             </tr>
                             <?php foreach ($attendants as $key => $attendant) : ?>
                             <tr>
-                                <td><?= $attendant['on_chat'] == "yes" ? "<img src='img/is-on.png'></img>" : "<img src='img/is-off.png'></img>" ?></td>
+                                <td><?= $attendant['on_chat'] == "yes" ? "<img src='../../dashboard/img/is-on.png'></img>" : "<img src='../../dashboard/img/is-off.png'></img>" ?></td>
                                 <td><?= explode(" ", $attendant['name'])[0] ?></td>
 
                                 <?php
@@ -264,10 +264,10 @@ $queueController->verifyPermission();
                         </table>
                         <div>
                             <div style="font-size: 10px">
-                                <img src='img/is-on.png' style="height: 10px;"></img> Online
-                                <img src='img/is-busy.png' style="height: 10px; margin-left: 20px;"></img> Backup
-                                <img src='img/is-trainer.png' style="height: 10px; margin-left: 20px;"></img> Treinamento
-                                <img src='img/is-off.png' style="height: 10px; margin-left: 20px;"></img> Offline
+                                <img src='../../dashboard/img/is-on.png' style="height: 10px;"></img> Online
+                                <img src='../../dashboard/img/is-busy.png' style="height: 10px; margin-left: 20px;"></img> Backup
+                                <img src='../../dashboard/img/is-trainer.png' style="height: 10px; margin-left: 20px;"></img> Treinamento
+                                <img src='../../dashboard/img/is-off.png' style="height: 10px; margin-left: 20px;"></img> Offline
                             </div>
                         </div>
                     </div>
@@ -289,15 +289,15 @@ $queueController->verifyPermission();
         </footer>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
-    <script src="./js/jquery-3.2.1.min.js"></script>
-    <script src="./js/front.js"></script>
-    <script src="./js/queue.js"></script>
-    <script src="./jquery-ui.js"></script>
-    <script src="./vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="./vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="./js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
-    <script src="./vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="./vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../../dashboard/js/jquery-3.2.1.min.js"></script>
+    <script src="../../dashboard/js/front.js"></script>
+    <script src="../../dashboard/js/queue.js"></script>
+    <script src="../../dashboard/jquery-ui.js"></script>
+    <script src="../../dashboard/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../dashboard/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="../../dashboard/js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
+    <script src="../../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 </body>

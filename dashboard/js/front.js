@@ -62,7 +62,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#final-date").change(function () {
+    $("#initial-date").change(function () {
         $("#btn-generate-report").prop("disabled", false);
     });
 
@@ -165,7 +165,7 @@ $(document).ready(function () {
                 var novoConteudo = $(this).val();
                 $(this).parent().text(novoConteudo);
                 $(this).parent().removeClass("celulaEmEdicao");
-                $.post("../utils/controller/module/module-data.ctrl.php", {id:idModule, valor:novoConteudo},
+                $.post("../../utils/controller/module/module-data.ctrl.php", {id:idModule, valor:novoConteudo},
                     function (valor) {
                     }
                 )
@@ -275,7 +275,7 @@ $(document).ready(function () {
     });
 
     $("select[name=listUser]").change(function(){
-        $.post("../utils/controller/ctrl-auth.php", {user:$(this).val()},
+        $.post("../../utils/controller/ctrl-auth.php", {user:$(this).val()},
           function(auth){
             $(".auth").empty();
             $(".auth").append(auth);
@@ -284,7 +284,7 @@ $(document).ready(function () {
     });
 
     $(".generate-report").click(function(){
-        $.post("../utils/controller/ctrl-report.php", {makeReport:$(this).val(), initial_date:$("#initial_date").val(), final_date:$("#final_date").val()},
+        $.post("../../utils/controller/ctrl-report.php", {makeReport:$(this).val(), initial_date:$("#initial_date").val(), final_date:$("#final_date").val()},
           function(makeReport){
             $(".report").empty();
             $(".report").append(makeReport);
@@ -294,7 +294,7 @@ $(document).ready(function () {
 
     $("select[name=group]").change(function(){
         $("select[name=attendant]").html('<option value="">Selecione um atendente</option>');
-        $.post("../../../utils/controller/employee/employee-js.ctrl.php", {group:$(this).val()},
+        $.post("../../../../utils/controller/employee/employee-js.ctrl.php", {group:$(this).val()},
           function(valor){
             $("select[name=attendant]").append(valor);
           }
@@ -302,7 +302,7 @@ $(document).ready(function () {
     });
 
     $("input[name=login]").blur(function(){
-        $.post("../../utils/controller/credential/credential-js.ctrl.php", {userToVerify:$(this).val().trim()},
+        $.post("../../../utils/controller/credential/credential-js.ctrl.php", {userToVerify:$(this).val().trim()},
           function(result){
             if (result > 0){
                 document.formAdd.login.style.boxShadow = "0 0 5px #ff0000"; 
@@ -318,7 +318,7 @@ $(document).ready(function () {
     });
 
     $("input[name=category]").blur(function(){
-        $.post("../../utils/controller/category/category-js.ctrl.php", {fromCategory:$(this).val()},
+        $.post("../../../utils/controller/category/category-js.ctrl.php", {fromCategory:$(this).val()},
           function(fromCategory){
             $("#id_category").val(fromCategory);
           }
@@ -327,7 +327,7 @@ $(document).ready(function () {
 
     $("input[name=registry]").blur(function(){
         $("select[name=client]").html('<option value="">Selecione o cliente requerente</option>');
-        $.post("../../../utils/controller/client/client-js.ctrl.php", {registry:$(this).val()},
+        $.post("../../../../utils/controller/client/client-js.ctrl.php", {registry:$(this).val()},
           function(client){
             $("select[name=client]").append(client);
           }
@@ -337,7 +337,7 @@ $(document).ready(function () {
     $("select[name=state]").change(function(){
         $("select[name=city]").html('<option value="">aguarde...</option>');
         $("select[name=registry]").html('<option value="">Selecione uma cidade</option>');
-        $.post("../../utils/controller/city/city-js.ctrl.php", {valor:$(this).val()},
+        $.post("../../../utils/controller/city/city-js.ctrl.php", {valor:$(this).val()},
           function(valor){
             $("select[name=city]").html(valor);
           }
@@ -346,7 +346,7 @@ $(document).ready(function () {
 
     $("select[name=city]").change(function(){
         $("select[name=registry]").html('<option value="">aguarde...</option>');
-        $.post("../../utils/controller/registry/registry-js.ctrl.php", {valor:$(this).val()},
+        $.post("../../../utils/controller/registry/registry-js.ctrl.php", {valor:$(this).val()},
           function(valor){
             $("select[name=registry]").html(valor);
           }
@@ -354,13 +354,13 @@ $(document).ready(function () {
     });
 
     $("input[name=registryListToAdm]").blur(function(){
-        $.post("../utils/controller/ctrl_registry.php", {fromFile:$(this).val()},
+        $.post("../../utils/controller/ctrl_registry.php", {fromFile:$(this).val()},
           function(fromFile){
             $("#id_registry").val(fromFile);
           }
         )
 
-        $.post("../utils/controller/ctrl_registry.php", {registryToAdm:$(this).val()},
+        $.post("../../utils/controller/ctrl_registry.php", {registryToAdm:$(this).val()},
           function(registryToAdm){
             $("tbody").html(registryToAdm);
           }

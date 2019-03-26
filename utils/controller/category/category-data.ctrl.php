@@ -75,7 +75,7 @@ class CategoryDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/cadastros");
+        header("Location:../../../painel/modulos");
     }
 
    function getInstance(){

@@ -1,9 +1,9 @@
 <?php 
-include_once __DIR__ . '/../../utils/controller/registration/registration.ctrl.php';
-$controller = RegistrationController::getInstance();
-$controller->verifyPermission();
+include_once __DIR__ . '/../../utils/controller/role/role.ctrl.php';
+$roleController = RoleController::getInstance();
+$roleController->verifyPermission();
 
-$controller->findAllModules();
+$roleController->findAll();
 ?>
 
 <!DOCTYPE html>
@@ -41,60 +41,54 @@ $controller->findAllModules();
         <?php include("../navs/header.php"); ?>
         <section class="forms">
             <div class="container-fluid">
-
                 <header>
                     <div class="row">
                         <div class="col-sm-6">
-                            <h1 class="h3 display">Módulos</h1>
+                            <h1 class="h3 display"></h1>
                         </div>
                         <div class="col-sm-6 text-right h2">
-                            <a class="btn btn-primary" href="modulo/novo"><i class="fa fa-plus"></i> Nova Categoria / Módulo</a>
-                            <a class="btn btn-default" href="modulos"><i class="fa fa-refresh"></i> Atualizar</a>
+                            <a class="btn btn-primary" href="cargo/novo"><i class="fa fa-plus"></i> Novo Cargo</a>
+                            <a class="btn btn-default" href="cargos"><i class="fa fa-refresh"></i> Atualizar</a>
                         </div>
                     </div>
                 </header>
 
                 <div class="row">
                     <div class="table-responsive">
-                        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="example2" class="table table-striped table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Categoria</th>
-                                    <th>Módulo</th>
-                                    <th>Grupo</th>
-                                    <th>Tempo Limite (minutos)</th>
+                                    <th>Descrição</th>
+                                    <th>Destinado a</th>
                                     <th>Situação</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($controller->getAllModules())) : ?>
-                                <?php foreach ($controller->getAllModules() as $module) : ?>
-                                <?php $controller->findCategoryByIdAndOrder($module['id_category']); ?>
+                                <?php if (!empty($roleController->getAllRoles())) : ?>
+                                <?php foreach ($roleController->getAllRoles() as $role) : ?>
                                 <tr>
-                                    <td><?= $module['id'] ?></td>
-                                    <td><?= $controller->getCategory()['description'] ?></td>
-                                    <td><?= $module['description'] ?></td>
-                                    <td><?= $controller->getCategory()['t_group'] ?></td>
-                                    <td name="limit" id="<?= $module['id']; ?>" title="Duplo clique para editar!"><?= $module['limit_time'] ?></td>
-                                    <td><?= ucfirst($module['status']) ?></td>
+                                    <td><?= $role['id'] ?></td>
+                                    <td><?= $role['description'] ?></td>
+                                    <td><?= ($role['type']) == 1 ? "Cliente" : "Funcionário" ?></td>
+                                    <td><?= ucfirst($role['status']) ?></td>
                                     <td class="actions text-right">
-                                        <?php if ($module['status'] == "ativo") { ?>
-                                        <a href="../utils/controller/module/module-data.ctrl.php?id=<?= $module['id']; ?>" class="btn btn-sm btn-danger" title="desativar"><i class="fa fa-trash-o"></i> Desativar</a>
+                                        <?php if ($role['status'] == "ativo") { ?>
+                                        <a href="../utils/controller/role/role-data.ctrl.php?id=<?= $role['id']; ?>" class="btn btn-sm btn-danger" title="desativar"><i class="fa fa-trash-o"></i> Desativar</a>
                                         <?php 
                                     } else { ?>
-                                        <a href="../utils/controller/module/module-data.ctrl.php?type=active&id=<?= $module['id']; ?>" class="btn btn-sm btn-success" title="ativar"><i class="fa fa-check-circle-o"></i> Ativar</a>
+                                        <a href="../utils/controller/role/role-data.ctrl.php?type=active&id=<?= $role['id']; ?>" class="btn btn-sm btn-success" title="ativar"><i class="fa fa-check-circle-o"></i> Ativar</a>
                                         <?php 
                                     } ?>
                                     </td>
                                 </tr>
-                                <?php endforeach ?>
+                                <?php endforeach; ?>
                                 <?php else : ?>
                                 <tr>
-                                    <td colspan="6">Nenhum módulo encontrado.</td>
+                                    <td colspan="6">Nenhum funcionário encontrado.</td>
                                 </tr>
-                                <?php endif ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

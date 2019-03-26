@@ -55,6 +55,13 @@ class AuthorizationController
 	  	return $authorizations;
 	}
 
+	public function verifyPermission()
+    {
+        if (!isset($_SESSION['Authorization'.'_page_'.$_SESSION['login']])) {
+            header("Location:../painel");
+        }
+    }
+
 	public static function getInstance()
     {
         if (!self::$instance) {

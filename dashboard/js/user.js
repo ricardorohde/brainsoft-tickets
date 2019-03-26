@@ -21,7 +21,7 @@ $(document).ready(function(){
             });
             
             if($("#userInformed").length){
-                $.post("../../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
+                $.post("../../../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
                   function(valor){
                     $("select[name=role]").append(valor);
                   }
@@ -39,7 +39,7 @@ $(document).ready(function(){
             });
             
             if($("#userInformed").length){
-                $.post("../../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
+                $.post("../../../../utils/controller/role/role-js.ctrl.php", {typeUser:$('input[name="typeUser"]:checked').val(), userInformed:$('#userInformed').val()},
                   function(valor){
                     $("select[name=role]").append(valor);
                   }

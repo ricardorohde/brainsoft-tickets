@@ -102,7 +102,7 @@ class ModuleDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/cadastros");
+        header("Location:../../../painel/modulos");
     }
 
     public function delete()
@@ -121,7 +121,7 @@ class ModuleDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/cadastros");
+        header("Location:../../../painel/modulos");
     }
 
     public function update()
@@ -141,7 +141,7 @@ class ModuleDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/cadastros");
+        header("Location:../../../painel/modulos");
     }
 
     public static function getInstance()

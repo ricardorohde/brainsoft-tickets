@@ -181,13 +181,13 @@ class NewRegistryDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/cartorios");
+        header("Location:../../../painel/cartorios");
     }
 
     public function verifyPermission()
     {
         if (!isset($_SESSION['Registry'.'_page_'.$_SESSION['login']])) {
-            header("Location:../dashboard");
+            header("Location:../painel");
         }
     }
 

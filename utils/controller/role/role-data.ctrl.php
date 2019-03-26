@@ -104,7 +104,7 @@ class RoleDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/cadastros");
+        header("Location:../../../painel/cargos");
     }
 
     public static function getInstance()

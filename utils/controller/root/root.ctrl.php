@@ -6,7 +6,6 @@ new PostController();
 class PostController
 {
 	private static $instance;
-	private $emailController;
 
 	private $data;
 

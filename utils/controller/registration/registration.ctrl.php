@@ -10,11 +10,9 @@ class RegistrationController
     private $prepareInstance;
     private $navBarController;
     private $moduleController;
-    private $roleController;
     private $categoryController;
 
     private $allModules;
-    private $allRoles;
     private $category;
 
     public function getAllModules() 
@@ -25,16 +23,6 @@ class RegistrationController
     public function setAllModules($allModules) 
     {
         $this->allModules = $allModules;
-    }
-
-    public function getAllRoles() 
-    {
-        return $this->allRoles;
-    }
-    
-    public function setAllRoles($allRoles) 
-    {
-        $this->allRoles = $allRoles;
     }
 
     public function getCategory() 
@@ -52,18 +40,12 @@ class RegistrationController
         $this->navBarController = NavBarController::getInstance();
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
         $this->moduleController = ModuleController::getInstance();
-        $this->roleController = RoleController::getInstance();
         $this->categoryController = CategoryController::getInstance();
     }
 
     public function findAllModules()
     {
         $this->allModules = $this->moduleController->findAll();
-    }
-
-    public function findAllRoles()
-    {
-        $this->allRoles = $this->roleController->findAll();
     }
 
     public function findCategoryByIdAndOrder($id)

@@ -8,6 +8,18 @@ class RoleController
     private $prepareInstance;
     private $navBarController;
 
+    private $allRoles;
+
+    public function getAllRoles()
+    {
+        return $this->allRoles;
+    }
+
+    public function setAllRoles($allRoles)
+    {
+        $this->allRoles = $allRoles;
+    }
+
     function __construct()
     {
         $this->navBarController = NavBarController::getInstance();
@@ -17,7 +29,7 @@ class RoleController
     public function findAll()
     {
         $role = new Role($this, $this->prepareInstance);
-        return $role->findAll();
+        $this->allRoles = $role->findAll();
     }
 
     public function findAllByType($type)
@@ -33,6 +45,13 @@ class RoleController
     	$role->setStatus($status);
         $role->setId($id);
     	return $role->findRoleByStatusAndId();
+    }
+
+    public function verifyPermission()
+    {
+        if (!isset($_SESSION['Role'.'_page_'.$_SESSION['login']])) {
+            header("Location:../painel");
+        }
     }
 
     public static function getInstance()

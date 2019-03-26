@@ -164,13 +164,13 @@ class StateController
             $this->logController->new('state', $action, $this->currentDescriptionState, 'fail', $this->currentIdState);
         }
 
-        header("Location:../../../dashboard/estados");
+        header("Location:../../../painel/estados");
     }
 
     public function verifyPermission()
     {
         if (!isset($_SESSION['State' . '_page_' . $_SESSION['login']])) {
-            header("Location:../dashboard");
+            header("Location:../painel");
         }
     }
 

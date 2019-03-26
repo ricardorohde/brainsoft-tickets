@@ -317,7 +317,7 @@ class QueueController
 	function verifyPermission()
 	{
   		if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
-    		header("Location:../dashboard");
+    		header("Location:../painel");
   		}
 	}
 

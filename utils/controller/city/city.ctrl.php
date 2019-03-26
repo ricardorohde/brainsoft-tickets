@@ -177,13 +177,13 @@ class CityController
             $this->logController->new('city', $action, $this->currentDescriptionCity, 'fail', $this->currentIdCity);
         }
 
-        header("Location:../../../dashboard/cidades");
+        header("Location:../../../painel/cidades");
     }
 
     public function verifyPermission()
     {
         if (!isset($_SESSION['City'.'_page_'.$_SESSION['login']])) {
-            header("Location:../dashboard");
+            header("Location:../painel");
         }
     }
 

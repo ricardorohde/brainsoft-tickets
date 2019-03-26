@@ -53,7 +53,7 @@ class TicketDataController
             $data = $_POST;
             $this->registerCtrl($data, 0);
         } else {
-            header("Location:/dashboard/tickets");
+            header("Location:/painel/tickets");
         }
     }
 
@@ -149,17 +149,17 @@ class TicketDataController
             case "new":
                 unset($_SESSION['ticketStatus']);
                 $_SESSION['ticketStatus'] = "<strong>Sucesso!</strong> Ticket cadastrado com êxito.";
-                header("Location:../../../dashboard/tickets");
+                header("Location:../../../painel/tickets");
                 break;
             case "update":
                 unset($_SESSION['ticketStatus']);
                 $_SESSION['ticketStatus'] = "<strong>Sucesso!</strong> Ticket alterado com êxito.";
-                header("Location:../../../dashboard/tickets");
+                header("Location:../../../painel/tickets");
                 break;
             case 'finish':
                 unset($_SESSION['ticketStatus']);
                 $_SESSION['ticketStatus'] = "<strong>Sucesso!</strong> Ticket finalizado com êxito.";
-                header("Location:../../../dashboard/tickets");
+                header("Location:../../../painel/tickets");
                 break;
             default:
                 break;
@@ -169,14 +169,14 @@ class TicketDataController
     function thereIsInputEmpty()
     {
         $_SESSION['thereIsProblemInTicket'] = "<strong>Erro!</strong> Preencha todos os campos para registrar.";
-        header("Location:../dashboard/view_ticket.php");
+        header("Location:../painel/view_ticket.php");
         die();
     }
 
     function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
-            header("Location:../dashboard");
+            header("Location:../painel");
         }
     }
 

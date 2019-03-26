@@ -21,7 +21,7 @@ if (!isset($_SESSION['login'])) {
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
-                <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a><a href="index.php" class="navbar-brand">
+                <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a><a href="/painel" class="navbar-brand">
                         <?php if (empty($registry)) { ?>
                         <div class="brand-text d-none d-md-inline-block"><span>Equipe </span><strong class="text-primary">Brainsoft</strong></div></a></div>
                 <?php 

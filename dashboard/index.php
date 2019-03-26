@@ -14,16 +14,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
 
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../dashboard/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="css/fontastic.css">
+    <link rel="stylesheet" href="../../dashboard/css/fontastic.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" href="css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <link rel="stylesheet" href="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">>
-    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="../../dashboard/css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">>
+    <link rel="stylesheet" href="../../dashboard/css/style.default.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../../dashboard/css/custom.css">
 
-    <link rel="shortcut icon" href="../brain_icon">
+    <link rel="shortcut icon" href="../../brain_icon">
   </head>
 
   <body>
@@ -139,19 +139,19 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="../../dashboard/js/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
-    <script src="vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="js/fusioncharts.js"></script>
-    <script src="js/fusioncharts.charts.js"></script>
+    <script src="../../dashboard/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../dashboard/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="../../dashboard/js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
+    <script src="../../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../../dashboard/js/fusioncharts.js"></script>
+    <script src="../../dashboard/js/fusioncharts.charts.js"></script>
     <script type="text/javascript">
       FusionCharts.ready(function () {
           var revenueChart = new FusionCharts({
-              type: 'doughnut2d',
+              type: 'doughnut3d',
               renderAt: 'chart-container',
               width: '450',
               height: '450',

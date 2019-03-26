@@ -37,7 +37,7 @@ class StateDataController
                     $this->update();
                     break;
                 default:
-                    header("Location:../../../dashboard/estados");
+                    header("Location:../../../painel/estados");
                     break;
             }
         } else {
@@ -52,7 +52,7 @@ class StateDataController
                 $this->remove();
             }
         }
-        header("Location:../../../dashboard/estados");
+        header("Location:../../../painel/estados");
     }
 
     public function new()
@@ -94,6 +94,6 @@ class StateDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/estados");
+        header("Location:../../../painel/estados");
     }
 }

@@ -81,12 +81,12 @@ class NavBarController
 			$target = explode(" ", $target);
 
 			if (@$target[1] == "Conta") {
-				$class = $this->currentUrl[2] == explode('/', $target[0])[4] ? 'active' : '';
+				@$class = $this->currentUrl[2] == explode('/', $target[0])[4] ? 'active' : '';
 				$menu = $menu . "<li class='" . $class . "'><a href='" . $target[0] . "'><i class='fa " . $target[2] . "'></i><span> Minha " . $target[1] . "</span></a></li><hr>\n";
 			}
 
 			if (isset($_SESSION[$name . '_page_' . $id])) {
-				$class = strstr(explode('/', $target[0])[4], $this->currentUrl[2]) ? 'active' : '';
+				@$class = strstr(explode('/', $target[0])[4], $this->currentUrl[2]) ? 'active' : '';
 				$menu = $menu . "				<li class='" . $class . "'><a href='" . $target[0] . "'><i class='fas " . $target[2] . "'></i><span>" . $target[1] . "</span></a></li>\n";
 			}
 		}

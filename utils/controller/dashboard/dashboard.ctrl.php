@@ -97,7 +97,7 @@ class DashboardController
         }
 
         if (!isset($_SESSION["Index"."_page_".$_SESSION['login']])) {
-            header("Location:conta");
+            header("Location:/conta");
         }
     }
 

@@ -103,13 +103,13 @@ class NewUserDataController
             $this->sessionController->set();
         }
 
-        header("Location:../../../dashboard/usuarios");
+        header("Location:../../../painel/usuarios");
     }
     
     public function verifyPermission()
     {
         if (!isset($_SESSION['User'.'_page_'.$_SESSION['login']])) {
-            header("Location:../dashboard");
+            header("Location:../painel");
         }
     }
 

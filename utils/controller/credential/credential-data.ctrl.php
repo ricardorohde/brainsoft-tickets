@@ -95,7 +95,7 @@ class CredentialDataController
                 unset($_SESSION['withoutLogin']);
                 unset($_SESSION['errorLogin']);
                 unset($_SESSION['thereIsProblemInLogin']);
-                header("Location:../../../dashboard");
+                header("Location:../../../painel");
                 break;
             case '404':
                 unset($_SESSION['withoutLogin']);
@@ -107,15 +107,15 @@ class CredentialDataController
                 unset($_SESSION['needSamePass']);
                 unset($_SESSION['passNotChanged']);
                 $_SESSION['passChanged'] = "<strong>Sucesso!</strong> Senha alterada com êxito.";
-                header("Location:../../dashboard");
+                header("Location:../../painel");
                 break;
             case '409':
                 $_SESSION['passNotChanged'] = "<strong>Erro!</strong> Ocorreu um problema ao alterar a sua senha.";
-                header("Location:../../dashboard");
+                header("Location:../../painel");
                 break;
             case '304':
                 $_SESSION['needSamePass'] = "<strong>Erro!</strong> As senhas necessitam ser iguais.";
-                header("Location:../../dashboard");
+                header("Location:../../painel");
                 break;
             case '400':
                 $_SESSION['thereIsProblemInLogin'] = "<strong>Erro!</strong> Preencha todos os campos para entrar.";

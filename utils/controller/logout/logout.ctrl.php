@@ -29,7 +29,7 @@ class LogoutController
 			$this->sessionInstance->destroy();
 			header("Location:/");
 		} else {
-			header("Location:/dashboard/fila-interna");
+			header("Location:/painel/fila-interna");
 		}
 	}
 
