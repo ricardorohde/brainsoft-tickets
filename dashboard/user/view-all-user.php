@@ -52,6 +52,15 @@ $employees = $allUserController->findAllEmployees();
 
                 <hr>
 
+                <?php if (isset($_SESSION['UserOk']) || isset($_SESSION['UserNo'])) : ?>
+                <div id="statusUser" class="alert alert-<?= isset($_SESSION['UserOk']) ? 'success' : 'danger' ?>" style="display:block;" ?>
+                    <?= isset($_SESSION['UserOk']) ? $_SESSION['UserOk'] : '' ?>
+                    <?= isset($_SESSION['UserNo']) ? $_SESSION['UserNo'] : '' ?>
+                    <?php unset($_SESSION['UserOk']);
+                    unset($_SESSION['UserNo']) ?>
+                </div>
+                <?php endif ?>
+
                 <ul class="nav nav-tabs menu-users">
                     <li class="nav-item">
                         <a class="nav-link active" href="#first-tab" data-toggle="tab">Clientes</a>

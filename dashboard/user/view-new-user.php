@@ -143,7 +143,7 @@ $newUserController->verifyGet($_GET);
                                         </div>
                                     </div>
 
-                                    <?php if (isset($_GET['type']) && $_GET['type'] == 'employee') : ?>
+                                    <?php if ((isset($_GET['type']) && $_GET['type'] == 'employee') || !isset($_GET['type'])) : ?>
                                     <div class="form-group row dataOfEmployee">
                                         <label class="col-sm-2 form-control-label">Grupo</label>
                                         <div class="col-sm-10">

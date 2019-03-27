@@ -113,14 +113,14 @@ class Employee
     {
     	$elements = [$this->getName(), $this->getEmail(), $this->getTGroup(), $this->getIdCredential(), $this->getIdRole()];
     	$query = "INSERT INTO employee (`id`, `name`, `email`, `t_group`, `id_credential`, `id_role`) VALUES (NULL, ?, ?, ?, ?, ?)";
-        return $this->prepareInstance->prepare($query, $elements, "");
+        return $this->prepareInstance->prepareStatus($query, $elements, "");
     }
 
     public function update()
     {
     	$elements = [$this->getName(), $this->getEmail(), $this->getTGroup(), $this->getIdRole(), $this->getId()];
     	$query = "UPDATE employee SET name = ?, email = ?, t_group = ?, id_role = ? WHERE id = ?";
-        return $this->prepareInstance->prepare($query, $elements, "");
+        return $this->prepareInstance->prepareStatus($query, $elements, "");
     }
 
     public function findAll()

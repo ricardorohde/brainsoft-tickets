@@ -85,8 +85,7 @@ class ClientController
         $client->setIdCredential($data[0]);
         $client->setIdRegistry($data['registry']);
         $client->setIdRole($data['role']);
-
-        $client->register();
+        return $client->register();
     }
 
     function update($data)
@@ -97,16 +96,14 @@ class ClientController
         $client->setIdRegistry($data['registry']);
         $client->setIdRole($data['role']);
         $client->setId($data['id_user']);
-
-        $client->update();
+        return $client->update();
     }
 
     function remove($data)
     {
         $client = new Client($this->getInstance(), $this->prepareInstance);
         $client->setId($data['id_user']);
-
-        $client->remove();
+        return $client->remove();
     }
 
     public function verifyPermission()

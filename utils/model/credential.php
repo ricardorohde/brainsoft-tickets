@@ -1,46 +1,43 @@
 <?php
-include_once __DIR__.'/../../common/config.php';
+include_once __DIR__ . '/../../common/config.php';
 
 class Credential
 {
-    private static $instance;
     private $prepareInstance;
     private $myController;
 
-	protected $id;
-	protected $login;
-	protected $password;
-	protected $b_salt;
-
-	protected $connection;
+    private $id;
+    private $login;
+    private $password;
+    private $b_salt;
 
     public function getPrepareInstance()
     {
-      return $this->prepareInstance;
+        return $this->prepareInstance;
     }
-    
+
     public function setPrepareInstance($prepareInstance)
     {
-      $this->prepareInstance = $prepareInstance;
+        $this->prepareInstance = $prepareInstance;
     }
 
     public function getMyController()
     {
-      return $this->myController;
+        return $this->myController;
     }
-    
+
     public function setMyController($myController)
     {
-      $this->myController = $myController;
+        $this->myController = $myController;
     }
 
-	public function getId()
-	{
-		return $this->id;
-	}
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	public function getLogin()
-	{
+    public function getLogin()
+    {
         return $this->login;
     }
 
@@ -56,7 +53,7 @@ class Credential
 
     public function setId($id)
     {
-    	$this->id = $id;
+        $this->id = $id;
     }
 
     public function setLogin($login)
@@ -91,72 +88,62 @@ class Credential
         $this->setConn(new ConfigDatabase());
     }
 
-    public function findById() //NEW
+    public function findById()
     {
         $element = $this->getId();
         $query = "SELECT login FROM credential WHERE id = ?";
         return $this->prepareInstance->prepare($query, $element, "");
     }
 
+    public function findByLogin()
+    {
+        $element = $this->getLogin();
+        $query = "SELECT id FROM credential WHERE login = ? ORDER BY id DESC";
+        return $this->prepareInstance->prepare($query, $element, "");
+    }
+
     public function checkLogin()
     {
-		$sql = $this->getConn()->getConnection()->prepare("SELECT * FROM credential WHERE login = ?");
-		$sql->bindValue(1, $this->getLogin());
-		$sql->execute();
+        $element = $this->getLogin();
+        $query = "SELECT * FROM credential WHERE login = ?";
+        $result = $this->prepareInstance->prepare($query, $element, "");
 
-		while ($row = $sql->fetch()) {
-  			$id = $row['id'];
-	    	$passwd = $row['password'];
-	    	$b_salt = $row['b_salt'];
-		}
+        $bs_salt = "ftosniarbsistemas";
+        $salted_hash = hash('sha256', $this->getPassword() . $bs_salt . $result['b_salt']);
 
-	    $bs_salt="ftosniarbsistemas";
-	    $salted_hash = hash('sha256', $this->getPassword().$bs_salt.$b_salt);
-
-	    if ($passwd == $salted_hash) {
-	    	$this->myController->setHeader($id, $this->getPassword(), '200');
-	    } else {
-	    	$this->myController->setHeader(0, NULL, '404');
-    	}
+        if ($result['password'] == $salted_hash) {
+            $this->myController->setHeader($result['id'], $this->getPassword(), '200');
+        } else {
+            $this->myController->setHeader(0, null, '404');
+        }
     }
 
     public function changePassword()
     {
-    	//GERANDO A SENHA DO USUÁRIO COM O SALT 
-	    $b_salt = $this->rand_string(20); 
-	    $site_salt = "ftosniarbsistemas"; 
-	    $salted_hash = hash('sha256', $this->getPassword().$site_salt.$b_salt);
+        //GERANDO A SENHA DO USUÁRIO COM O SALT 
+        $b_salt = $this->rand_string(20);
+        $site_salt = "ftosniarbsistemas";
+        $salted_hash = hash('sha256', $this->getPassword() . $site_salt . $b_salt);
 
-	    echo $this->getId();
+        //ATUALIZANDO O ACESSO DO USUÁRIO
+        $elements = [$salted_hash, $b_salt, $this->getId()];
+        $query = "UPDATE credential SET password = ?, b_salt = ? WHERE id = ?";
+        $result = $this->prepareInstance->prepareStatus($query, $elements, "");
 
-	    //ATUALIZANDO O ACESSO DO USUÁRIO
-	    $sql = $this->getConn()->getConnection()->prepare("UPDATE credential SET password = ?, b_salt = ? WHERE id = ?");
-	    $sql->bindValue(1, $salted_hash);
-	    $sql->bindValue(2, $b_salt);
-	    $sql->bindValue(3, $this->getId());
-	    $result = $sql->execute();
-
-	    $this->myController->verifyChangePass($result);
+        $this->myController->verifyChangePass($result);
     }
 
     public function register()
     {
-	    //GERANDO A SENHA DO USUÁRIO COM O SALT 
-	    $b_salt = $this->rand_string(20);
-	    $site_salt = "ftosniarbsistemas";
-	    $salted_hash = hash('sha256', $this->getPassword().$site_salt.$b_salt);
+        //GERANDO A SENHA DO USUÁRIO COM O SALT 
+        $b_salt = $this->rand_string(20);
+        $site_salt = "ftosniarbsistemas";
+        $salted_hash = hash('sha256', $this->getPassword() . $site_salt . $b_salt);
 
-	    //REGISTRANDO O ACESSO DO USUÁRIO
-	    $sql = $this->getConn()->getConnection()->prepare("INSERT INTO credential (`id`, `login`, `password`, `b_salt`) VALUES (NULL, ?, ?, ?)");
-	    $sql->bindValue(1, $this->getLogin());
-	    $sql->bindValue(2, $salted_hash);
-	    $sql->bindValue(3, $b_salt);
-	    $sql->execute();
-
-	    //RECEBENDO O ID DO ULTIMO REGISTRO FEITO EM 'CREDENTIAL'
-	  	$sql = $this->getConn()->getConnection()->prepare("SELECT MAX(ID) as last FROM credential");
-	  	$sql->execute();
-	  	return $sql->fetchAll();
+        //REGISTRANDO O ACESSO DO USUÁRIO
+        $elements = [$this->getLogin(), $salted_hash, $b_salt];
+        $query = "INSERT INTO credential (`id`, `login`, `password`, `b_salt`) VALUES (NULL, ?, ?, ?)";
+        return $this->prepareInstance->prepareStatus($query, $elements, "");
     }
 
     public function verifyIfExists()
@@ -164,17 +151,17 @@ class Credential
         $element = $this->getLogin();
         $query = "SELECT COUNT(*) as total FROM credential WHERE login LIKE ?";
         return $this->prepareInstance->prepare($query, $element, "");
-	}
+    }
 
-	private function rand_string($length)
-	{
-    	$str = "";
-      	$chars = "ftosniarbabcdefghijklmanopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      	$size = strlen($chars);
-      	
-      	for ($i = 0;$i < $length;$i++) {
-        	$str .= $chars[rand(0,$size-1)];
-      	}
-      	return $str; 
+    private function rand_string($length)
+    {
+        $str = "";
+        $chars = "ftosniarbabcdefghijklmanopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $size = strlen($chars);
+
+        for ($i = 0; $i < $length; $i++) {
+            $str .= $chars[rand(0, $size - 1)];
+        }
+        return $str;
     }
 }

@@ -36,7 +36,7 @@ class NewUserDataController
     {
         if (isset($this->dataReceived['submit'])) {
             foreach ($this->dataReceived as $key => $value) {
-                if ((!isset($this->dataReceived[$key]) || empty($this->dataReceived[$key])) /*&& $this->data['typeUser'] != "employee"*/) {
+                if ((!isset($this->dataReceived[$key]) || empty($this->dataReceived[$key])) ) {
                     //$this->setHeader(NULL, NULL, '400');
                 }
             }
@@ -57,16 +57,21 @@ class NewUserDataController
 
     public function new()
     {
-        $lastCredentialId = $this->credentialController->new($this->dataReceived['login'], $this->dataReceived['password'])[0]["last"];
-        array_push($this->dataReceived, $lastCredentialId);
+        $newCredential = $this->credentialController->new($this->dataReceived['login'], $this->dataReceived['password']);
+        if ($newCredential == 1) {
+            $credentialFound = $this->credentialController->findByLogin($this->dataReceived['login']);
+            array_push($this->dataReceived, $credentialFound);
 
-        if ($this->dataReceived['typeUser'] == 'client') {
-            $result = $this->clientController->new($this->dataReceived);
+            if ($this->dataReceived['typeUser'] == 'client') {
+                $result = $this->clientController->new($this->dataReceived);
+            } else {
+                $result = $this->employeeController->new($this->dataReceived);
+            }
+
+            $this->setSession($result, "registrado", "registrar");
         } else {
-            $result = $this->employeeController->new($this->dataReceived);
+            $this->setSession(0, "registrado", "registrar");
         }
-
-        $this->setSession($result, "new", "registrado", "registrar");
     }
 
     public function update()
@@ -77,7 +82,7 @@ class NewUserDataController
             $result = $this->employeeController->update($this->dataReceived);
         }
 
-        $this->setSession($result, "update", "atualizado", "atualizar");
+        $this->setSession($result, "atualizado", "atualizar");
     }
 
     public function remove()
@@ -88,27 +93,27 @@ class NewUserDataController
             $result = $this->employeeController->remove($this->dataReceived);
         }
 
-        $this->setSession($result, "update", "atualizado", "atualizar");
+        $this->setSession($result, "removido", "remover");
     }
 
-    public function setSession($result, $sender, $verbOk, $verbNo)
+    public function setSession($result, $verbOk, $verbNo)
     {
         if ($result == 1) {
-            $this->sessionController->setSession($sender . "UserOk");
+            $this->sessionController->setSession("UserOk");
             $this->sessionController->setContent("<strong>Sucesso!</strong> Usuário " . $verbOk . " com êxito.");
             $this->sessionController->set();
         } else {
-            $this->sessionController->setSession($sender . "UserNo");
+            $this->sessionController->setSession("UserNo");
             $this->sessionController->setContent("<strong>Erro!</strong> Problema ao " . $verbNo . " o usuário.");
             $this->sessionController->set();
         }
 
         header("Location:../../../painel/usuarios");
     }
-    
+
     public function verifyPermission()
     {
-        if (!isset($_SESSION['User'.'_page_'.$_SESSION['login']])) {
+        if (!isset($_SESSION['User' . '_page_' . $_SESSION['login']])) {
             header("Location:../painel");
         }
     }

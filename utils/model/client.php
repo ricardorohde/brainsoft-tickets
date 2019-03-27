@@ -104,23 +104,21 @@ class Client
     {
     	$elements = [$this->getName(), $this->getEmail(), $this->getIdCredential(), $this->getIdRegistry(), $this->getIdRole()];
         $query = "INSERT INTO client (`id`, `name`, `email`, `id_credential`, `id_registry`, `id_role`) VALUES (NULL, ?, ?, ?, ?, ?)";
-        $result = $this->prepareInstance->prepare($query, $elements, "");
-        //$this->getMyController()->verifyResult("register", $result);  			
+        return $this->prepareInstance->prepareStatus($query, $elements, "");		
     }
 
     public function update()
     {
     	$elements = [$this->getName(), $this->getEmail(), $this->getIdRegistry(), $this->getIdRole(), $this->getId()];
         $query = "UPDATE client SET name = ?, email = ?, id_registry = ?, id_role = ? WHERE id = ?";
-        $result = $this->prepareInstance->prepare($query, $elements, "");
-        //$this->getMyController()->verifyResult("update", $result);
+        return $this->prepareInstance->prepareStatus($query, $elements, "");
 	}
 	
 	public function remove()
     {
     	$element = $this->getId();
         $query = "DELETE FROM client WHERE id = ?";
-        $result = $this->prepareInstance->prepare($query, $element, "");
+		return $this->prepareInstance->prepareStatus($query, $element, "");
     }
 
 	public function findAll()

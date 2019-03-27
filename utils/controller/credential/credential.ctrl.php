@@ -26,7 +26,15 @@ class CredentialController
         return $credential->findById();
     }
 
-    function new($login, $password){
+    public function findByLogin($login)
+    {
+        $credential = new Credential($this, $this->prepareInstance);
+        $credential->setLogin($login);
+        return $credential->findByLogin()['id'];
+    }
+
+    function new($login, $password)
+    {
         $credential = new Credential($this, $this->prepareInstance);
         $credential->setLogin($login);
         $credential->setPassword($password);
@@ -41,3 +49,4 @@ class CredentialController
         return self::$instance;
     }
 }
+
