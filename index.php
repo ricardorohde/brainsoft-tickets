@@ -1,56 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Brainsoft Sistemas - Administrativo</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="../dashboard/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../dashboard/vendor/font-awesome/css/font-awesome.min.css">
-    <!-- Google fonts - Roboto -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <!-- theme stylesheet-->
     <link rel="stylesheet" href="../dashboard/css/style.default.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="../dashboard/css/custom.css">
-    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
-  </head>
-  <body>
-    <div class="root-page login-page">
-      <div class="container">
-        <div class="form-outer text-center d-flex align-items-center">
-          <div class="form-inner">
-            <div id="statusLogin" class="alert alert-info" 
-              <?php echo (isset($_SESSION['withoutLogin'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-              <?php echo $_SESSION['withoutLogin'];?>
+
+    <link rel="shortcut icon" href="/brain-icon">
+
+</head>
+
+<body>
+    <div class="container-fluid px-3">
+        <div class="row min-vh-100">
+            <div class="col-md-5 col-lg-6 col-xl-4 px-lg-5 d-flex align-items-center">
+                <div class="w-100 py-5">
+                    <div class="text-center">
+                        <img src="http://brainsoftsistemas.com.br/img/comum/logomarca_brainsoft.png" alt="Logotipo da empresa Brainsoft" style="max-width: 22rem;" class="img-fluid mb-4">
+                    </div>
+                    <form class="form-validate">
+                        <div class="form-group">
+                            <label>Usuário</label>
+                            <input name="loginUsername" type="email" placeholder="ex: brainsoft" autocomplete="off" required data-msg="Por gentileza informe seu usuário de acesso" class="form-control" autofocus>
+                        </div>
+                        <div class="form-group mb-4">
+                            <div class="row">
+                                <div class="col">
+                                    <label>Senha</label>
+                                </div>
+                                <div class="col-auto"><a href="#" class="form-text small text-muted">Esqueceu sua senha?</a></div>
+                            </div>
+                            <input name="loginPassword" placeholder="******" type="password" required data-msg="Por gentileza informe sua senha" class="form-control">
+                        </div>
+                        <!-- Submit-->
+                        <button class="btn btn-lg btn-block btn-primary mb-3">Acessar</button>
+                        <!-- Link-->
+                    </form>
+                </div>
             </div>
-            <div id="statusLogin" class="alert alert-danger" 
-              <?php echo (isset($_SESSION['errorLogin'])) ? 'style="display:block;"' : 'style="display:none;"'?> >
-              <?php echo $_SESSION['errorLogin'];?>
+            <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+                <!-- Image-->
+                <div style="background-image: url(../../img/page-login.jpg);" class="bg-cover h-100 mr-n3"></div>
             </div>
-            <div class="logo text-uppercase">
-              <span>Sistema</span><strong class="text-primary">Brainsoft</strong>
-            </div>
-            <p>Informe seu usuário e senha para ter acesso a área administrativa.</p>
-            <form id="login-form" method="post" action="utils/controller/credential/credential-data.ctrl.php">
-              <div class="form-group">
-                <input id="login" type="text" name="login" required="" autofocus="" placeholder="Usuário...">
-              </div>
-              <div class="form-group">
-                <input id="password" type="password" name="password" required="" placeholder="Senha...">
-              </div>
-              <button type="submit" id="submit" name="submit" value="fromDoLogin" class="btn btn-primary">Entrar!</button>
-            </form>
-            <a href="#" class="forgot-pass">Esqueceu sua senha?</a>
-          </div>
         </div>
-      </div>
     </div>
 
     <!-- Javascript files-->
@@ -64,6 +65,7 @@
     <script src="../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
     <!---->
-    
-  </body>
-</html>
+
+</body>
+
+</html> 

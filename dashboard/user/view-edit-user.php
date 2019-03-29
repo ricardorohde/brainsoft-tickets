@@ -137,7 +137,7 @@ $newUserController->verifyGet($_GET);
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Cargo</label>
                                         <div class="col-sm-10 select">
-                                            <select name="role" class="form-control"></select>
+                                            <select name="role" id="role" class="form-control"></select>
                                         </div>
                                     </div>
                                     <div class="line dataOfEmployee"></div>
@@ -156,7 +156,7 @@ $newUserController->verifyGet($_GET);
                                                         echo "<option value='nivel2' selected>Nível 2</option>";
                                                         break;
                                                     default:
-                                                        echo "<option>Selecione um grupo...</option>";
+                                                        echo "<option value=''>Selecione um grupo...</option>";
                                                         echo "<option value='nivel1'>Nível 1</option>";
                                                         echo "<option value='nivel2'>Nível 2</option>";
                                                 }

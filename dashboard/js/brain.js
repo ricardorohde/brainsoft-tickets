@@ -1,108 +1,84 @@
-$(document).ready(function() {
+$(document).ready(function () {
+	var send = true;
+	var position = 0;
+	var statusOfEmail = 1;
 
-	$('.registerUser').click(function() {
+	$("input").blur(function () {
+		verifyInput(this);
+	});
 
-		var haveProblem = 0;
-		var statusOfEmail = 0;
+	$("select").blur(function () {
+		verifySelect(this);
+	});
 
-		var typeUser = document.formAdd.typeUser.value;
-		var name = document.formAdd.name.value;
-		var state = document.formAdd.state.value;
-		var city = document.formAdd.city.value;
-		var registry = document.formAdd.registry.value;
-		var role = document.formAdd.role.value;
-		var login = document.formAdd.login.value;
-		var password = document.formAdd.password.value;
-
-		if(name == ""){
-			document.formAdd.name.style.boxShadow = "0 0 5px #ff0000"; 
-			document.formAdd.name.style.border = "1px solid #ff0000";
-			haveProblem = 1;
-		} else{
-			document.formAdd.name.style.boxShadow = ""; 
-			document.formAdd.name.style.border = "";
-		}
-
-		statusOfEmail = validateEmail();
-
-		if (typeUser == "client") {
-			if(state == ""){
-				document.formAdd.state.style.boxShadow = "0 0 5px #ff0000"; 
-				document.formAdd.state.style.border = "1px solid #ff0000";
-				haveProblem = 1;
-			} else{
-				document.formAdd.state.style.boxShadow = ""; 
-				document.formAdd.state.style.border = "";
+	$('.btnAction').click(function () {
+		send = true;
+		position = 0;
+		$("input:visible").each(function () {
+			if ($(this).attr("id") != "email") {
+				verifyInput(this);
+			} else {
+				if ($(this).val() != "") {
+					validateEmail(this);
+				}
 			}
+		});
 
-			if(city == ""){
-				document.formAdd.city.style.boxShadow = "0 0 5px #ff0000"; 
-				document.formAdd.city.style.border = "1px solid #ff0000";
-				haveProblem = 1;
-			} else{
-				document.formAdd.city.style.boxShadow = ""; 
-				document.formAdd.city.style.border = "";
-			}
 
-			if(registry == ""){
-				document.formAdd.registry.style.boxShadow = "0 0 5px #ff0000"; 
-				document.formAdd.registry.style.border = "1px solid #ff0000";
-				haveProblem = 1;
-			} else{
-				document.formAdd.registry.style.boxShadow = ""; 
-				document.formAdd.registry.style.border = "";
-			}
-		}
+		$("select:visible").each(function () {
+			verifySelect(this);
+		});
 
-		if(role == ""){
-			document.formAdd.role.style.boxShadow = "0 0 5px #ff0000"; 
-			document.formAdd.role.style.border = "1px solid #ff0000";
-			haveProblem = 1;
-		} else{
-			document.formAdd.role.style.boxShadow = ""; 
-			document.formAdd.role.style.border = "";
-		}
-
-		if(login == ""){
-			document.formAdd.login.style.boxShadow = "0 0 5px #ff0000"; 
-			document.formAdd.login.style.border = "1px solid #ff0000";
-			haveProblem = 1;
-		} else{
-			document.formAdd.login.style.boxShadow = ""; 
-			document.formAdd.login.style.border = "";
-		}
-
-		if(password == ""){
-			document.formAdd.password.style.boxShadow = "0 0 5px #ff0000"; 
-			document.formAdd.password.style.border = "1px solid #ff0000";
-			haveProblem = 1;
-		} else{
-			document.formAdd.password.style.boxShadow = ""; 
-			document.formAdd.password.style.border = "";
-		}
-
-		if (haveProblem > 0 || statusOfEmail > 0){
+		if (send && statusOfEmail == 1) {
+			return true;
+		} else {
 			return false;
-		} else{
+		}
+	});
+
+	function validateEmail(field) {
+		var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+		if (!filter.test($(field).val())) {
+			checkPosition(field);
+			$(field).addClass("required");
+			return false;
+		} else {
+			$("input[name=email]").removeClass("required");
 			return true;
 		}
+	}
 
-		function validateEmail(){
-			var emailID = document.formAdd.email.value;
-			atpos = emailID.indexOf("@");
-			dotpos = emailID.lastIndexOf(".");
-
-			if (emailID == "" || (atpos < 1 || ( dotpos - atpos < 2 ))){
-				document.formAdd.email.style.boxShadow = "0 0 5px #ff0000"; 
-				document.formAdd.email.style.border = "1px solid #ff0000";
-				document.formAdd.email.focus();
-				return 1;
-			} else{
-				document.formAdd.email.style.boxShadow = ""; 
-				document.formAdd.email.style.border = "";
-				return 0;
-			}
+	function verifyInput(field) {
+		if ($(field).val() == "" && $(field).attr("id") != "email") {
+			checkPosition(field);
+			$(field).addClass("required");
+			return false;
+		} else {
+			$(field).removeClass("required");
+			return true;
 		}
+	}
 
-	});
+	function verifySelect(field) {
+		element = "#" + $(field).attr("id") + " option:selected";
+
+		if ($(element).val() < 1) {
+			checkPosition(field);
+			$(field).addClass("required");
+			return false;
+		} else {
+			$(field).removeClass("required");
+			return true;
+		}
+	}
+
+	function checkPosition(field)
+	{
+		if (position == 0) {
+			$(field).focus();
+		}
+		position = 1;
+		send = false;
+	}
 });

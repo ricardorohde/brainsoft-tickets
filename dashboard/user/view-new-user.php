@@ -4,6 +4,12 @@ $newUserController = NewUserController::getInstance();
 $newUserController->verifyPermission();
 
 $newUserController->verifyGet($_GET);
+
+$ts = gmdate("D, d M Y H:i:s") . " GMT";
+header("Expires: $ts");
+header("Last-Modified: $ts");
+header("Pragma: no-cache");
+header("Cache-Control: no-cache, must-revalidate");
 ?>
 
 <!DOCTYPE html>
@@ -139,7 +145,7 @@ $newUserController->verifyGet($_GET);
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Cargo</label>
                                         <div class="col-sm-10 select">
-                                            <select name="role" class="form-control"></select>
+                                            <select name="role" id="role" class="form-control"></select>
                                         </div>
                                     </div>
 
@@ -158,7 +164,7 @@ $newUserController->verifyGet($_GET);
                                                         echo "<option value='nivel2' selected>Nível 2</option>";
                                                         break;
                                                     default:
-                                                        echo "<option>Selecione um grupo...</option>";
+                                                        echo "<option value=''>Selecione um grupo...</option>";
                                                         echo "<option value='nivel1'>Nível 1</option>";
                                                         echo "<option value='nivel2'>Nível 2</option>";
                                                 }
@@ -237,7 +243,7 @@ $newUserController->verifyGet($_GET);
                                                         echo '<button type="submit" name="submit" value="removeUser" class="btn btn-danger btnAction" onclick="return confirm(\'Deseja realmente excluir?\')">Excluir!</button>';
                                                     }
                                                 } else {
-                                                    echo '<button type="submit" name="submit" value="newUser" class="btn btn-primary btnAction">Cadastrar!</button>';
+                                                    echo '<button type="submit" name="submit" value="newUser" class="btn btn-primary btnAction" disabled>Cadastrar!</button>';
                                                 }
                                             }
                                             ?>

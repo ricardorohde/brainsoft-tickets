@@ -1252,8 +1252,9 @@ section.forms .form .form-body {
 
 section.forms .line {
   width: 100%;
+  border: 0;
   height: 1px;
-  border-bottom: 1px dashed #eee;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
   margin: 20px 0 30px;
 }
 
@@ -1275,10 +1276,6 @@ section.forms .btn-primary, section.forms .btn-secondary {
 section.forms p {
   font-size: 0.8em;
   color: #999;
-}
-
-section.forms input.form-control {
-  border-radius: 0;
 }
 
 section.forms input.form-control::-moz-placeholder {
@@ -1311,7 +1308,7 @@ section.forms .select:last-of-type {
 }
 
 section.forms select {
-  border-radius: 0;
+  border-radius: 4px;
   border-color: #ddd;
   font-weight: 300;
   font-family: "Roboto", sans-serif;
@@ -1383,9 +1380,6 @@ section.forms .input-group-btn .dropdown-menu a {
 @media (min-width: 768px) {
   section.forms h2 {
     font-size: 1rem;
-  }
-  section.forms input.form-control {
-    border-radius: 0;
   }
   section.forms input.form-control::-moz-placeholder {
     font-size: 0.85em;

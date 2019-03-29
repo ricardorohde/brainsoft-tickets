@@ -236,3 +236,8 @@ a:link {
 .main-card-title {
 	padding-top: 5px;
 }
+
+.required {
+	box-shadow: 0 0 3px #ff0000;
+	border: 1px solid #ff0000;
+}

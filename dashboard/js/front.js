@@ -301,22 +301,6 @@ $(document).ready(function () {
         )
     });
 
-    $("input[name=login]").blur(function(){
-        $.post("../../../utils/controller/credential/credential-js.ctrl.php", {userToVerify:$(this).val().trim()},
-          function(result){
-            if (result > 0){
-                document.formAdd.login.style.boxShadow = "0 0 5px #ff0000"; 
-                document.formAdd.login.style.border = "1px solid #ff0000";
-                $("button[type=submit]").hide();
-            } else if (result == 0){
-                document.formAdd.login.style.boxShadow = "0 0 5px #28a745"; 
-                document.formAdd.login.style.border = "1px solid #28a745";
-                $("button[type=submit]").show();
-            }
-          }
-        )
-    });
-
     $("input[name=category]").blur(function(){
         $.post("../../../utils/controller/category/category-js.ctrl.php", {fromCategory:$(this).val()},
           function(fromCategory){
