@@ -47,7 +47,7 @@
 		
 		
 
-		
+		RewriteRule ^controller/credential/data?$ utils/controller/credential/credential-data.ctrl.php [NC]
 		RewriteRule ^controller/ticket/data?$ utils/controller/ticket/ticket-data.ctrl.php [NC]
 		RewriteRule ^controller/user/data?$ utils/controller/user/new-user-data.ctrl.php [NC]
 </IfModule>

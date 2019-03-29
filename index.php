@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../dashboard/css/style.default.css" id="theme-stylesheet">
     <link rel="stylesheet" href="../dashboard/css/custom.css">
 
-    <link rel="shortcut icon" href="/brain-icon">
+    <link rel="shortcut icon" href="/brain_icon">
 
 </head>
 
@@ -27,10 +27,17 @@
                     <div class="text-center">
                         <img src="http://brainsoftsistemas.com.br/img/comum/logomarca_brainsoft.png" alt="Logotipo da empresa Brainsoft" style="max-width: 22rem;" class="img-fluid mb-4">
                     </div>
-                    <form class="form-validate">
+                    <?php session_start(); ?>
+                    <?php if (isset($_SESSION['loginNo'])) : ?>
+                    <div id="statusLogin" class="alert alert-danger">
+                        <?= $_SESSION['loginNo'] ?>
+                        <?php unset($_SESSION['loginNo']); ?>
+                    </div>
+                    <?php endif ?>
+                    <form class="form-validate" method="POST" action="/controller/credential/data">
                         <div class="form-group">
                             <label>Usuário</label>
-                            <input name="loginUsername" type="email" placeholder="ex: brainsoft" autocomplete="off" required data-msg="Por gentileza informe seu usuário de acesso" class="form-control" autofocus>
+                            <input name="login" type="text" placeholder="ex: brainsoft" autocomplete="off" required data-msg="Por gentileza informe seu usuário de acesso" class="form-control" autofocus>
                         </div>
                         <div class="form-group mb-4">
                             <div class="row">
@@ -39,22 +46,18 @@
                                 </div>
                                 <div class="col-auto"><a href="#" class="form-text small text-muted">Esqueceu sua senha?</a></div>
                             </div>
-                            <input name="loginPassword" placeholder="******" type="password" required data-msg="Por gentileza informe sua senha" class="form-control">
+                            <input name="password" placeholder="******" type="password" required data-msg="Por gentileza informe sua senha" class="form-control">
                         </div>
-                        <!-- Submit-->
-                        <button class="btn btn-lg btn-block btn-primary mb-3">Acessar</button>
-                        <!-- Link-->
+                        <button type="submit" name="submit" value="fromDoLogin" class="btn btn-lg btn-block btn-primary mb-3">Acessar</button>
                     </form>
                 </div>
             </div>
             <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
-                <!-- Image-->
-                <div style="background-image: url(../../img/page-login.jpg);" class="bg-cover h-100 mr-n3"></div>
+                <div style="background-image: url(/img/page-login.jpg);" class="bg-cover h-100 mr-n3"></div>
             </div>
         </div>
     </div>
 
-    <!-- Javascript files-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="../dashboard/vendor/jquery.cookie/jquery.cookie.js"> </script>
@@ -63,8 +66,6 @@
     <script src="../dashboard/js/front.js"></script>
     <script src="../dashboard/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.-->
-    <!---->
 
 </body>
 

@@ -82,7 +82,7 @@ class CredentialDataController
     {
         switch ($status) {
             case '200':
-                $this->employeeController->isOnChat($id, "yes"); //DEIXANDO O USUÁRIO ONLINE NA FILA
+                $this->employeeController->isOnChat($id, "yes"); //PUT USER ON IN QUEUE
                 $_SESSION['login'] = $id;
 
                 $this->authorizationController = AuthorizationController::getInstance();
@@ -92,15 +92,12 @@ class CredentialDataController
 
                 $this->authorizationController->authorizePage();       
 
-                unset($_SESSION['withoutLogin']);
-                unset($_SESSION['errorLogin']);
-                unset($_SESSION['thereIsProblemInLogin']);
+                unset($_SESSION['loginNo']);
                 header("Location:../../../painel");
                 break;
             case '404':
-                unset($_SESSION['withoutLogin']);
-                $_SESSION['errorLogin'] = "<strong>Erro!</strong> Usuário e/ou Senha incorretos.";
-                header("Location:/utils/do-login.php");
+                $_SESSION['loginNo'] = "<strong>Erro!</strong> Usuário e/ou Senha incorretos.";
+                header("Location:/");
                 break;
             case '202':
                 unset($_SESSION['passDefault']);
@@ -116,10 +113,6 @@ class CredentialDataController
             case '304':
                 $_SESSION['needSamePass'] = "<strong>Erro!</strong> As senhas necessitam ser iguais.";
                 header("Location:../../painel");
-                break;
-            case '400':
-                $_SESSION['thereIsProblemInLogin'] = "<strong>Erro!</strong> Preencha todos os campos para entrar.";
-                header("Location:/utils/do-login.php");
                 break;
             default:
                 break;
