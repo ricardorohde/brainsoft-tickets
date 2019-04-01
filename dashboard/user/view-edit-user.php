@@ -27,7 +27,7 @@ $newUserController->verifyGet($_GET);
     <link rel="stylesheet" href="../../../dashboard/css/custom.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 
-    <link rel="shortcut icon" href="../../brain_icon">
+    <link rel="shortcut icon" href="../../../brain_icon">
 </head>
 
 <body>
@@ -65,35 +65,21 @@ $newUserController->verifyGet($_GET);
                                 <h2 class="h5 display main-card-title"><?= isset($_GET['id']) ? "Visualizar/Alterar Usuário" : "Novo Usuário" ?></h2>
                             </div>
                             <div class="card-body">
-                                <form class="form-horizontal" id="formAdd" name="formAdd" action="/controller/user/data" method="POST">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 form-control-label">Tipo</label>
-                                        <div class="col-sm-10">
-                                            <div class="i-checks <?php if (isset($_GET['type']) and $_GET['type'] == 'employee') echo 'control'; ?>" id="divClient">
-                                                <input id="radioCustom1" type="radio" value="client" name="typeUser" class="form-control-custom radio-custom" checked <?= isset($type) && $type == "employee" ? 'disabled' : '' ?>>
-                                                <label for="radioCustom1">Cliente</label>
-                                            </div>
-                                            <div class="i-checks <?php if (isset($_GET['type']) and $_GET['type'] == 'client') echo 'control'; ?>" id="divEmployee">
-                                                <input id="radioCustom2" type="radio" value="employee" name="typeUser" class="form-control-custom radio-custom" <?= isset($type) && $type == "employee" ? 'checked' : '' ?>>
-                                                <label for="radioCustom2">Funcionário</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="line"></div>
+                                <form class="form-horizontal" id="formAdd" name="formAdd" action="/controller/user/data" method="POST" novalidate>
+                                    <input type="hidden" value="<?= $newUserController->getDataInUrl()[3] ?>" name="typeUser">
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Nome Completo</label>
                                         <div class="col-sm-10">
                                             <input type="text" name="name" class="form-control" value="<?= isset($row_sql_user['name']) ? $row_sql_user['name'] : '' ?>"><span class="help-block-none">Informe o nome completo do usuário.</span>
                                         </div>
                                     </div>
-                                    <div class="line"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Email</label>
                                         <div class="col-sm-10">
                                             <input type="text" id="email" name="email" class="form-control" value="<?= isset($row_sql_user['email']) ? $row_sql_user['email'] : '' ?>"><span class="help-block-none">Informe o email do usuário.</span>
                                         </div>
                                     </div>
-                                    <div class="line"></div>
+                                    <div class="line dataOfClient"></div>
                                     <div class="form-group row dataOfClient">
                                         <label class="col-sm-2 form-control-label">Estado</label>
                                         <div class="col-sm-3 select">
@@ -120,7 +106,6 @@ $newUserController->verifyGet($_GET);
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="line dataOfClient"></div>
                                     <div class="form-group row dataOfClient">
                                         <label class="col-sm-2 form-control-label">Cartório</label>
                                         <div class="col-sm-10 select">
@@ -133,14 +118,14 @@ $newUserController->verifyGet($_GET);
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="line dataOfClient"></div>
+                                    <div class="line dataOfEmployee"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Cargo</label>
                                         <div class="col-sm-10 select">
                                             <select name="role" id="role" class="form-control"></select>
                                         </div>
                                     </div>
-                                    <div class="line dataOfEmployee"></div>
+                                    <div class="line dataOfClient"></div>
                                     <?php if (isset($_GET['type']) && $_GET['type'] == 'employee') : ?>
                                     <div class="form-group row dataOfEmployee">
                                         <label class="col-sm-2 form-control-label">Grupo</label>
@@ -165,23 +150,17 @@ $newUserController->verifyGet($_GET);
                                         </div>
                                     </div>
                                     <?php endif ?>
-                                    <div class="line"></div>
+                                    <div class="line dataOfEmployee"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Nickname</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="login" class="form-control" value="<?= isset($row_sql_credential['login']) ? $row_sql_credential['login'] : '' ?>" required><span class="help-block-none">Informe um nome para que o usuário acesse o sistema.</span>
+                                            <input type="text" name="login" class="form-control" value="<?= isset($row_sql_credential['login']) ? $row_sql_credential['login'] : '' ?>" disabled required>
+                                            <span class="help-block-none">Informe um nome para que o usuário acesse o sistema.</span>
                                         </div>
                                         <input type="hidden" name="id_user" value="<?= isset($_GET['id']) ? $_GET['id'] : '' ?>">
                                     </div>
-                                    <div class="line <? isset($row_sql_user['name']) ? 'control' : '' ?>"></div>
-                                    <div class="form-group row <? isset($row_sql_user['name']) ? 'control' : '' ?>">
-                                        <label class="col-sm-2 form-control-label">Senha</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" name="password" class="form-control" value="temp123" required><span class="help-block-none">Crie uma senha de acesso para o usuário.</span>
-                                        </div>
-                                    </div>
                                     <div class="line"></div>
-                                    <?php if (isset($_GET['id'])) : ?>
+                                    <?php if ($newUserController->getDataInUrl()[3] == 'client' && !empty($newUserController->getAlltickets())) : ?>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
                                             <div class="table-responsive">
@@ -197,7 +176,6 @@ $newUserController->verifyGet($_GET);
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php if (!empty($newUserController->getAlltickets())) : ?>
                                                         <?php foreach ($newUserController->getAlltickets() as $ticket) : ?>
                                                         <tr>
                                                             <td><?= $ticket['chat'] ?></td>
@@ -210,17 +188,16 @@ $newUserController->verifyGet($_GET);
                                                             </td>
                                                         </tr>
                                                         <?php endforeach; ?>
-                                                        <?php else : ?>
-                                                        <tr>
-                                                            <td colspan="7">Nenhum ticket registrado.</td>
-                                                        </tr>
-                                                        <?php endif; ?>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php endif ?>
+                                    <?php elseif ($newUserController->getDataInUrl()[3] != 'employee') : ?>
+                                    <div class="alert alert-primary" role="alert">
+                                        Não existem tickets atribuidos para este cliente.
+                                    </div>
+                                    <?php endif; ?>
                                     <div class="form-group row text-right">
                                         <div class="offset-sm-10 offset-md-8 col-sm-2 col-md-4">
                                             <?php 

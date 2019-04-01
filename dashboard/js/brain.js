@@ -50,7 +50,7 @@ $(document).ready(function () {
 	}
 
 	function verifyInput(field) {
-		if ($(field).val() == "" && $(field).attr("id") != "email") {
+		if ($(field).val() == "" && $(field).attr("id") != "email" && $(field).attr("type") != "search") {
 			checkPosition(field);
 			$(field).addClass("required");
 			return false;

@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="../../dashboard/css/style.default.css" id="theme-stylesheet">
     <link rel="stylesheet" href="../../dashboard/css/custom.css">
 
-    <link rel="shortcut icon" href="../../brain_icon">
+    <link rel="shortcut icon" href="brain_icon">
   </head>
 
   <body>

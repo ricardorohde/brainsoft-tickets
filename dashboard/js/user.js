@@ -31,13 +31,13 @@ $(document).ready(function () {
     inputTypeUserChanged();
 
     function inputTypeUserChanged() {
-        if ($('input[name="typeUser"]:checked').val() === "client") {
+        if ($('input[name="typeUser"]').val() === "client") {
             $("select[name=role] option").each(function () {
                 $(this).remove();
             });
 
             if ($("#userInformed").length) {
-                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]:checked').val(), userInformed: $('#userInformed').val() },
+                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]').val(), userInformed: $('#userInformed').val() },
                     function (valor) {
                         $("select[name=role]").append(valor);
                     }
@@ -49,13 +49,13 @@ $(document).ready(function () {
             $('.dataOfClient').slideUp("slow");
         }
 
-        if ($('input[name="typeUser"]:checked').val() === "employee") {
+        if ($('input[name="typeUser"]').val() === "employee") {
             $("select[name=role] option").each(function () {
                 $(this).remove();
             });
 
             if ($("#userInformed").length) {
-                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]:checked').val(), userInformed: $('#userInformed').val() },
+                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]').val(), userInformed: $('#userInformed').val() },
                     function (valor) {
                         $("select[name=role]").append(valor);
                     }

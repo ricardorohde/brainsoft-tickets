@@ -38,6 +38,7 @@ class NewUserController
     private $allRoles;
 
     private $allTickets;
+    private $dataInUrl;
 
     public function getThereIsProblem()
     {
@@ -159,6 +160,16 @@ class NewUserController
         $this->allTickets = $allTickets;
     }
 
+    public function getDataInUrl()
+    {
+        return $this->dataInUrl;
+    }
+
+    public function setDataInUrl($dataInUrl)
+    {
+        $this->dataInUrl = $dataInUrl;
+    }
+
     function __construct()
     {
         $this->navBarController = NavBarController::getInstance();
@@ -171,6 +182,8 @@ class NewUserController
         $this->roleController = RoleController::getInstance();
         $this->credentialController = CredentialController::getInstance();
         $this->ticketController = TicketController::getInstance();
+
+        $this->dataInUrl = explode("/", $_SERVER["REQUEST_URI"]);
     }
 
     public function verifyGet($get)
@@ -272,5 +285,5 @@ class NewUserController
             self::$instance = new NewUserController();
         }
         return self::$instance;
-    }
+    }   
 }
