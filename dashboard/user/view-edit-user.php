@@ -250,7 +250,7 @@ $newUserController->verifyGet($_GET);
     <script src="../../../dashboard/js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
     <script src="../../../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
     <script src="../../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="../../../dashboard/js/user.js"></script>
+    <script src="../../../dashboard/js/edit-user.js"></script>
     <script src="../../../dashboard/js/front.js"></script>
     <script src="../../../dashboard/js/brain.js"></script>
 

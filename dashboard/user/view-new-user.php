@@ -102,6 +102,8 @@ header("Cache-Control: no-cache, must-revalidate");
                                         </div>
                                     </div>
 
+                                    <div class="line"></div>
+
                                     <div class="form-group row dataOfClient">
                                         <label class="col-sm-2 form-control-label">Estado</label>
                                         <div class="col-sm-3 select">
@@ -280,7 +282,7 @@ header("Cache-Control: no-cache, must-revalidate");
     <script src="../../dashboard/js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
     <script src="../../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
     <script src="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="../../dashboard/js/user.js"></script>
+    <script src="../../dashboard/js/new-user.js"></script>
     <script src="../../dashboard/js/front.js"></script>
     <script src="../../dashboard/js/brain.js"></script>
 

@@ -19,11 +19,6 @@ $(document).ready(function () {
         $("input[name=login]").val($(this).val().toLowerCase());
     });
 
-    setTimeout(function () {
-        $("#example_filter > label > input").focus();
-        $("#ticketListOfClient_filter > label > input").focus();
-    }, 1000);
-
     $('input[name=typeUser]').change(function () {
         inputTypeUserChanged();
     });
@@ -31,13 +26,13 @@ $(document).ready(function () {
     inputTypeUserChanged();
 
     function inputTypeUserChanged() {
-        if ($('input[name="typeUser"]').val() === "client") {
+        if ($('input[name="typeUser"]:checked').val() === "client") {
             $("select[name=role] option").each(function () {
                 $(this).remove();
             });
 
             if ($("#userInformed").length) {
-                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]').val(), userInformed: $('#userInformed').val() },
+                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]:checked').val(), userInformed: $('#userInformed').val() },
                     function (valor) {
                         $("select[name=role]").append(valor);
                     }
@@ -49,13 +44,13 @@ $(document).ready(function () {
             $('.dataOfClient').slideUp("slow");
         }
 
-        if ($('input[name="typeUser"]').val() === "employee") {
+        if ($('input[name="typeUser"]:checked').val() === "employee") {
             $("select[name=role] option").each(function () {
                 $(this).remove();
             });
 
             if ($("#userInformed").length) {
-                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]').val(), userInformed: $('#userInformed').val() },
+                $.post("../../../../utils/controller/role/role-js.ctrl.php", { typeUser: $('input[name="typeUser"]:checked').val(), userInformed: $('#userInformed').val() },
                     function (valor) {
                         $("select[name=role]").append(valor);
                     }
