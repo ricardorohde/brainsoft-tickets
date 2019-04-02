@@ -287,8 +287,8 @@ class QueueController
 
 	function totalCalls($attendant, $actualDate)
 	{
-		$elements = [$attendant['id'], $actualDate."%", "pendente", $actualDate."%"];
-		$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND (finalized_at LIKE ? OR (t_status = ? AND registered_at LIKE ?))";
+		$elements = [$attendant['id'], $actualDate."%", $actualDate."%"];
+		$query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND (registered_at LIKE ? OR finalized_at LIKE ?)";
 		return $this->prepareInstance->prepare($query, $elements, "");
 	}
 
