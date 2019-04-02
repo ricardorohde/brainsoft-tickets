@@ -76,7 +76,7 @@ $dashboardController->verifyPermission();
                     <div class="col-lg-4 col-md-4 col-sm-4" style="text-align: center; width: 100%;">
                         <div id="chart-container" style="display: inline-block;"></div>
                     </div>
-                    <div class="col-lg-8">
+                    <div class="col-lg-8 col-md-8 col-sm-8">
                         <canvas id="bar-chart"></canvas>
                     </div>
                 </div>

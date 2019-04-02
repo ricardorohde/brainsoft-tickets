@@ -234,6 +234,7 @@ class TicketController
     {
         $ticket = new Ticket($this, $this->prepareInstance);
         $ticket->setIdAttendant($attendantId);
+        $ticket->setRegisteredAt($actualDate);
         $ticket->setFinalizedAt($actualDate);
         return $ticket->countByAttendantAndDate();
     }

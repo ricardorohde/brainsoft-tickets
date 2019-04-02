@@ -18,7 +18,8 @@ class Ticket
 	private $idAttendant;
 	private $resolution;
 	private $historic;
-	private $isRepeated;
+    private $isRepeated;
+    private $registeredAt;
 	private $finalizedAt;
 	private $idWhoOpened;
 	private $idWhoClosed;
@@ -212,6 +213,16 @@ class Ticket
         $this->idWhoClosed = $idWhoClosed;
     }
 
+    public function getRegisteredAt()
+    {
+        return $this->registeredAt;
+    }
+
+    public function setRegisteredAt($registeredAt)
+    {
+        $this->registeredAt = $registeredAt;
+    }
+
 	function __construct($controller, $prepareInstance)
     {
     	$this->setMyController($controller);
@@ -342,8 +353,8 @@ class Ticket
 
     public function countByAttendantAndDate()
     {
-        $elements = [$this->getIdAttendant(), $this->getFinalizedAt()."%"];
-        $query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND finalized_at LIKE ?";
+        $elements = [$this->getIdAttendant(), $this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
+        $query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND (registered_at LIKE ? OR finalized_at LIKE ?)";
         return $this->prepareInstance->prepare($query, $elements, "");
-    }
+    }   
 }
