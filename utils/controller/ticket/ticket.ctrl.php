@@ -230,6 +230,14 @@ class TicketController
         return $ticket->findByClient();
     }
 
+    public function countByAttendantAndDate($attendantId, $actualDate)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setIdAttendant($attendantId);
+        $ticket->setFinalizedAt($actualDate);
+        return $ticket->countByAttendantAndDate();
+    }
+
     public function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {

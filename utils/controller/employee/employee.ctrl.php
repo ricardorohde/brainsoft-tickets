@@ -34,13 +34,26 @@ class EmployeeController
         return $employee->findByCredential();
     }
 
+    public function findByName($name)
+    {
+        $employee = new Employee($this, $this->prepareInstance);
+        $employee->setName($name);
+        return $employee->findByName();
+    }
+
+    public function findAllByGroupAndName()
+    {
+        $employee = new Employee($this, $this->prepareInstance);
+        return $employee->findAllByGroupAndName();
+    }
+
     public function findDataOfEmployees($sqlIds)
     {
         $employee = new Employee($this, $this->prepareInstance);
         return $employee->findDataBySqlIds($sqlIds);
     }
 
-    public function new($data) // NEW
+    public function new($data)
     {  
         $employee = new Employee($this, $this->prepareInstance);
         $employee->setName($data['name']);
@@ -51,7 +64,7 @@ class EmployeeController
         return $employee->register();
     }
 
-    public function update($data) // NEW
+    public function update($data)
     {
         $employee = new Employee($this, $this->prepareInstance);
         $employee->setName($data['name']);

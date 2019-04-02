@@ -127,13 +127,27 @@ class Employee
     {
         $query = "SELECT * FROM employee ORDER BY id DESC";
         return $this->prepareInstance->prepare($query, "", "all");
+	}
+	
+	public function findAllByGroupAndName()
+    {
+		$elements = ["nivel1", "nivel2"];
+        $query = "SELECT id, name, on_chat FROM employee WHERE t_group = ? OR t_group = ? ORDER BY t_group, name";
+        return $this->prepareInstance->prepare($query, $elements, "all");
     }
 
     public function findById()
     {
-    	$elements = $this->getId();
+    	$element = $this->getId();
     	$query = "SELECT * FROM employee WHERE id = ?";
-        return $this->prepareInstance->prepare($query, $elements, "");
+        return $this->prepareInstance->prepare($query, $element, "");
+	}
+	
+	public function findByName()
+    {
+    	$element = $this->getName();
+    	$query = "SELECT * FROM employee WHERE name = ?";
+        return $this->prepareInstance->prepare($query, $element, "");
     }
 
     public function findByCredential()
