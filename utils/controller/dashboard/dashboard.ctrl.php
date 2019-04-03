@@ -17,6 +17,7 @@ class DashboardController
     private $solvedTickets;
 
     private $labelsToBarGraph;
+    private $dayOnWeekFlag;
 
     public function getTotalTickets()
     {
@@ -78,6 +79,7 @@ class DashboardController
         define('OPEN', '[');
         define('CLOSE', ']');
         define('DELIMITER', ',');
+        $this->dayInWeekFlag = false;
 
         $this->findTotalTickets();
         $this->findOpenTickets();
@@ -113,7 +115,7 @@ class DashboardController
             if ($i == 0) {
                 $labels = $labels . '"Hoje"' . DELIMITER;
             } else {
-                $labels = $labels . '"' . date('d/m', strtotime('-' . $i . ' days')) . '"' . DELIMITER;
+                $labels = $labels . '"' . date('d/m', strtotime($this->dayInWeek($i))) . '"' . DELIMITER;
             }
         }
         $labels = $labels . CLOSE;
@@ -165,11 +167,12 @@ class DashboardController
 
     public function makeData($name)
     {
+        $this->dayInWeekFlag = false;
         $attendantId = $this->employeeController->findByName($name)['id'];
         $data = OPEN;
 
         for ($i = 0; $i < 7; $i++) {
-            $actualDate = date('Y-m-d', strtotime('-' . $i . ' days'));
+            $actualDate = $this->dayInWeek($i);
             if ($i < 7) {
                 $data = $data . $this->ticketController->countByAttendantAndDate($attendantId, $actualDate)['total'] . DELIMITER;
             } else {
@@ -211,6 +214,20 @@ class DashboardController
         }
 
         return $colors;
+    }
+
+    public function dayInWeek($decrement)
+    {
+        $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days'));
+        $dayInWeek = date('w', strtotime($actualDate));
+
+        if ($dayInWeek == 0 || $dayInWeek == 6 || $this->dayInWeekFlag) {
+            $this->dayInWeekFlag = true;
+            $decrement = $decrement + 2;
+            $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days'));
+        }
+
+        return $actualDate;
     }
 
     public function verifyPermission()
