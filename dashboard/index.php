@@ -2,6 +2,7 @@
 include_once __DIR__ . '/../utils/controller/dashboard/dashboard.ctrl.php';
 $dashboardController = DashboardController::getInstance();
 $dashboardController->verifyPermission();
+
 ?>
 
 <!DOCTYPE html>
@@ -15,14 +16,14 @@ $dashboardController->verifyPermission();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
 
-    <link rel="stylesheet" href="../../dashboard/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/../../dashboard/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/../../dashboard/css/fontastic.css">
+    <link rel="stylesheet" href="/../../dashboard/css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <link rel="stylesheet" href="/../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" href="/../../dashboard/css/style.default.css">
+    <link rel="stylesheet" href="/../../dashboard/css/custom.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="../../dashboard/css/fontastic.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" href="../../dashboard/css/grasp_mobile_progress_circle-1.0.0.min.css">
-    <link rel="stylesheet" href="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">>
-    <link rel="stylesheet" href="../../dashboard/css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="../../dashboard/css/custom.css">
 
     <link rel="shortcut icon" href="brain_icon">
 </head>
@@ -85,27 +86,16 @@ $dashboardController->verifyPermission();
         <section class="statistics section-padding section-no-padding-bottom">
             <div class="container-fluid">
                 <div class="row d-flex align-items-stretch">
-                    <div class="col-lg-6">
-                        <div class="wrapper data-usage">
-                            <h2 class="display h4">Monthly Usage</h2>
-                            <div class="row d-flex align-items-center">
-                                <div class="col-sm-6">
-                                    <div id="progress-circle" class="d-flex align-items-center justify-content-center"></div>
-                                </div>
-                                <div class="col-sm-6"><strong class="text-primary">80.56 Gb</strong><small>Current Plan</small><span>100 Gb Monthly</span></div>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing.</p>
-                        </div>
+                    <div id="div-polar-chart" class="col-lg-5 col-md-5 col-sm-5 polar-group-1">
+                        <h3 class="text-center">Módulos Grupo 1</h3>
+                        <canvas id="polar-chart-group-1"></canvas>
+                    </div>
+                    <div id="div-polar-chart" class="offset-lg-2 col-lg-5 col-md-5 col-sm-5 polar-group-2">
+                        <h3 class="text-center">Módulos Grupo 2</h3>
+                        <canvas id="polar-chart-group-2"></canvas>
                     </div>
                 </div>
             </div>
-        </section>
-        <section class="updates section-padding">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-4 col-md-12">
-                    </div>
-                </div>
         </section>
         <footer class="main-footer">
             <div class="container-fluid">
@@ -184,49 +174,13 @@ $dashboardController->verifyPermission();
         });
 
         $(function() {
-            var ctx = $("#bar-chart");
+            new Chart(document.getElementById("polar-chart-group-1"), <?= $dashboardController->getElementToPolarChart("nivel1") ?>);
+        });
 
-            //bar chart data
-            var data = {
-                labels: <?= $dashboardController->getLabelsToBarGraph() ?>,
-                datasets: <?= $dashboardController->makeDataSets() ?>
-            };
-
-            //options
-            var options = {
-                responsive: true,
-                title: {
-                    display: true,
-                    position: "top",
-                    text: "Atendimentos na semana",
-                    fontSize: 18,
-                    fontColor: "#111"
-                },
-                legend: {
-                    display: true,
-                    position: "bottom",
-                    labels: {
-                        fontColor: "#333",
-                        fontSize: 12
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            min: 0
-                        }
-                    }]
-                }
-            };
-
-            //create Chart class object
-            var chart = new Chart(ctx, {
-                type: "bar",
-                data: data,
-                options: options
-            });
+        $(function() {
+            new Chart(document.getElementById("polar-chart-group-2"), <?= $dashboardController->getElementToPolarChart("nivel2") ?>);
         });
     </script>
 </body>
 
-</html> 
+</html>

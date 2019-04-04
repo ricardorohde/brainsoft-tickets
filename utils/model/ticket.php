@@ -356,5 +356,12 @@ class Ticket
         $elements = [$this->getIdAttendant(), $this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
         $query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND (registered_at LIKE ? OR finalized_at LIKE ?)";
         return $this->prepareInstance->prepare($query, $elements, "");
-    }   
+    } 
+    
+    public function topFiveModules()
+    {
+        $element = $this->getGroup();
+        $query = "SELECT COUNT(*) AS NrVezes, id_module FROM ticket WHERE t_group = ? GROUP BY id_module ORDER BY NrVezes DESC LIMIT 5";
+        return $this->prepareInstance->prepare($query, $element, "all");
+    }
 }

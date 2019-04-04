@@ -1,121 +1,123 @@
 .table-files {
-    max-height:400px;
-    overflow-y:auto;
-}/* your styles go here */
+  max-height: 400px;
+  overflow-y: auto;
+} /* your styles go here */
 
 .modal-date {
-    width: 700px;
+  width: 700px;
 }
 
 #id_chat {
-	height: 70px;
-    font-size: 65px;
-    text-align: center;
+  height: 70px;
+  font-size: 65px;
+  text-align: center;
 }
 
 .makeTree > .easytree-focused {
-	border: none;
-	font-size: 18px;
+  border: none;
+  font-size: 18px;
 }
 
 .repeated {
-	height: 16px;
+  height: 16px;
 }
 
 .btnAction {
-	margin-left: 5px;
-	height: 36px;
+  margin-left: 5px;
+  height: 36px;
 }
 
-#dateFilter{
-	width: 80px;
+#dateFilter {
+  width: 80px;
 }
 
-#chatFilter{
-	width: 60px;
+#chatFilter {
+  width: 60px;
 }
 
-#attendantFilter{
-	width: 150px;
+#attendantFilter {
+  width: 150px;
 }
 
-#statusFilter{
-	width: 150px;
+#statusFilter {
+  width: 150px;
 }
 
-#nameFilter, #emailFilter {
-	width: 200px;
+#nameFilter,
+#emailFilter {
+  width: 200px;
 }
 
-#wrongIdChat, .text-danger {
-	color: red;
+#wrongIdChat,
+.text-danger {
+  color: red;
 }
 
 #example_wrapper {
-	padding: 0px;
+  padding: 0px;
 }
 
 #example2_wrapper {
-	padding: 0px;
+  padding: 0px;
 }
 
-a:link { 
-	text-decoration:none; 
-} 
+a:link {
+  text-decoration: none;
+}
 
-.row-card{
-	margin-bottom: 10px;
+.row-card {
+  margin-bottom: 10px;
 }
 
 .card-header {
-	padding: 0.50rem!important;
-	color: black;
+  padding: 0.5rem !important;
+  color: black;
 }
 
 .card-body {
-	padding: 0.50rem!important;
+  padding: 0.5rem !important;
 }
 
 /* Cosmetic only */
 .easyPaginateNav {
-	text-align: center;
+  text-align: center;
 }
 
 .easyPaginateNav a {
-	padding: 5px;
+  padding: 5px;
 }
 
 .easyPaginateNav a.current {
-	font-weight: bold;
-	text-decoration: underline;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
-.place_in_line{
-	text-align: center;
-	padding-left: 23px;
+.place_in_line {
+  text-align: center;
+  padding-left: 23px;
 }
 
-.colum_of_place{
-	padding-left: 15px;
+.colum_of_place {
+  padding-left: 15px;
 }
 
 .nivel1 {
-	display: flex;
-	height: 78px;
+  display: flex;
+  height: 78px;
 }
 
 .nivel2 {
-	display: flex;
-	height: 78px;
+  display: flex;
+  height: 78px;
 }
 
 .second-ticket {
-	margin-left: 15px;
+  margin-left: 15px;
 }
 
 .progress {
-	height: 10px;
-	width: 79px;
+  height: 10px;
+  width: 79px;
 }
 
 ::-moz-progress-bar {
@@ -123,27 +125,28 @@ a:link {
 }
 
 #span-ticket-header {
-	color: white;
+  color: white;
 }
 
 #data-ticket-text {
-	color: black;
+  color: black;
 }
 
 .iframe-queue {
-	margin-left: 7%;
+  margin-left: 7%;
 }
 
 .bold-text {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-.ui-menu:hover, .ui-menu-item:hover {
-	background-color: none;
+.ui-menu:hover,
+.ui-menu-item:hover {
+  background-color: none;
 }
 
 .to-print {
-	display: none;
+  display: none;
 }
 
 .rowForm {
@@ -153,52 +156,52 @@ a:link {
 }
 
 .title-report-size {
-	font-size: 2em;
+  font-size: 2em;
 }
 
 .generate-report {
-	width: 100%;
+  width: 100%;
 }
 
 #title_of_report {
-	margin-bottom: -5px;
+  margin-bottom: -5px;
 }
 
 #filter_period {
-	margin-top: -5px;
+  margin-top: -5px;
 }
 
 #date_of_report {
-	display: block;
-	margin-top: -5px;
-	margin-bottom: 35px;
+  display: block;
+  margin-top: -5px;
+  margin-bottom: 35px;
 }
 
 #requester_of_report {
-	display: block;
-	margin-top: -5px;
+  display: block;
+  margin-top: -5px;
 }
 
 #div-final-date {
-	margin-left: 100px;
+  margin-left: 100px;
 }
 
 #div-initial-date {
-	margin-left: -15px;
+  margin-left: -15px;
 }
 
 .hide {
-	display: none;
+  display: none;
 }
 
 #btn-modal {
-	width: 100%;
+  width: 100%;
 }
 
 .last-tickets {
-	margin-left: 7px!important;
-	max-width: 97%!important;
-	margin-bottom: 0px!important; 
+  margin-left: 7px !important;
+  max-width: 97% !important;
+  margin-bottom: 0px !important;
 }
 
 .progresso {
@@ -218,26 +221,40 @@ a:link {
 }
 
 #qtd-tickets {
-	margin-top: -15px;
+  margin-top: -15px;
 }
 
 .card-in-ticket-list {
-	border-radius: .25rem 0px 0px .25rem!important;
+  border-radius: 0.25rem 0px 0px 0.25rem !important;
 }
 
 #conteudo {
-	text-align: center;
+  text-align: center;
 }
 
 .main-card {
-	margin-top: 10px;
+  margin-top: 10px;
 }
 
 .main-card-title {
-	padding-top: 5px;
+  padding-top: 5px;
 }
 
 .required {
-	box-shadow: 0 0 3px #ff0000;
-	border: 1px solid #ff0000;
+  box-shadow: 0 0 3px #ff0000;
+  border: 1px solid #ff0000;
+}
+
+#div-polar-chart {
+  background-color: white;
+	box-shadow: 5px 5px 15px 0.1px grey;
+	padding: 10px;
+}
+
+.polar-group-1 {
+  margin-left: 4%;
+}
+
+.polar-group-2 {
+  margin-left: 7%;
 }

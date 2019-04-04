@@ -239,6 +239,13 @@ class TicketController
         return $ticket->countByAttendantAndDate();
     }
 
+    public function findTopFiveModules($group)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setGroup($group);
+        return $ticket->topFiveModules();
+    }
+
     public function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
