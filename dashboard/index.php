@@ -174,6 +174,21 @@ $dashboardController->verifyPermission();
         });
 
         $(function() {
+            var ctx = $("#bar-chart");
+            var data = {
+                labels: <?= $dashboardController->getLabelsToBarChart() ?>,
+                datasets: <?= $dashboardController->getDataSetsToBarChart() ?>
+            };
+            var options = <?= $dashboardController->getOptionsToBarChart() ?>;
+
+            var chart = new Chart(ctx, {
+                type: "bar",
+                data: data,
+                options: options
+            });
+        });
+
+        $(function() {
             new Chart(document.getElementById("polar-chart-group-1"), <?= $dashboardController->getElementToPolarChart("nivel1") ?>);
         });
 

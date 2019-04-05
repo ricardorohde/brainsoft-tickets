@@ -75,7 +75,7 @@ class DashboardController
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
         $this->ticketController = TicketController::getInstance();
 
-        //$this->ticketChartHelper = TicketChartInWeekHelper::getInstance();
+        $this->ticketChartHelper = TicketChartInWeekHelper::getInstance();
         $this->moduleChartHelper = ModuleChartHelper::getInstance();
 
         $this->findTotalTickets();
