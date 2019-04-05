@@ -3,6 +3,7 @@ include_once __DIR__ . '/../utils/controller/dashboard/dashboard.ctrl.php';
 $dashboardController = DashboardController::getInstance();
 $dashboardController->verifyPermission();
 
+$dashboardController->makeBarChart($_POST);
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +78,13 @@ $dashboardController->verifyPermission();
                     <div class="col-lg-4 col-md-4 col-sm-4" style="text-align: center; width: 100%;">
                         <div id="chart-container" style="display: inline-block;"></div>
                     </div>
-                    <div class="col-lg-8 col-md-8 col-sm-8">
+                    <div class="col-lg-8 col-md-8 col-sm-8 bar-tickets-in-week">
+                        <form class="form-inline" action="" method="POST">
+                            <div class="form-group col-lg-11 mb-2 mr-1">
+                                <input type="date" class="form-control" id="bar-tickets-in-week-filter" name="bar-tickets-in-week-filter" max="<?= $dashboardController->getActualDate() ?>">
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+                        </form>
                         <canvas id="bar-chart"></canvas>
                     </div>
                 </div>

@@ -11,6 +11,8 @@ class TicketChartInWeekHelper
     private $options;
     private $dayInWeekFlag;
 
+    private $dateStart;
+
     public function getLabels()
     {
         return $this->labels;
@@ -27,6 +29,14 @@ class TicketChartInWeekHelper
     {
         $this->options = $options;
     }
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
+    public function setDateStart($dateStart)
+    {
+        $this->dateStart = $dateStart;
+    }
 
     function __construct()
     {
@@ -38,7 +48,6 @@ class TicketChartInWeekHelper
         define('DELIMITER', ',');
         $this->dayInWeekFlag = false;
 
-        $this->makeLabels();
         $this->makeOptions();
     }
 
@@ -46,11 +55,7 @@ class TicketChartInWeekHelper
     {
         $labels = OPEN;
         for ($i = 0; $i < 7; $i++) {
-            if ($i == 0) {
-                $labels = $labels . '"Hoje"' . DELIMITER;
-            } else {
-                $labels = $labels . '"' . date('d/m', strtotime($this->dayInWeek($i))) . '"' . DELIMITER;
-            }
+            $labels = $labels . '"' . date('d/m', strtotime($this->dayInWeek($i))) . '"' . DELIMITER;
         }
         $labels = $labels . CLOSE;
         $this->labels = $labels;
@@ -139,12 +144,13 @@ class TicketChartInWeekHelper
     }
     public function dayInWeek($decrement)
     {
-        $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days'));
+        
+        $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days', strtotime($this->dateStart)));
         $dayInWeek = date('w', strtotime($actualDate));
         if ($dayInWeek == 0 || $dayInWeek == 6 || $this->dayInWeekFlag) {
             $this->dayInWeekFlag = true;
             $decrement = $decrement + 2;
-            $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days'));
+            $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days', strtotime($this->dateStart)));
         }
         return $actualDate;
     }

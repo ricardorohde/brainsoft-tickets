@@ -247,8 +247,8 @@ a:link {
 
 #div-polar-chart {
   background-color: white;
-	box-shadow: 5px 5px 15px 0.1px grey;
-	padding: 10px;
+  box-shadow: 5px 5px 15px 0.1px grey;
+  padding: 10px;
 }
 
 .polar-group-1 {
@@ -257,4 +257,14 @@ a:link {
 
 .polar-group-2 {
   margin-left: 7%;
+}
+
+.bar-tickets-in-week {
+  background-color: #f3f7fa;
+  box-shadow: 5px 5px 15px 0.1px grey;
+  padding: 10px;
+}
+
+#bar-tickets-in-week-filter {
+  width: 100%!important;
 }

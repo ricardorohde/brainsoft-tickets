@@ -19,6 +19,8 @@ class DashboardController
     private $pendingTickets;
     private $solvedTickets;
 
+    private $actualDate;
+
     public function getTotalTickets()
     {
         return $this->totalTickets;
@@ -59,6 +61,16 @@ class DashboardController
         $this->solvedTickets = $solvedTickets;
     }
 
+    public function getActualDate()
+    {
+        return $this->actualDate;
+    }
+
+    public function setActualDate($actualDate)
+    {
+        $this->actualDate = $actualDate;
+    }
+
     public function getLabelsToBarGraph()
     {
         return $this->labelsToBarGraph;
@@ -77,6 +89,8 @@ class DashboardController
 
         $this->ticketChartHelper = TicketChartInWeekHelper::getInstance();
         $this->moduleChartHelper = ModuleChartHelper::getInstance();
+
+        $this->actualDate = date("Y-m-d");
 
         $this->findTotalTickets();
         $this->findOpenTickets();
@@ -102,6 +116,18 @@ class DashboardController
     public function findSolvedTickets()
     {
         $this->solvedTickets = $this->totalTickets['total'] - $this->pendingTickets['total'] - $this->openTickets['total'];
+    }
+
+    public function makeBarChart($post)
+    {
+        if (isset($post['bar-tickets-in-week-filter'])) {
+            $date = $post['bar-tickets-in-week-filter'];
+        } else {
+            $date = date("Y-m-d");
+        }
+
+        $this->ticketChartHelper->setDateStart($date);
+        $this->ticketChartHelper->makeLabels();
     }
 
     public function getLabelsToBarChart()
@@ -137,5 +163,5 @@ class DashboardController
             self::$instance = new DashboardController();
         }
         return self::$instance;
-    }
+    }    
 }
