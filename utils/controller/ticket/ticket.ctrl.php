@@ -239,10 +239,12 @@ class TicketController
         return $ticket->countByAttendantAndDate();
     }
 
-    public function findTopFiveModules($group)
+    public function findTopFiveModules($group, $initialDate, $finalDate)
     {
         $ticket = new Ticket($this, $this->prepareInstance);
         $ticket->setGroup($group);
+        $ticket->setRegisteredAt($initialDate);
+        $ticket->setFinalizedAt($finalDate);
         return $ticket->topFiveModules();
     }
 

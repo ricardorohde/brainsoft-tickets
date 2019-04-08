@@ -360,8 +360,8 @@ class Ticket
     
     public function topFiveModules()
     {
-        $element = $this->getGroup();
-        $query = "SELECT COUNT(*) AS NrVezes, id_module FROM ticket WHERE t_group = ? GROUP BY id_module ORDER BY NrVezes DESC LIMIT 5";
-        return $this->prepareInstance->prepare($query, $element, "all");
+        $elements = [$this->getGroup(), $this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
+        $query = "SELECT COUNT(*) AS NrVezes, id_module FROM ticket WHERE t_group = ? AND registered_at BETWEEN ? AND ? GROUP BY id_module ORDER BY NrVezes DESC LIMIT 5";
+        return $this->prepareInstance->prepare($query, $elements, "all");
     }
 }

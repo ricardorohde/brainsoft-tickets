@@ -120,14 +120,28 @@ class DashboardController
 
     public function makeBarChart($post)
     {
-        if (isset($post['bar-tickets-in-week-filter'])) {
+        if (isset($post['filter-to-tickets-in-week']) && isset($post['bar-tickets-in-week-filter'])) {
             $date = $post['bar-tickets-in-week-filter'];
         } else {
             $date = date("Y-m-d");
         }
 
-        $this->ticketChartHelper->setDateStart($date);
+        $this->ticketChartHelper->setInitialDate($date);
         $this->ticketChartHelper->makeLabels();
+    }
+
+    public function makePolarChart($post)
+    {
+        if (isset($post['filter-to-modules'])) {
+            $initialDate = $post['polar-modules-initial-filter'];
+            $finalDate = $post['polar-modules-final-filter'];
+        } else {
+            $initialDate = date("Y-m-d", strtotime("2018-10-10"));
+            $finalDate = date("Y-m-d");
+        }
+
+        $this->moduleChartHelper->setInitialDate($initialDate);
+        $this->moduleChartHelper->setFinalDate($finalDate);
     }
 
     public function getLabelsToBarChart()

@@ -15,6 +15,9 @@ class ModuleChartHelper
     private $topFiveModules;
     private $backgroundColors;
 
+    private $initialDate;
+    private $finalDate;
+
     public function getLabels()
     {
         return $this->labels;
@@ -45,6 +48,26 @@ class ModuleChartHelper
         $this->topFiveModules = $topFiveModules;
     }
 
+    public function getInitialDate()
+    {
+        return $this->initialDate;
+    }
+
+    public function setInitialDate($initialDate)
+    {
+        $this->initialDate = $initialDate;
+    }
+
+    public function getFinalDate()
+    {
+        return $this->finalDate;
+    }
+
+    public function setFinalDate($finalDate)
+    {
+        $this->finalDate = $finalDate;
+    }
+
     function __construct()
     {
         $this->ticketController = TicketController::getInstance();
@@ -58,7 +81,7 @@ class ModuleChartHelper
 
     public function topFiveModules($group)
     {
-        $this->topFiveModules = $this->ticketController->findTopFiveModules($group);
+        $this->topFiveModules = $this->ticketController->findTopFiveModules($group, $this->initialDate, $this->finalDate);
     }
 
     public function makeLabelsAndData()
@@ -88,7 +111,7 @@ class ModuleChartHelper
         $this->data = $data;
     }
 
-    public function suffleColors()
+    public function shuffleColors()
     {
         $colors = ["rgb(201, 203, 207)", "rgb(255, 205, 86)", "rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(75, 192, 192)"];
         shuffle($colors);
@@ -96,7 +119,7 @@ class ModuleChartHelper
         $newSequenceColors = OPEN;
         $i = 0;
         $count = count($colors) - 1;
-        
+
         foreach ($colors as $color) {
             if ($i != $count) {
                 $newSequenceColors = $newSequenceColors . '"' . $color . '"' . DELIMITER;
@@ -114,7 +137,7 @@ class ModuleChartHelper
     {
         $this->topFiveModules($group);
         $this->makeLabelsAndData();
-        $this->suffleColors();
+        $this->shuffleColors();
 
         $element = '{
             "type": "polarArea",

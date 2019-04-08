@@ -11,7 +11,7 @@ class TicketChartInWeekHelper
     private $options;
     private $dayInWeekFlag;
 
-    private $dateStart;
+    private $initialDate;
 
     public function getLabels()
     {
@@ -29,13 +29,13 @@ class TicketChartInWeekHelper
     {
         $this->options = $options;
     }
-    public function getDateStart()
+    public function getinitialDate()
     {
-        return $this->dateStart;
+        return $this->initialDate;
     }
-    public function setDateStart($dateStart)
+    public function setinitialDate($initialDate)
     {
-        $this->dateStart = $dateStart;
+        $this->initialDate = $initialDate;
     }
 
     function __construct()
@@ -143,14 +143,13 @@ class TicketChartInWeekHelper
         return $colors;
     }
     public function dayInWeek($decrement)
-    {
-        
-        $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days', strtotime($this->dateStart)));
+    {       
+        $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days', strtotime($this->initialDate)));
         $dayInWeek = date('w', strtotime($actualDate));
         if ($dayInWeek == 0 || $dayInWeek == 6 || $this->dayInWeekFlag) {
             $this->dayInWeekFlag = true;
             $decrement = $decrement + 2;
-            $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days', strtotime($this->dateStart)));
+            $actualDate = date('Y-m-d', strtotime('-' . $decrement . ' days', strtotime($this->initialDate)));
         }
         return $actualDate;
     }

@@ -4,6 +4,7 @@ $dashboardController = DashboardController::getInstance();
 $dashboardController->verifyPermission();
 
 $dashboardController->makeBarChart($_POST);
+$dashboardController->makePolarChart($_POST);
 ?>
 
 <!DOCTYPE html>
@@ -81,9 +82,9 @@ $dashboardController->makeBarChart($_POST);
                     <div class="col-lg-8 col-md-8 col-sm-8 bar-tickets-in-week">
                         <form class="form-inline" action="" method="POST">
                             <div class="form-group col-lg-11 mb-2 mr-1">
-                                <input type="date" class="form-control" id="bar-tickets-in-week-filter" name="bar-tickets-in-week-filter" max="<?= $dashboardController->getActualDate() ?>">
+                                <input type="date" class="form-control" id="bar-tickets-in-week-filter" name="bar-tickets-in-week-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['bar-tickets-in-week-filter']) ? $_POST['bar-tickets-in-week-filter'] : $dashboardController->getActualDate() ?>">
                             </div>
-                            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+                            <button type="submit" name="filter-to-tickets-in-week" class="btn btn-primary mb-2">Filtrar</button>
                         </form>
                         <canvas id="bar-chart"></canvas>
                     </div>
@@ -92,6 +93,15 @@ $dashboardController->makeBarChart($_POST);
         </section>
         <section class="statistics section-padding section-no-padding-bottom">
             <div class="container-fluid">
+                <form id="polar-modules-form" class="form-inline" action="" method="POST">
+                    <div class="form-group col-lg-5 mb-2 mr-1">
+                        <input type="date" class="form-control" id="polar-modules-initial-filter" name="polar-modules-initial-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['polar-modules-initial-filter']) ? $_POST['polar-modules-initial-filter'] : $dashboardController->getActualDate() ?>" required>
+                    </div>
+                    <div class="form-group col-lg-5 mb-2 mr-1">
+                        <input type="date" class="form-control" id="polar-modules-final-filter" name="polar-modules-final-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['polar-modules-final-filter']) ? $_POST['polar-modules-final-filter'] : $dashboardController->getActualDate() ?>" required>
+                    </div>
+                    <button id="polar-modules-submit" type="submit" name="filter-to-modules" class="btn btn-primary mb-2">Filtrar</button>
+                </form>
                 <div class="row d-flex align-items-stretch">
                     <div id="div-polar-chart" class="col-lg-5 col-md-5 col-sm-5 polar-group-1">
                         <h3 class="text-center">Módulos Grupo 1</h3>

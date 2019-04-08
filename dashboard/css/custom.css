@@ -265,6 +265,14 @@ a:link {
   padding: 10px;
 }
 
-#bar-tickets-in-week-filter {
+#bar-tickets-in-week-filter, #polar-modules-initial-filter, #polar-modules-final-filter {
   width: 100%!important;
+}
+
+#polar-modules-form {
+  margin-left: 2%;
+}
+
+#polar-modules-submit {
+  margin-left: 7%;
 }
