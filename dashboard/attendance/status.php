@@ -20,7 +20,10 @@ $apiPct->countCustomersAtReception();
 </head>
 
 <body style="background-color: transparent;">
-    <h3>Recepção | <?= $apiPct->toStringTotalCustomersAtReception(); ?></h3>
+    <h3>Recepção | <a href=""><?= $apiPct->toStringTotalCustomersAtReception(); ?></a></h3>
+    <pre>
+    <?= var_dump($apiPct->getInfoCustomersAtReception()); ?>
+    </pre>
 </body>
 
 </html> 

@@ -2,6 +2,12 @@
 date_default_timezone_set('America/Sao_Paulo');
 
 include_once __DIR__ . '/../../utils/controller/ctrl-queue.php';
+include_once __DIR__ . '/../../utils/pct-chat/api.php';
+
+$apiPct = new apiPct();
+$apiPct->consultCustomersAtReception();
+$apiPct->countCustomersAtReception();
+
 $queueController = QueueController::getInstance();
 $queueController->verifyPermission();
 ?>
@@ -84,7 +90,7 @@ $queueController->verifyPermission();
                 </header>
                 <hr>
                 <div id="conteudo">
-                    <iframe class="iframe-queue" width='300px' height='23px' frameborder='0' src='/dashboard/attendance/status.php' SCROLLING="NO"></iframe>
+                    <h3>Recepção | <a id="customers-in-reception" tabindex="0" role="button" class="btn popovers" data-container="body" data-trigger="focus" data-toggle="popover" title="" data-html="true" data-content="<?= $apiPct->getInfoCustomersAtReception() ?>" data-original-title="Clientes na fila"><?= $apiPct->toStringTotalCustomersAtReception(); ?></a></h3>
                     <hr>
                     <h1>Disponibilidade Grupo 1</h1>
                     <div class="row" id="internal-row">

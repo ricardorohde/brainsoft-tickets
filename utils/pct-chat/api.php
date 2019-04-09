@@ -19,6 +19,8 @@ class ApiPct
     private $dataOfAllChats;
     private $dataOfEspecificChat;
 
+    private $infoCustomersAtReception;
+
     public function getTotalCustomersAtReception()
     {
         return $this->totalCustomersAtReception;
@@ -89,6 +91,16 @@ class ApiPct
         return $this->dataOfEspecificChat;
     }
 
+    public function getInfoCustomersAtReception()
+    {
+        return $this->infoCustomersAtReception;
+    }
+
+    public function setInfoCustomersAtReception($infoCustomersAtReception)
+    {
+        $this->infoCustomersAtReception = $infoCustomersAtReception;
+    }
+
     function __construct()
     {
         $this->defineTimezone();
@@ -127,6 +139,46 @@ class ApiPct
                 $this->totalCustomersAtReception++;
             }
         }
+
+        $this->makeInfoCustomersAtReception();
+    }
+
+    function makeInfoCustomersAtReception()
+    {
+        $iterator = 0;
+
+        $data = '{"customers": [';
+
+        foreach ($this->dataCustomersAtReception as $key => $value) {
+            $delimiter = ",";
+
+            if ($value->chat_atendente == "camila" && $value->chat_final == null && $value->departamento == "Camila") {
+                if ($iterator == $this->totalCustomersAtReception - 1) {
+                    $delimiter = "";
+                }
+
+                $data = $data . '{"nome":"' . $value->cliente_nome . '", "email":"' . $value->cliente_email . '", "hora": "' . $value->chat_inicio . '"}' . $delimiter;
+                $iterator++;
+            }
+        }
+
+        $data = $data . ']}';
+
+        //PARSE JSON
+        $jsonObj = json_decode($data);
+        $customers = $jsonObj->customers;
+
+        //MAKE HTML
+        $html = "";
+        foreach ($customers as $customer) {
+            $today = new DateTime(date("Y-m-d H:i:s"), new DateTimeZone('America/Sao_Paulo'));
+            $inChat = new DateTime($customer->hora, new DateTimeZone('America/Sao_Paulo'));
+
+            $totalTime = $inChat->diff($today);
+            $html = $html . "<strong>" . explode(" ", $customer->nome)[0] . "</strong>: <br>" . $customer->email . " | " . $totalTime->i . "min." . "<br><br>";
+        }
+
+        $this->infoCustomersAtReception = $html;
     }
 
     function toStringTotalCustomersAtReception()
