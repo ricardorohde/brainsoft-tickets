@@ -70,6 +70,18 @@ $emailController->verifyPermission();
                                                         <option value="registry">Cartório</option>
                                                     </select>
                                                 </div>
+                                                <div class="form-check form-check-inline checkbox-role hide">
+                                                    <input class="form-check-input" type="checkbox" id="checkOficial" value="4" onclick="verifyCheckbox();">
+                                                    <label class="form-check-label" for="checkOficial">Oficial</label>
+                                                </div>
+                                                <div class="form-check form-check-inline checkbox-role hide">
+                                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="6" onclick="verifyCheckbox();">
+                                                    <label class="form-check-label" for="inlineCheckbox2">Substituto</label>
+                                                </div>
+                                                <div class="form-check form-check-inline checkbox-role hide">
+                                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="7" onclick="verifyCheckbox();">
+                                                    <label class="form-check-label" for="inlineCheckbox3">Administrador do Sistema</label>
+                                                </div>
                                             </div>
                                             <div class="form-group row divAllStates hide">
                                                 <div class="offset-sm-1 col-sm-3 select">
@@ -193,6 +205,7 @@ $emailController->verifyPermission();
     <script src="../../dashboard/vendor/jquery-validation/jquery.validate.min.js"></script>
     <script src="../../dashboard/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="../../dashboard/js/marketing/controls.js"></script>
+    <script src="../../dashboard/js/marketing/controls-checkbox.js"></script>
     <script src="../../dashboard/js/marketing/history.js"></script>
     <script src="../../dashboard/vendor/marketing/multiFile/jquery.MultiFile.min.js" type="text/javascript"></script>
     <script src="../../dashboard/vendor/marketing/ckeditor/ckeditor.js"></script>
@@ -204,4 +217,4 @@ $emailController->verifyPermission();
     <!---->
 </body>
 
-</html> 
+</html>

@@ -71,6 +71,24 @@ class ClientController
         return $client->findAllByRegistryEmailNotNull($registry);
     }
 
+    public function findAllByEmailNotNullWithFilter($filter)
+    {
+        $client = new Client($this, $this->prepareInstance);
+        return $client->findAllByEmailNotNullWithFilter($filter);
+    }
+
+    public function findAllByStateEmailNotNullWithFilter($state, $filter)
+    {
+        $client = new Client($this, $this->prepareInstance);
+        return $client->findAllByStateEmailNotNullWithFilter($state, $filter);
+    }
+
+    public function findAllByRegistryEmailNotNullWithFilter($registry, $filter)
+    {
+        $client = new Client($this, $this->prepareInstance);
+        return $client->findAllByRegistryEmailNotNullWithFilter($registry, $filter);
+    }
+
     public function findDataOfClients($sqlIds)
     {
         $client = new Client($this, $this->prepareInstance);

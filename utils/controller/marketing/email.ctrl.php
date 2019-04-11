@@ -164,6 +164,120 @@ class EmailController
         }
     }
 
+    public function findAllClientsWithFilter($filter)
+    {
+        $clientController = new ClientController();
+        $clients = $clientController->findAllByEmailNotNullWithFilter($filter);
+        $qtdClients = count($clients);
+
+        for ($i = 0; $i < $qtdClients; $i++) {
+            $id = $clients[$i]['id'];
+            $name = $clients[$i]['name'];
+            $login = $clients[$i]['login'];
+            $email = $clients[$i]['email'];
+            $registry = $clients[$i]['registry'];
+            $option = "<tr>
+                        <th scope='row'>$name</th>
+                        <td>$login</td>
+                        <td>$email</td>
+                        <td>$registry</td>
+                        <td>
+                            <div class='form-check form-check-inline'>
+                              <input class='form-check-input' type='radio' name='radio$i' id='radio$i' value='send' checked>
+                              <label class='form-check-label' for='inlineRadio$i'>Sim</label>
+                            </div>
+                            <div class='form-check form-check-inline'>
+                              <input class='form-check-input' type='radio' name='radio$i' id='radioNo$i' value='noSend'>
+                              <label class='form-check-label' for='inlineRadioNo$i'>Não</label>
+                            </div>
+                        </td>
+                        <input type='hidden' name='id[]' value='$id' />
+                        <input type='hidden' name='client[]' value='$name' />
+                        <input type='hidden' name='login[]' value='$login' />
+                        <input type='hidden' name='email[]' value='$email' />
+                        <input type='hidden' name='registry[]' value='$registry' />
+                       </tr>";
+
+            echo $option;
+        }
+    }
+
+    public function findAllClientsOfStateWithFilter($state, $filter)
+    {
+        $clientController = new ClientController();
+        $clients = $clientController->findAllByStateEmailNotNullWithFilter($state, $filter);
+        $qtdClients = count($clients);
+
+        for ($i = 0; $i < $qtdClients; $i++) {
+            $id = $clients[$i]['id'];
+            $name = $clients[$i]['name'];
+            $login = $clients[$i]['login'];
+            $email = $clients[$i]['email'];
+            $registry = $clients[$i]['registry'];
+            $option = "<tr>
+                        <th scope='row'>$name</th>
+                        <td>$login</td>
+                        <td>$email</td>
+                        <td>$registry</td>
+                        <td>
+                            <div class='form-check form-check-inline'>
+                              <input class='form-check-input' type='radio' name='radio$i' id='radio$i' value='send' checked>
+                              <label class='form-check-label' for='inlineRadio$i'>Sim</label>
+                            </div>
+                            <div class='form-check form-check-inline'>
+                              <input class='form-check-input' type='radio' name='radio$i' id='radioNo$i' value='noSend'>
+                              <label class='form-check-label' for='inlineRadioNo$i'>Não</label>
+                            </div>
+                        </td>
+                        <input type='hidden' name='id[]' value='$id' />
+                        <input type='hidden' name='client[]' value='$name' />
+                        <input type='hidden' name='login[]' value='$login' />
+                        <input type='hidden' name='email[]' value='$email' />
+                        <input type='hidden' name='registry[]' value='$registry' />
+                       </tr>";
+
+            echo $option;
+        }
+    }
+
+    public function findAllClientsOfRegistryWithFilter($registry, $filter)
+    {
+        $clientController = new ClientController();
+        $clients = $clientController->findAllByRegistryEmailNotNullWithFilter($registry, $filter);
+        $qtdClients = count($clients);
+
+        for ($i = 0; $i < $qtdClients; $i++) {
+            $id = $clients[$i]['id'];
+            $name = $clients[$i]['name'];
+            $login = $clients[$i]['login'];
+            $email = $clients[$i]['email'];
+            $registry = $clients[$i]['registry'];
+            $option = "<tr>
+                        <th scope='row'>$name</th>
+                        <td>$login</td>
+                        <td>$email</td>
+                        <td>$registry</td>
+                        <td>
+                            <div class='form-check form-check-inline'>
+                              <input class='form-check-input' type='radio' name='radio$i' id='radio$i' value='send' checked>
+                              <label class='form-check-label' for='inlineRadio$i'>Sim</label>
+                            </div>
+                            <div class='form-check form-check-inline'>
+                              <input class='form-check-input' type='radio' name='radio$i' id='radioNo$i' value='noSend'>
+                              <label class='form-check-label' for='inlineRadioNo$i'>Não</label>
+                            </div>
+                        </td>
+                        <input type='hidden' name='id[]' value='$id' />
+                        <input type='hidden' name='client[]' value='$name' />
+                        <input type='hidden' name='login[]' value='$login' />
+                        <input type='hidden' name='email[]' value='$email' />
+                        <input type='hidden' name='registry[]' value='$registry' />
+                       </tr>";
+
+            echo $option;
+        }
+    }
+
     function verifyPermission()
     {
         if (!isset($_SESSION['Marketing'.'_page_'.$_SESSION['login']])) {

@@ -26,22 +26,38 @@ class PostController
 	{
 		$controller = new EmailController();
 
-		if ($this->data['action'] == "getAllClients") {
-			echo $controller->findAllClients();
-		} else if ($this->data['action'] == "getAllStates") {
-			echo $controller->findAllStates();
-		} else if ($this->data['action'] == "getAllClientsOfState") {
-			echo $controller->findAllClientsOfState($this->data['value']);
-		} else if ($this->data['action'] == "getAllClientsOfRegistry") {
-			echo $controller->findAllClientsOfRegistry($this->data['value']);
+		switch ($this->data['action']) {
+			case 'getAllClients':
+				echo $controller->findAllClients();
+				break;
+			case 'getAllStates':
+				echo $controller->findAllStates();
+				break;
+			case 'getAllClientsOfState':
+				echo $controller->findAllClientsOfState($this->data['value']);
+				break;
+			case 'getAllClientsOfRegistry':
+				echo $controller->findAllClientsOfRegistry($this->data['value']);
+				break;
+			case 'getAllClientsWithFilter':
+				echo $controller->findAllClientsWithFilter($this->data['filters']);
+				break;
+			case 'getAllClientsOfStateWithFilter':
+				echo $controller->findAllClientsOfStateWithFilter($this->data['value'], $this->data['filters']);
+				break;
+			case 'getAllClientsOfRegistryWithFilter':
+				echo $controller->findAllClientsOfRegistryWithFilter($this->data['value'], $this->data['filters']);
+				break;
+			default:
+				break;
 		}
 	}
 
 	public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new PostController();
-        }
-        return self::$instance;
-    }
+	{
+		if (!self::$instance) {
+			self::$instance = new PostController();
+		}
+		return self::$instance;
+	}
 }

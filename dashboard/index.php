@@ -95,7 +95,7 @@ $dashboardController->makePolarChart($_POST);
             <div class="container-fluid">
                 <form id="polar-modules-form" class="form-inline" action="" method="POST">
                     <div class="form-group col-lg-5 mb-2 mr-1">
-                        <input type="date" class="form-control" id="polar-modules-initial-filter" name="polar-modules-initial-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['polar-modules-initial-filter']) ? $_POST['polar-modules-initial-filter'] : $dashboardController->getActualDate() ?>" required>
+                        <input type="date" class="form-control" id="polar-modules-initial-filter" name="polar-modules-initial-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['polar-modules-initial-filter']) ? $_POST['polar-modules-initial-filter'] : "2018-10-10" ?>" required>
                     </div>
                     <div class="form-group col-lg-5 mb-2 mr-1">
                         <input type="date" class="form-control" id="polar-modules-final-filter" name="polar-modules-final-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['polar-modules-final-filter']) ? $_POST['polar-modules-final-filter'] : $dashboardController->getActualDate() ?>" required>
