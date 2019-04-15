@@ -79,7 +79,7 @@ $employees = $allUserController->findAllEmployees();
                                         <th>Cod.</th>
                                         <th>Nome</th>
                                         <th>Email</th>
-                                        <th>Cidade</th>
+                                        <th>Cartório</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -90,7 +90,7 @@ $employees = $allUserController->findAllEmployees();
                                         <td>00<?= $client['id'] ?></td>
                                         <td><?= $client['name'] ?></td>
                                         <td><?= $client['email'] ?></td>
-                                        <td><?= $client['city'] ?></td>
+                                        <td><?= $client['registry'] ?></td>
                                         <td class="actions text-right">
                                             <a href="usuario/client/<?= $client['id']; ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
                                         </td>

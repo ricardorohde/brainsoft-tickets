@@ -211,7 +211,7 @@ class Client
 
 	public function findDataBySqlIds($sqlIds)
 	{
-		$query = sprintf("SELECT client.id, client.name, email, city.description as city FROM client, registry, city WHERE client.id IN(%s) AND client.id_registry = registry.id AND registry.id_city = city.id ORDER BY id DESC", $sqlIds);
+		$query = sprintf("SELECT client.id, client.name, email, registry.name as registry FROM client, registry, city WHERE client.id IN(%s) AND client.id_registry = registry.id AND registry.id_city = city.id ORDER BY id DESC", $sqlIds);
 		return $this->prepareInstance->prepare($query, "", "all");
 	}
 }
