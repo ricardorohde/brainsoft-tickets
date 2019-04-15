@@ -229,7 +229,7 @@ $queueController->verifyPermission();
                             </tr>
                             <?php foreach ($attendants as $key => $attendant) : ?>
                             <tr>
-                                <td><?= $attendant['on_chat'] == "yes" ? "<img src='../../dashboard/img/is-on.png'></img>" : "<img src='../../dashboard/img/is-off.png'></img>" ?></td>
+                                <td><img src=<?= $queueController->checkStatusToIcon($attendant['on_chat']) ?>></td>
                                 <td><?= explode(" ", $attendant['name'])[0] ?></td>
 
                                 <?php
@@ -270,10 +270,10 @@ $queueController->verifyPermission();
                         </table>
                         <div>
                             <div style="font-size: 10px">
-                                <img src='../../dashboard/img/is-on.png' style="height: 10px;"></img> Online
-                                <img src='../../dashboard/img/is-busy.png' style="height: 10px; margin-left: 20px;"></img> Backup
-                                <img src='../../dashboard/img/is-trainer.png' style="height: 10px; margin-left: 20px;"></img> Treinamento
-                                <img src='../../dashboard/img/is-off.png' style="height: 10px; margin-left: 20px;"></img> Offline
+                                <img src='../../dashboard/img/backup.png' style="height: 10px;"> Backup
+                                <img src='../../dashboard/img/is-off.png' style="height: 10px; margin-left: 20px;"> Offline
+                                <img src='../../dashboard/img/is-on.png' style="height: 10px; margin-left: 20px;"> Online
+                                <img src='../../dashboard/img/training.png' style="height: 10px; margin-left: 20px;"> Treinamento
                             </div>
                         </div>
                     </div>

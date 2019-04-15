@@ -281,3 +281,7 @@ a:link {
   color: black;
   font-size: 18px;
 }
+
+.status-to-attendant {
+  color: white;
+}

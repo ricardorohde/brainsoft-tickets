@@ -314,6 +314,26 @@ class QueueController
 		return $category['description'] . "/" . $module['description'];
 	}
 
+	public function checkStatusToIcon($status)
+	{
+		$icon = "";
+		switch ($status) {
+			case 'on':
+				$icon = "../../dashboard/img/is-on.png";
+				break;
+			case 'backup':
+				$icon = "../../dashboard/img/backup.png";
+				break;
+			case 'training':
+				$icon = "../../dashboard/img/training.png";
+				break;
+			default:
+				$icon = "../../dashboard/img/is-off.png";
+				break;
+		}
+		return $icon;
+	}
+
 	function verifyPermission()
 	{
   		if (!isset($_SESSION['Queue'.'_page_'.$_SESSION['login']])) {
