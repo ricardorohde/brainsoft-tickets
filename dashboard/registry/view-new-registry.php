@@ -126,6 +126,7 @@ $newRegistryController->findAllStates();
     </div>
     <!-- Javascript files-->
     <script src="../../dashboard/js/jquery-3.2.1.min.js"></script>
+    <script src="/script/header"></script>
     <script src="../../js/jquery.mask.js"></script>
     <script src="../../dashboard/js/registry.js"></script>
     <script src="../../dashboard/js/front.js"></script>

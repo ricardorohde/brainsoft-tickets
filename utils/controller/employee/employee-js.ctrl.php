@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__ . "/../navbar/navbar.ctrl.php";
 include_once __DIR__ . "/../../model/employee.php";
+include_once __DIR__ . "/employee.ctrl.php";
 
 $employeeController = new EmployeeJsController();
 $employeeController->verifyData();
@@ -10,25 +11,31 @@ class EmployeeJsController
     private static $instance;
     private $prepareInstance;
     private $navBarController;
+    private $employeeController;
 
     function __construct()
     {
         $this->navBarController = NavBarController::getInstance();
         $this->prepareInstance = $this->navBarController->getPrepareInstance();
+        $this->employeeController = EmployeeController::getInstance();
     }
 
     public function verifyData()
     {
         if (isset($_POST['group']) && !empty($_POST['group'])) {
             $this->findAttendantsByGroup($_POST['group']);
-        } 
+        }
+
+        if (isset($_POST['status']) && !empty($_POST['status'])) {
+            $this->changeStatusOnChat($_POST['status']);
+        }
     }
 
     public function findAttendantsByGroup($group)
     {
         $employee = new Employee($this, $this->prepareInstance);
 
-        $employee->setOnChat("yes");
+        $employee->setOnChat("on");
         $employee->setTGroup($group);
         $employees = $employee->findAttendants();
   
@@ -41,6 +48,11 @@ class EmployeeJsController
 
             echo $option;
         }
+    }
+
+    private function changeStatusOnChat($status)
+    {
+        $this->employeeController->statusOnChat($_SESSION['login'], $status);
     }
 
     public static function getInstance()

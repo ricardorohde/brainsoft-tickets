@@ -274,6 +274,7 @@ header("Cache-Control: no-cache, must-revalidate");
     </div>
     <!-- Javascript files-->
     <script src="../../dashboard/js/jquery-3.2.1.min.js"></script>
+    <script src="/script/header"></script>
     <script src="../../../js/jquery.mask.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="../../dashboard/jquery-ui.js"></script>

@@ -25,7 +25,7 @@ class LogoutController
 	{
 		$id = $this->employeeController->findByCredential($_SESSION['login'])['id'];
 		if ($this->ticketController->checkIfHasOpenTicketByEmployee($id)['total'] < 1) {
-			$this->employeeController->isOnChat($_SESSION['login'], "no");
+			$this->employeeController->statusOnChat($_SESSION['login'], "off");
 			$this->sessionInstance->destroy();
 			header("Location:/");
 		} else {

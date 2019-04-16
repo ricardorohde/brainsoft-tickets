@@ -82,7 +82,7 @@ class CredentialDataController
     {
         switch ($status) {
             case '200':
-                $this->employeeController->isOnChat($id, "yes"); //PUT USER ON IN QUEUE
+                $this->employeeController->statusOnChat($id, "on"); //PUT USER ON IN QUEUE
                 $_SESSION['login'] = $id;
 
                 $this->authorizationController = AuthorizationController::getInstance();

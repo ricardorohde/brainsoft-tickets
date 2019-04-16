@@ -255,9 +255,9 @@ $allTicketCtrl->verifyPost($_POST);
     <!-- Javascript files-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="../../dashboard/js/jquery-3.2.1.min.js"></script>
+    <script src="/script/header"></script>
     <script src="../../dashboard/js/jquery.easyPaginate.js"></script>
     <script src="../../js/jquery.mask.js"></script>
-    <script src="../dashboard/js/jquery-3.2.1.min.js"></script>
     <script src="../../dashboard/js/front.js"></script>
     <script src="../../dashboard/js/view-all-ticket.js"></script>
     <script src="../../dashboard/jquery-ui.js"></script>

@@ -75,7 +75,7 @@ class EmployeeController
         return $employee->update();
     }
 
-    public function isOnChat($idCredential, $status)
+    public function statusOnChat($idCredential, $status)
     {
         $employee = new Employee($this, $this->prepareInstance);
         $employee->setOnChat($status);

@@ -1,4 +1,7 @@
 <?php
+include_once __DIR__ . '/../../utils/controller/header/header.ctrl.php';
+$headerController = headerController::getInstance();
+
 $element = $id;
 
 $query = "SELECT registry.name FROM client, registry WHERE client.id_credential = ? AND client.id_registry = registry.id";
@@ -6,15 +9,6 @@ $registry = $navBarController->getPrepareInstance()->prepare($query, $element, "
 
 $query = "SELECT notification.description, date_format(notification.date, '%d/%m/%Y') as nDate FROM notification, user_notification WHERE notification.id = user_notification.id_notification AND user_notification.id_user = ?";
 $notifications = $navBarController->getPrepareInstance()->prepare($query, $element, "all");
-?>
-<?php
-if (!isset($_SESSION['login'])) {
-    if (isset($_SESSION['errorLogin'])) {
-        unset($_SESSION['errorLogin']);
-    };
-    $_SESSION['withoutLogin'] = "<strong>Informação!</strong> Informe seus dados para acessar o sistema.";
-    header("Location:/utils/do-login.php");
-}
 ?>
 <!-- navbar-->
 <header class="header">
@@ -32,19 +26,15 @@ if (!isset($_SESSION['login'])) {
         } ?>
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <div class="form-check form-check-inline status-to-attendant">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-backup" value="backup">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-backup" value="backup" <?= $headerController->checkAttendantStatus($id, "backup") ?>>
                     <label class="form-check-label" for="status-backup">Backup</label>
                 </div>
                 <div class="form-check form-check-inline status-to-attendant">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-offline" value="offline">
-                    <label class="form-check-label" for="status-offline">Offline</label>
-                </div>
-                <div class="form-check form-check-inline status-to-attendant">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-online" value="online">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-online" value="on" <?= $headerController->checkAttendantStatus($id, "on") ?>>
                     <label class="form-check-label" for="status-online">Online</label>
                 </div>
                 <div class="form-check form-check-inline status-to-attendant">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-training" value="treinamento">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-training" value="training" <?= $headerController->checkAttendantStatus($id, "training") ?>>
                     <label class="form-check-label" for="status-training">Treinamento</label>
                 </div>
                 <li class="nav-item dropdown"><a id="notifications" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-bell"></i><span class="badge badge-warning"><?php $qtd = sizeof($notifications);

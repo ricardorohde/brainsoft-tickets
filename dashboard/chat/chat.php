@@ -75,6 +75,7 @@ if (!isset($_SESSION['ticket_page_'.$_SESSION['login']])) {
 <!-- Javascript files-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
 <script src="../js/jquery-3.2.1.min.js"></script>
+<script src="/script/header"></script>
 <script src="../jquery-ui.js"></script>
 <script src="../../js/jquery.mask.js"></script>
 <script src="../js/chat.js"></script>
