@@ -25,7 +25,7 @@ $notifications = $navBarController->getPrepareInstance()->prepare($query, $eleme
             <?php
         } ?>
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-                <div class="form-check form-check-inline status-to-attendant">
+                <div class="form-check form-check-inline status-to-attendant <?= $headerController->checkTicketsInQueue() ?>">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-backup" value="backup" <?= $headerController->checkAttendantStatus($id, "backup") ?>>
                     <label class="form-check-label" for="status-backup">Backup</label>
                 </div>
@@ -33,7 +33,7 @@ $notifications = $navBarController->getPrepareInstance()->prepare($query, $eleme
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-online" value="on" <?= $headerController->checkAttendantStatus($id, "on") ?>>
                     <label class="form-check-label" for="status-online">Online</label>
                 </div>
-                <div class="form-check form-check-inline status-to-attendant">
+                <div class="form-check form-check-inline status-to-attendant <?= $headerController->checkTicketsInQueue() ?>">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-training" value="training" <?= $headerController->checkAttendantStatus($id, "training") ?>>
                     <label class="form-check-label" for="status-training">Treinamento</label>
                 </div>

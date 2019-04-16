@@ -35,7 +35,6 @@ class EmployeeJsController
     {
         $employee = new Employee($this, $this->prepareInstance);
 
-        $employee->setOnChat("on");
         $employee->setTGroup($group);
         $employees = $employee->findAttendants();
   

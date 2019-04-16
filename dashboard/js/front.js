@@ -1,6 +1,6 @@
 /*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function() {
-  $("#subFmit-search-register").click(function() {
+  $("#submit-search-register").click(function() {
     var idChat = $("#id_chat").val();
     var idAttendant = $("input[name='id_attendant']:checked").val();
     var error = false;

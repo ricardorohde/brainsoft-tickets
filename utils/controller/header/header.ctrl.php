@@ -1,15 +1,18 @@
 <?php
 include_once __DIR__ . "/../employee/employee.ctrl.php";
+include_once __DIR__ . "/../ticket/ticket.ctrl.php";
 
 class headerController
 {
     private static $instance;
 
     private $employeeController;
+    private $ticketController;
 
     function __construct()
     {
         $this->employeeController = EmployeeController::getInstance();
+        $this->ticketController = TicketController::getInstance();
     }
 
     public function checkAttendantStatus($idCredential, $checkBox)
@@ -19,9 +22,15 @@ class headerController
 
         if ($status == $checkBox) {
             return "checked";
-        } else {
-            return "";
         }
+    }
+
+    public function checkTicketsInQueue()
+    {
+        $id = $this->employeeController->findByCredential($_SESSION['login'])['id'];
+		if ($this->ticketController->checkIfHasOpenTicketByEmployee($id)['total'] > 0) {
+			return "hide";
+		}
     }
 
     public static function getInstance()

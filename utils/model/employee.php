@@ -159,8 +159,8 @@ class Employee
 
     public function findAttendants()
     {
-    	$elements = [$this->getTGroup(), $this->getOnChat(), "aberto"];
-        $query = "SELECT id, name FROM employee WHERE t_group = ? AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY name";
+    	$elements = [$this->getTGroup(), "off", "training", "aberto"];
+        $query = "SELECT id, name FROM employee WHERE t_group = ? AND (on_chat != ? AND on_chat != ?) AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY name";
         return $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
@@ -180,8 +180,8 @@ class Employee
 
 	public function findToForward()
 	{
-		$elements = ["nivel1", "nivel2", "yes", "aberto"];
-		$query = "SELECT id, name, id_credential FROM employee WHERE (t_group = ? OR t_group = ?) AND on_chat = ? AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
+		$elements = ["nivel1", "nivel2", "off", "training", "aberto"];
+		$query = "SELECT id, name, id_credential FROM employee WHERE (t_group = ? OR t_group = ?) AND (on_chat != ? AND on_chat != ?) AND (SELECT COUNT(*) FROM ticket WHERE id_attendant = employee.id AND t_status = ?) < 2 ORDER BY t_group, name";
 		return $this->prepareInstance->prepare($query, $elements, "all");
 	}
 
