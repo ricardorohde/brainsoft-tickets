@@ -112,9 +112,9 @@ class Credential
         $salted_hash = hash('sha256', $this->getPassword() . $bs_salt . $result['b_salt']);
 
         if ($result['password'] == $salted_hash) {
-            $this->myController->setHeader($result['id'], $this->getPassword(), '200');
+            $this->myController->setHeader($result['id'], '200');
         } else {
-            $this->myController->setHeader(0, null, '404');
+            $this->myController->setHeader(0, '404');
         }
     }
 

@@ -25,14 +25,6 @@ class headerController
         }
     }
 
-    public function checkTicketsInQueue()
-    {
-        $id = $this->employeeController->findByCredential($_SESSION['login'])['id'];
-		if ($this->ticketController->checkIfHasOpenTicketByEmployee($id)['total'] > 0) {
-			return "hide";
-		}
-    }
-
     public static function getInstance()
     {
         if (!self::$instance) {

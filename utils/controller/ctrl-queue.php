@@ -180,8 +180,8 @@ class QueueController
 
 	function attendantsAbleOnGroup1()
 	{
-	    $elements = ["nivel1", "on"];
-	    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
+	    $elements = ["nivel1", "off"];
+	    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat != ?";
 	    $row_attendants_1_on_chat = $this->prepareInstance->prepare($query, $elements, "all");
 	    $this->allAttendantsOfGroup1OnChat = $row_attendants_1_on_chat[0]['total'];
 	}
@@ -194,16 +194,16 @@ class QueueController
 	    $this->initializedQueueOfGroup1 = json_decode($this->prepareInstance->prepareBind($query, $elements, "all"), true);
 
 	    $limit_finalized_1 = $this->allAttendantsOfGroup1OnChat;
-	    $elements = ["aberto", "nivel1", "on", $limit_finalized_1];
+	    $elements = ["aberto", "nivel1", "off", $limit_finalized_1];
 	    $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
-			t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
+			t_status != :status AND ticket.t_group = :group AND employee.on_chat != :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
 		$this->finalizedQueueOfGroup1 = json_decode($this->prepareInstance->prepareBind($query, $elements, "all"), true);
 	}
 
 	function attendantsAbleOnGroup2()
 	{
-	    $elements = ["nivel2", "on"];
-	    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat = ?";
+	    $elements = ["nivel2", "off"];
+	    $query = "SELECT COUNT(*) as total FROM employee WHERE t_group = ? AND on_chat != ?";
 	    $row_attendants_1_on_chat = $this->prepareInstance->prepare($query, $elements, "all");
 	    $this->allAttendantsOfGroup2OnChat = $row_attendants_1_on_chat[0]['total'];
 	}
@@ -216,9 +216,9 @@ class QueueController
 		$this->initializedQueueOfGroup2 = json_decode($this->prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all"), true);
 
 		$limit_finalized_2 = $this->allAttendantsOfGroup2OnChat;
-		$elements_to_finalized_queue_2 = ["aberto", "nivel2", "on", $limit_finalized_2];
+		$elements_to_finalized_queue_2 = ["aberto", "nivel2", "off", $limit_finalized_2];
 		$query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
-			t_status != :status AND ticket.t_group = :group AND employee.on_chat = :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
+			t_status != :status AND ticket.t_group = :group AND employee.on_chat != :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
 		$this->finalizedQueueOfGroup2 = json_decode($this->prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all"), true);
 	}
 
@@ -266,8 +266,8 @@ class QueueController
 
 	function attendantsOnGroup($group)
 	{
-		$elements = [$group, "on"];
-		$query = "SELECT id, name FROM employee WHERE t_group = ? AND on_chat = ?";
+		$elements = [$group, "off"];
+		$query = "SELECT id, name FROM employee WHERE t_group = ? AND on_chat != ?";
 		$data = $this->prepareInstance->prepare($query, $elements, "all"); 
 	
 		$group = array();

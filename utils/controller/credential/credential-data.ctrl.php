@@ -78,7 +78,7 @@ class CredentialDataController
         }
     }
 
-    public function setHeader($id, $password, $status)
+    public function setHeader($id, $status)
     {
         switch ($status) {
             case '200':
