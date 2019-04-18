@@ -157,7 +157,7 @@ class ApiPct
                     $delimiter = "";
                 }
 
-                $data = $data . '{"nome":"' . $value->cliente_nome . '", "email":"' . $value->cliente_email . '", "hora": "' . $value->chat_inicio . '"}' . $delimiter;
+                $data = $data . '{"cod":"' . $value->cod_chat . '", "nome":"' . $value->cliente_nome . '", "email":"' . $value->cliente_email . '", "hora": "' . $value->chat_inicio . '"}' . $delimiter;
                 $iterator++;
             }
         }
@@ -175,7 +175,7 @@ class ApiPct
             $inChat = new DateTime($customer->hora, new DateTimeZone('America/Sao_Paulo'));
 
             $totalTime = $inChat->diff($today);
-            $html = $html . "<strong>" . explode(" ", $customer->nome)[0] . "</strong>: <br>" . $customer->email . " | " . $totalTime->i . "min." . "<br><br>";
+            $html = $html . "<strong><a href='https://brainsoft.meupct.com/chat/detalhes/" . $customer->cod . "' target='_blank'>" . explode(" ", $customer->nome)[0] . "</a></strong>: <br>" . $customer->email . " | " . $totalTime->i . "min." . "<br><br>";
         }
 
         $this->infoCustomersAtReception = $html;
