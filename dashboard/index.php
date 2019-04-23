@@ -5,6 +5,7 @@ $dashboardController->verifyPermission();
 
 $dashboardController->makeBarChart($_POST);
 $dashboardController->makePolarChart($_POST);
+$dashboardController->makeLineChart($_POST);
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +92,7 @@ $dashboardController->makePolarChart($_POST);
                 </div>
             </div>
         </section>
-        <section class="statistics section-padding section-no-padding-bottom">
+        <section class="statistics section-padding">
             <div class="container-fluid">
                 <form id="polar-modules-form" class="form-inline" action="" method="POST">
                     <div class="form-group col-lg-5 mb-2 mr-1">
@@ -110,6 +111,22 @@ $dashboardController->makePolarChart($_POST);
                     <div id="div-polar-chart" class="offset-lg-2 col-lg-5 col-md-5 col-sm-5 polar-group-2">
                         <h3 class="text-center">Módulos Grupo 2</h3>
                         <canvas id="polar-chart-group-2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="dashboard-header section-padding">
+            <div class="container-fluid">
+                <div class="row d-flex align-items-md-stretch">
+                    <div class="offset-lg-2 col-lg-8 col-md-8 col-sm-8 line-tickets-in-month">
+                        <form class="form-inline" action="" method="POST">
+                            <div class="form-group col-lg-11 mb-2 mr-1">
+                                <input type="date" class="form-control" id="line-tickets-in-month-filter" name="line-tickets-in-month-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['line-tickets-in-month-filter']) ? $_POST['line-tickets-in-month-filter'] : $dashboardController->getActualDate() ?>">
+                            </div>
+                            <button type="submit" name="filter-to-tickets-in-month" class="btn btn-primary mb-2">Filtrar</button>
+                        </form>
+                        <h3 class="text-center">Atendimentos por mês</h3>
+                        <canvas id="line-chart-tickets-in-month"></canvas>
                     </div>
                 </div>
             </div>
@@ -212,6 +229,10 @@ $dashboardController->makePolarChart($_POST);
 
         $(function() {
             new Chart(document.getElementById("polar-chart-group-2"), <?= $dashboardController->getElementToPolarChart("nivel2") ?>);
+        });
+
+        $(function() {
+            new Chart(document.getElementById("line-chart-tickets-in-month"), <?= $dashboardController->getElementToLineChart() ?>);
         });
     </script>
 </body>

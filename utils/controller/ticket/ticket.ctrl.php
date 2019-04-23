@@ -248,6 +248,23 @@ class TicketController
         return $ticket->topFiveModules();
     }
 
+    public function countByMonth($month)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setRegisteredAt($month);
+        $ticket->setFinalizedAt($month);
+        return $ticket->countByMonth();
+    }
+
+    public function countByGroupAndMonth($group, $month)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setGroup($group);
+        $ticket->setRegisteredAt($month);
+        $ticket->setFinalizedAt($month);
+        return $ticket->countByGroupAndMonth();
+    }
+
     public function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {

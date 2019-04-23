@@ -356,12 +356,26 @@ class Ticket
         $elements = [$this->getIdAttendant(), $this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
         $query = "SELECT COUNT(*) as total FROM ticket WHERE id_attendant = ? AND (registered_at LIKE ? OR finalized_at LIKE ?)";
         return $this->prepareInstance->prepare($query, $elements, "");
-    } 
+    }
     
     public function topFiveModules()
     {
         $elements = [$this->getGroup(), $this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
         $query = "SELECT COUNT(*) AS NrVezes, id_module FROM ticket WHERE t_group = ? AND registered_at BETWEEN ? AND ? GROUP BY id_module ORDER BY NrVezes DESC LIMIT 5";
         return $this->prepareInstance->prepare($query, $elements, "all");
+    }
+
+    public function countByMonth()
+    {
+        $elements = [$this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
+        $query = "SELECT COUNT(*) as total FROM ticket WHERE (registered_at LIKE ? OR finalized_at LIKE ?)";
+        return $this->prepareInstance->prepare($query, $elements, "");
+    }
+
+    public function countByGroupAndMonth()
+    {
+        $elements = [$this->getGroup(), $this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
+        $query = "SELECT COUNT(*) as total FROM ticket WHERE t_group = ? AND (registered_at LIKE ? OR finalized_at LIKE ?)";
+        return $this->prepareInstance->prepare($query, $elements, "");
     }
 }

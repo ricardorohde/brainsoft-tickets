@@ -3,6 +3,7 @@ include_once __DIR__ . "/../navbar/navbar.ctrl.php";
 include_once __DIR__ . "/../ticket/ticket.ctrl.php";
 include_once __DIR__ . "/../../helper/ticket_chart_in_week_helper.php";
 include_once __DIR__ . "/../../helper/module_chart_helper.php";
+include_once __DIR__ . "/../../helper/ticket_chart_in_month_helper.php";
 
 class DashboardController
 {
@@ -13,6 +14,7 @@ class DashboardController
 
     private $ticketChartHelper;
     private $moduleChartHelper;
+    private $ticketChartInMonthHelper;
 
     private $totalTickets;
     private $openTickets;
@@ -89,6 +91,7 @@ class DashboardController
 
         $this->ticketChartHelper = TicketChartInWeekHelper::getInstance();
         $this->moduleChartHelper = ModuleChartHelper::getInstance();
+        $this->ticketChartInMonthHelper = ticketChartInMonthHelper::getInstance();
 
         $this->actualDate = date("Y-m-d");
 
@@ -144,6 +147,16 @@ class DashboardController
         $this->moduleChartHelper->setFinalDate($finalDate);
     }
 
+    public function makeLineChart($post)
+    {
+        if (isset($post['filter-to-tickets-in-month']) && isset($post['line-tickets-in-month-filter'])) {
+            $date = $post['line-tickets-in-month-filter'];
+        } else {
+            $date = date("Y-m-d");
+        }
+        $this->ticketChartInMonthHelper->setInitialDate($date);
+    }
+
     public function getLabelsToBarChart()
     {
         return $this->ticketChartHelper->getLabels();
@@ -162,6 +175,11 @@ class DashboardController
     public function getElementToPolarChart($group)
     {
         return $this->moduleChartHelper->makeElement($group);
+    }
+
+    public function getElementToLineChart()
+    {
+        return $this->ticketChartInMonthHelper->makeElement();
     }
 
     public function verifyPermission()
