@@ -290,30 +290,36 @@ class ApiPct
 
     public function checkStatusOfChat($date, $chat)
     {
-        $ch = curl_init();
-        $url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/' . $date;
         $message = array();
-        $messageToStatus = "Via telefone ou Chat antigo!";
-        $messageToCard = "Fone/Antigo";
+        $messageToStatus = "Chat antigo (não foi iniciado na data de hoje).";
+        $messageToCard = "Antigo";
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($chat > 100000) {
+            $ch = curl_init();
+            $url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/' . $date;
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $data = json_decode($response);
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-        foreach ($data as $key => $value) {
-            if ($value->cod_chat == $chat) {
-                if ($value->chat_final == null) {
-                    $messageToStatus = "Chat em andamento";
-                    $messageToCard = "Aberto";
-                } else {
-                    $messageToStatus = "Chat finalizado em " . date("d/m/Y H:i:s", strtotime($value->chat_final));
-                    $messageToCard = "Finalizado";
+            $data = json_decode($response);
+
+            foreach ($data as $key => $value) {
+                if ($value->cod_chat == $chat) {
+                    if ($value->chat_final == null) {
+                        $messageToStatus = "Chat em andamento.";
+                        $messageToCard = "Aberto";
+                    } else {
+                        $messageToStatus = "Chat finalizado em " . date("d/m/Y H:i:s", strtotime($value->chat_final)) . ".";
+                        $messageToCard = "Finalizado";
+                    }
                 }
             }
+        } else {
+            $messageToStatus = "Atendimento via telefone.";
+            $messageToCard = "Telefone";
         }
 
         array_push($message, $messageToStatus);
