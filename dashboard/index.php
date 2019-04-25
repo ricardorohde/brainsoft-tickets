@@ -6,6 +6,8 @@ $dashboardController->verifyPermission();
 $dashboardController->makeBarChart($_POST);
 $dashboardController->makePolarChart($_POST);
 $dashboardController->makeLineChart($_POST);
+$dashboardController->makeHorizontalBarChart($_POST);
+
 ?>
 
 <!DOCTYPE html>
@@ -120,13 +122,36 @@ $dashboardController->makeLineChart($_POST);
                 <div class="row d-flex align-items-md-stretch">
                     <div class="offset-lg-2 col-lg-8 col-md-8 col-sm-8 line-tickets-in-month">
                         <form class="form-inline" action="" method="POST">
-                            <div class="form-group col-lg-11 mb-2 mr-1">
+                            <div class="form-group col-lg-10 mb-2">
                                 <input type="date" class="form-control" id="line-tickets-in-month-filter" name="line-tickets-in-month-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['line-tickets-in-month-filter']) ? $_POST['line-tickets-in-month-filter'] : $dashboardController->getActualDate() ?>">
                             </div>
-                            <button type="submit" name="filter-to-tickets-in-month" class="btn btn-primary mb-2">Filtrar</button>
+                            <div class="form-group col-lg-2 mb-2">
+                                <button type="submit" name="filter-to-tickets-in-month" class="btn btn-primary mb-2">Filtrar</button>
+                            </div>
                         </form>
                         <h3 class="text-center">Atendimentos por mês</h3>
                         <canvas id="line-chart-tickets-in-month"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="dashboard-header section-padding">
+            <div class="container-fluid">
+                <div class="row d-flex align-items-md-stretch">
+                    <div class="offset-lg-1 col-lg-10 col-md-10 col-sm-10 bar-tickets-of-registry">
+                        <form class="form-inline" action="" method="POST">
+                            <div class="form-group col-lg-5 mb-2">
+                                <input type="date" class="form-control" id="bar-tickets-of-registry-initial-filter" name="bar-tickets-of-registry-initial-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['bar-tickets-of-registry-initial-filter']) ? $_POST['bar-tickets-of-registry-initial-filter'] : "2018-10-10" ?>">
+                            </div>
+                            <div class="form-group col-lg-5 mb-2">
+                                <input type="date" class="form-control" id="bar-tickets-of-registry-final-filter" name="bar-tickets-of-registry-final-filter" min="2018-10-10" max="<?= $dashboardController->getActualDate() ?>" value="<?= isset($_POST['bar-tickets-of-registry-final-filter']) ? $_POST['bar-tickets-of-registry-final-filter'] : $dashboardController->getActualDate() ?>" required>
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <button type="submit" name="filter-to-bar-tickets-by-registry" class="btn btn-primary mb-2">Filtrar</button>
+                            </div>
+                        </form>
+                        <h3 class="text-center">Atendimentos por cartório</h3>
+                        <canvas id="bar-chart-tickets-of-registry" height="1400"></canvas>
                     </div>
                 </div>
             </div>
@@ -148,6 +173,7 @@ $dashboardController->makeLineChart($_POST);
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="../../dashboard/js/jquery-3.2.1.min.js"></script>
     <script src="/script/header"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"> </script>
     <script src="../../dashboard/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../dashboard/vendor/jquery.cookie/jquery.cookie.js"> </script>
@@ -233,6 +259,10 @@ $dashboardController->makeLineChart($_POST);
 
         $(function() {
             new Chart(document.getElementById("line-chart-tickets-in-month"), <?= $dashboardController->getElementToLineChart() ?>);
+        });
+
+        $(function() {
+            new Chart(document.getElementById("bar-chart-tickets-of-registry"), <?= $dashboardController->getElementToHorizontalBarChart() ?>);
         });
     </script>
 </body>

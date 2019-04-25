@@ -378,4 +378,11 @@ class Ticket
         $query = "SELECT COUNT(*) as total FROM ticket WHERE t_group = ? AND (registered_at LIKE ? OR finalized_at LIKE ?)";
         return $this->prepareInstance->prepare($query, $elements, "");
     }
+
+    public function countByRegistryAndDate()
+    {
+        $elements = [$this->getRegisteredAt()."%", $this->getFinalizedAt()."%"];
+        $query = "SELECT registry.name as registry, COUNT(*) as total FROM ticket, registry WHERE registered_at BETWEEN ? AND ? AND ticket.id_registry = registry.id GROUP BY id_registry ORDER BY total DESC";
+        return $this->prepareInstance->prepare($query, $elements, "all");
+    }
 }

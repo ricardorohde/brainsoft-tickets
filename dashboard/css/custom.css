@@ -265,7 +265,7 @@ a:link {
   padding: 10px;
 }
 
-#bar-tickets-in-week-filter, #polar-modules-initial-filter, #polar-modules-final-filter, #line-tickets-in-month-filter {
+#bar-tickets-in-week-filter, #polar-modules-initial-filter, #polar-modules-final-filter, #line-tickets-in-month-filter, #bar-tickets-of-registry-initial-filter, #bar-tickets-of-registry-final-filter {
   width: 100%!important;
 }
 
@@ -286,7 +286,11 @@ a:link {
   color: white;
 }
 
-.line-tickets-in-month {
+.line-tickets-in-month, .bar-tickets-of-registry {
   box-shadow: 5px 5px 15px 0.1px grey;
   padding: 10px;
+}
+
+button[name=filter-to-bar-tickets-by-registry] {
+  width: 100%;
 }

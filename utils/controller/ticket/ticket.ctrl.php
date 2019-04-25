@@ -265,6 +265,14 @@ class TicketController
         return $ticket->countByGroupAndMonth();
     }
 
+    public function countByRegistryAndDate($initialDate, $finalDate)
+    {
+        $ticket = new Ticket($this, $this->prepareInstance);
+        $ticket->setRegisteredAt($initialDate);
+        $ticket->setFinalizedAt($finalDate);
+        return $ticket->countByRegistryAndDate();
+    }
+
     public function verifyPermission()
     {
         if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {

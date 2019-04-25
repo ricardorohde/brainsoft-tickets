@@ -4,6 +4,7 @@ include_once __DIR__ . "/../ticket/ticket.ctrl.php";
 include_once __DIR__ . "/../../helper/ticket_chart_in_week_helper.php";
 include_once __DIR__ . "/../../helper/module_chart_helper.php";
 include_once __DIR__ . "/../../helper/ticket_chart_in_month_helper.php";
+include_once __DIR__ . "/../../helper/ticket_chart_by_registry_helper.php";
 
 class DashboardController
 {
@@ -15,6 +16,7 @@ class DashboardController
     private $ticketChartHelper;
     private $moduleChartHelper;
     private $ticketChartInMonthHelper;
+    private $ticketChartByRegistryHelper;
 
     private $totalTickets;
     private $openTickets;
@@ -91,7 +93,8 @@ class DashboardController
 
         $this->ticketChartHelper = TicketChartInWeekHelper::getInstance();
         $this->moduleChartHelper = ModuleChartHelper::getInstance();
-        $this->ticketChartInMonthHelper = ticketChartInMonthHelper::getInstance();
+        $this->ticketChartInMonthHelper = TicketChartInMonthHelper::getInstance();
+        $this->ticketChartByRegistryHelper = TicketChartByRegistryHelper::getInstance();
 
         $this->actualDate = date("Y-m-d");
 
@@ -157,6 +160,20 @@ class DashboardController
         $this->ticketChartInMonthHelper->setInitialDate($date);
     }
 
+    public function makeHorizontalBarChart($post)
+    {
+        if (isset($post['filter-to-bar-tickets-by-registry'])) {
+            $initialDate = $post['bar-tickets-of-registry-initial-filter'];
+            $finalDate = $post['bar-tickets-of-registry-final-filter'];
+        } else {
+            $initialDate = date("Y-m-d", strtotime("2018-10-10"));
+            $finalDate = date("Y-m-d");
+        }
+
+        $this->ticketChartByRegistryHelper->setInitialDate($initialDate);
+        $this->ticketChartByRegistryHelper->setFinalDate($finalDate);
+    }
+
     public function getLabelsToBarChart()
     {
         return $this->ticketChartHelper->getLabels();
@@ -180,6 +197,11 @@ class DashboardController
     public function getElementToLineChart()
     {
         return $this->ticketChartInMonthHelper->makeElement();
+    }
+
+    public function getElementToHorizontalBarChart()
+    {
+        return $this->ticketChartByRegistryHelper->makeElement();
     }
 
     public function verifyPermission()
