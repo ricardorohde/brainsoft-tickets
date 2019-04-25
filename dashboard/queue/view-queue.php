@@ -184,7 +184,8 @@ $queueController->verifyPermission();
                                                             <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
                                                             <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
                                                             <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
-                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?>
+                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
+                                                            <strong>Status: </strong><?= $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat'])[0]?>
                                                         </p>
 											   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
 														</div>"><?= $chat['id_chat'] ?></button>
@@ -196,6 +197,9 @@ $queueController->verifyPermission();
 
                                                 <div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time'] ?>">
                                                     <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
+                                                </div>
+                                                <div>
+                                                    <p><?= $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat'])[1]?></p>
                                                 </div>
                                             </div>
                                             <?php endif ?>

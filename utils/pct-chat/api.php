@@ -293,8 +293,8 @@ class ApiPct
         $ch = curl_init();
         $url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/' . $date;
         $message = array();
-        $messageToStatus = "Chat antigo ou Telefone!";
-        $messageToCard = "Antigo";
+        $messageToStatus = "Via telefone ou Chat antigo!";
+        $messageToCard = "Fone/Antigo";
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
