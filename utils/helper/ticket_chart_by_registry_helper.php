@@ -102,7 +102,7 @@ class TicketChartByRegistryHelper
         ];
 
         $newSequenceColors = array();
-        $count = round(count($this->allRegistriesWithTickets) / 7) - 1;
+        $count = round(count($this->allRegistriesWithTickets) / 7) + 1;
 
         for ($i=0; $i < $count; $i++) {
             for ($j=0; $j < 7; $j++) {
@@ -177,12 +177,7 @@ class TicketChartByRegistryHelper
             options: {
                 responsive: true,
                 legend: {
-                    display: false,
-                    position: "bottom",
-                    labels: {
-                        fontColor: "#333",
-                        fontSize: 12
-                    }
+                    display: false
                 },
                 scales: {
                     xAxes: [{

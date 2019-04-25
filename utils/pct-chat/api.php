@@ -287,4 +287,38 @@ class ApiPct
             }
         }
     }
+
+    public function checkStatusOfChat($date, $chat)
+    {
+        $ch = curl_init();
+        $url = 'https://guilherme:aAoYdUycs71B5GfdfmqKRwaXUSr6iO50WiAuksHwbQzc7T4bH1eFVZvMBNqTG4px@brainsoft.meupct.com/api/chats/date/' . $date;
+        $message = array();
+        $messageToStatus = "Chat antigo ou Telefone!";
+        $messageToCard = "Antigo";
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response);
+
+        foreach ($data as $key => $value) {
+            if ($value->cod_chat == $chat) {
+                if ($value->chat_final == null) {
+                    $messageToStatus = "Chat em andamento";
+                    $messageToCard = "Aberto";
+                } else {
+                    $messageToStatus = "Chat finalizado em " . date("d/m/Y H:i:s", strtotime($value->chat_final));
+                    $messageToCard = "Finalizado";
+                }
+            }
+        }
+
+        array_push($message, $messageToStatus);
+        array_push($message, $messageToCard);
+
+        return $message;
+    }
 }
