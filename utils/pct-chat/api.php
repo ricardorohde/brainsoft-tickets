@@ -21,6 +21,9 @@ class ApiPct
 
     private $infoCustomersAtReception;
 
+    private $messageToStatus;
+    private $messageToCard;
+
     public function getTotalCustomersAtReception()
     {
         return $this->totalCustomersAtReception;
@@ -99,6 +102,16 @@ class ApiPct
     public function setInfoCustomersAtReception($infoCustomersAtReception)
     {
         $this->infoCustomersAtReception = $infoCustomersAtReception;
+    }
+
+    public function getMessageToStatus()
+    {
+        return $this->messageToStatus;
+    }
+
+    public function getMessageToCard()
+    {
+        return $this->messageToCard;
     }
 
     function __construct()
@@ -290,9 +303,8 @@ class ApiPct
 
     public function checkStatusOfChat($date, $chat)
     {
-        $message = array();
-        $messageToStatus = "Chat antigo (não foi iniciado na data de hoje).";
-        $messageToCard = "Antigo";
+        $this->messageToStatus = "Chat antigo (não foi iniciado na data de hoje).";
+        $this->messageToCard = "Antigo";
 
         if ($chat > 100000) {
             $ch = curl_init();
@@ -309,22 +321,17 @@ class ApiPct
             foreach ($data as $key => $value) {
                 if ($value->cod_chat == $chat) {
                     if ($value->chat_final == null) {
-                        $messageToStatus = "Chat em andamento.";
-                        $messageToCard = "Aberto";
+                        $this->messageToStatus = "Chat em andamento.";
+                        $this->messageToCard = "Aberto";
                     } else {
-                        $messageToStatus = "Chat finalizado em " . date("d/m/Y H:i:s", strtotime($value->chat_final)) . ".";
-                        $messageToCard = "Finalizado";
+                        $this->messageToStatus = "Chat finalizado em " . date("d/m/Y H:i:s", strtotime($value->chat_final)) . ".";
+                        $this->messageToCard = "Finalizado";
                     }
                 }
             }
         } else {
-            $messageToStatus = "Atendimento via telefone.";
-            $messageToCard = "Telefone";
+            $this->messageToStatus = "Atendimento via telefone.";
+            $this->messageToCard = "Telefone";
         }
-
-        array_push($message, $messageToStatus);
-        array_push($message, $messageToCard);
-
-        return $message;
     }
 }

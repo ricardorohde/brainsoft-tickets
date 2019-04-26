@@ -113,6 +113,7 @@ $queueController->verifyPermission();
                                             <?php if ($chat['t_group'] == "nivel1") : ?>
                                             <?php if ($chat['id'] == $newQueue) : ?>
                                             <div>
+                                                <?php $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat']); ?>
                                                 <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
 
                                                 <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
@@ -122,7 +123,7 @@ $queueController->verifyPermission();
                                                                         <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
                                                                         <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
                                                                         <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
-                                                                        <strong>Status: </strong><?= $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat'])[0]?>
+                                                                        <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
                                                                     </p>
 																   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
 
@@ -135,7 +136,7 @@ $queueController->verifyPermission();
                                                     <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
                                                 </div>
                                                 <div>
-                                                    <p><?= $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat'])[1]?></p>
+                                                    <p><?= $apiPct->getMessageToCard() ?></p>
                                                 </div>
                                             </div>
                                             <?php endif ?>
@@ -176,6 +177,7 @@ $queueController->verifyPermission();
                                             <?php if ($chat['t_group'] == "nivel2") : ?>
                                             <?php if ($chat['id'] == $newQueue) : ?>
                                             <div>
+                                                <?php $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat']); ?>
                                                 <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
 
                                                 <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
@@ -185,7 +187,7 @@ $queueController->verifyPermission();
                                                             <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
                                                             <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
                                                             <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
-                                                            <strong>Status: </strong><?= $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat'])[0]?>
+                                                            <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
                                                         </p>
 											   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
 														</div>"><?= $chat['id_chat'] ?></button>
@@ -199,7 +201,7 @@ $queueController->verifyPermission();
                                                     <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
                                                 </div>
                                                 <div>
-                                                    <p><?= $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat'])[1]?></p>
+                                                    <p><?= $apiPct->getMessageToCard() ?></p>
                                                 </div>
                                             </div>
                                             <?php endif ?>
