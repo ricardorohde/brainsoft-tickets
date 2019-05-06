@@ -25,6 +25,7 @@ $notifications = $navBarController->getPrepareInstance()->prepare($query, $eleme
             <?php
         } ?>
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+                <?php if ($_SESSION['role'] == '2') : ?>
                 <div class="form-check form-check-inline status-to-attendant">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-backup" value="backup" <?= $headerController->checkAttendantStatus($id, "backup") ?>>
                     <label class="form-check-label" for="status-backup">Backup</label>
@@ -37,8 +38,9 @@ $notifications = $navBarController->getPrepareInstance()->prepare($query, $eleme
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="status-training" value="training" <?= $headerController->checkAttendantStatus($id, "training") ?>>
                     <label class="form-check-label" for="status-training">Treinamento</label>
                 </div>
+                <?php endif ?>
                 <li class="nav-item dropdown"><a id="notifications" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-bell"></i><span class="badge badge-warning"><?php $qtd = sizeof($notifications);
-                                                                                                                                                                                                                                         echo $qtd; ?></span></a>
+                                                                                                                                                                                                                                                            echo $qtd; ?></span></a>
                     <ul aria-labelledby="notifications" class="dropdown-menu">
 
                         <?php for ($i = 0; $i < sizeof($notifications); $i++) { ?>
