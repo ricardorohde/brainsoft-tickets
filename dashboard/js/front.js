@@ -363,7 +363,7 @@ $(document).ready(function() {
 
   $("select[name=group]").change(function() {
     $("select[name=attendant]").html(
-      '<option value="">Selecione um atendente</option>'
+      '<option value="">Selecione um atendente</option><option value="1">Recepção</option>'
     );
     $.post(
       "../../../../utils/controller/employee/employee-js.ctrl.php",

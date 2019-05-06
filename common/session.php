@@ -2,26 +2,26 @@
 class Session
 {
 	private static $instance;
-	
+
 	private $session;
 	private $content;
 
 	public function getSession()
 	{
-	  return $this->session;
-	}
-	
-	public function setSession($session)
-	{
-	  $this->session = $session;
+		return $this->session;
 	}
 
-	public function getContent() 
+	public function setSession($session)
+	{
+		$this->session = $session;
+	}
+
+	public function getContent()
 	{
 		return $this->content;
 	}
-	
-	public function setContent($content) 
+
+	public function setContent($content)
 	{
 		$this->content = $content;
 	}
@@ -38,7 +38,7 @@ class Session
 
 	public function unset()
 	{
-		session_unset($_SESSION[$this->session]);	
+		session_unset($_SESSION[$this->session]);
 	}
 
 	public function authorize()
@@ -56,18 +56,18 @@ class Session
 		$schedule = date("H:i");
 
 		if ($schedule == "12:00" || $schedule == "18:00") {
-			for ($i=1; $i<8; $i++) {
-				$this->setSession("user".$i);
+			for ($i = 1; $i < 8; $i++) {
+				$this->setSession("user" . $i);
 				$this->unset();
 			}
 		}
 	}
 
 	public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new Session("");
-        }
-        return self::$instance;
-    }
+	{
+		if (!self::$instance) {
+			self::$instance = new Session("");
+		}
+		return self::$instance;
+	}
 }

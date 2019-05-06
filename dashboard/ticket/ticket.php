@@ -354,7 +354,7 @@ $connection = $ticketController->getConn();
                                                 <?php endif; ?>
                                             </select>
                                             <?php if ($row_id_chat == null) : ?>
-                                            <span id="span-attendant">Selecione o atendente <strong><?= $targetAttendant['name'] ?>.</strong></span>
+                                            <span id="span-attendant"><?= $targetAttendant['name'] != "Camila Bortolanza" ? "Selecione o atendente <strong>" . $targetAttendant['name'] . "</strong>" : "" ?>.</span>
                                             <?php endif; ?>
                                         </div>
                                     </div>

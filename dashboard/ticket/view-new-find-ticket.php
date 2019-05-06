@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "../../utils/controller/ticket/new-find.ctrl.php";
 $ticketController = NewFindTicketController::getInstance();
 ?>
@@ -57,11 +57,15 @@ $ticketController = NewFindTicketController::getInstance();
                                     <label class="col-sm-2 form-control-label mt-4" style="padding-left: 0px!important;">Atendente</label>
                                     <div class="col-sm-10 mt-3" style="padding-left: 0px!important;">
                                         <?php foreach ($attendants as $attendant) : ?>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="attendant<?= $attendant['id'] ?>" name="id_attendant" value="<?= $attendant['id'] ?>" class="custom-control-input" <?= $attendant['id_credential'] == $id ? "checked" : "" ?>>
-                                            <label class="custom-control-label" for="attendant<?= $attendant['id'] ?>"><?= explode(' ', $attendant['name'])[0]; ?></label>
-                                        </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="attendant<?= $attendant['id'] ?>" name="id_attendant" value="<?= $attendant['id'] ?>" class="custom-control-input" <?= $attendant['id_credential'] == $id ? "checked" : "" ?>>
+                                                <label class="custom-control-label" for="attendant<?= $attendant['id'] ?>"><?= explode(' ', $attendant['name'])[0]; ?></label>
+                                            </div>
                                         <?php endforeach ?>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="attendant1" name="id_attendant" value="1" class="custom-control-input" <?= $_SESSION['login'] == 4 ? "checked" : "" ?>>
+                                            <label class="custom-control-label" for="attendant1">Recepção</label>
+                                        </div>
                                     </div>
                                     <span class="offset-sm-2 mb-4" style="margin-top: -12px;">(Caso o atendente esteja com 2 atendimentos ou Offline ele não aparecerá aqui.)</span>
                                 </div>
@@ -101,16 +105,16 @@ $ticketController = NewFindTicketController::getInstance();
                                                     if ($date_formated == $actual_date && $value->chat_final == null) :
                                                         $chat_started = date('H:m:s', strtotime($value->chat_inicio));
                                                         ?>
-                                                <tr>
-                                                    <td><a href="#" class="chat-code"><?= $value->cod_chat ?></a></td>
-                                                    <td><?= ucfirst($value->chat_atendente) ?></td>
-                                                    <td><?= ucfirst($value->cliente_nome) ?></td>
-                                                    <td><?= $chat_started ?></td>
-                                                </tr>
-                                                <?php
-                                            endif;
-                                        endforeach;
-                                        ?>
+                                                        <tr>
+                                                            <td><a href="#" class="chat-code"><?= $value->cod_chat ?></a></td>
+                                                            <td><?= ucfirst($value->chat_atendente) ?></td>
+                                                            <td><?= ucfirst($value->cliente_nome) ?></td>
+                                                            <td><?= $chat_started ?></td>
+                                                        </tr>
+                                                    <?php
+                                                endif;
+                                            endforeach;
+                                            ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -146,19 +150,19 @@ $ticketController = NewFindTicketController::getInstance();
                                                 </thead>
                                                 <tbody>
                                                     <?php if (!empty($calls)) : ?>
-                                                    <?php foreach ($calls as $call) : ?>
-                                                    <tr>
-                                                        <td><?= $call['chat']; ?></td>
-                                                        <td><?= ucfirst($call['t_status']); ?></td>
-                                                        <td><?= $call['module']; ?></td>
-                                                        <td><?= explode(' ', $call['name'])[0]; ?></td>
-                                                        <td><?= date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
-                                                    </tr>
-                                                    <?php endforeach ?>
+                                                        <?php foreach ($calls as $call) : ?>
+                                                            <tr>
+                                                                <td><?= $call['chat']; ?></td>
+                                                                <td><?= ucfirst($call['t_status']); ?></td>
+                                                                <td><?= $call['module']; ?></td>
+                                                                <td><?= explode(' ', $call['name'])[0]; ?></td>
+                                                                <td><?= date('d/m/Y H:i:s', strtotime($call['registered_at'])); ?></td>
+                                                            </tr>
+                                                        <?php endforeach ?>
                                                     <?php else : ?>
-                                                    <tr>
-                                                        <td colspan="6">Nenhuma ligação registrada.</td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td colspan="6">Nenhuma ligação registrada.</td>
+                                                        </tr>
                                                     <?php endif ?>
                                                 </tbody>
                                             </table>
@@ -206,4 +210,4 @@ $ticketController = NewFindTicketController::getInstance();
     <!---->
 </body>
 
-</html> 
+</html>

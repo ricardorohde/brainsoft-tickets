@@ -16,6 +16,8 @@ $(document).ready(function () {
 	});
 
 	$("button[type=submit]").click(function() {
+		var selectedAttendant = $("#attendant option:selected").html();
+		var targetAttendant = $("#target-attendant").val();
 		var error = false;
 
 		if(!error){
@@ -31,27 +33,28 @@ $(document).ready(function () {
 		if(!error) {
 			$('select').each(function() {
 				if($(this).val() == ""){
-					$(this).addClass("border-danger");
-					error = true;
+					if ($(this).attr('id') != 'attendant') {
+						$(this).addClass("border-danger");
+						error = true;
+					}
 				} else {
 					$(this).removeClass("border-danger");
 				}
 			});
 		}
 
-		if(!error) {
-			var selectedAttendant = $("#attendant option:selected").html();
-			var targetAttendant = $("#target-attendant").val();
-		
-			if(selectedAttendant != targetAttendant) {
-				$("#attendant").addClass("border-danger");
-				$("#span-attendant").addClass("text-danger");
-				$("#span-attendant").html("Alerta! Selecione o atendente correto (neste caso, o " + targetAttendant + ").");
-				error = true;
-			} else {
-				$("#attendant").removeClass("border-danger");
-				$("#span-attendant").removeClass("text-danger");
-				$("#span-attendant").html("");
+		if(!error) {		
+			if (targetAttendant != "Camila Bortolanza") {
+				if(selectedAttendant != targetAttendant) {
+					$("#attendant").addClass("border-danger");
+					$("#span-attendant").addClass("text-danger");
+					$("#span-attendant").html("Alerta! Selecione o atendente correto (neste caso, o " + targetAttendant + ").");
+					error = true;
+				} else {
+					$("#attendant").removeClass("border-danger");
+					$("#span-attendant").removeClass("text-danger");
+					$("#span-attendant").html("");
+				}
 			}
 		}
 

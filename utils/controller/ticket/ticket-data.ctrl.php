@@ -44,11 +44,11 @@ class TicketDataController
 
             $this->registerCtrl($data, 1);
         } else if (isset($_POST['submit'])) {
-            foreach ($_POST as $key => $value) {
+            /*foreach ($_POST as $key => $value) {
                 if ((!isset($_POST[$key]) || empty($_POST[$key])) && $key != 'submit' && $key != 'module' && $key != 'attendant' && $key != 'resolution' && $key != 'historic') {
                     $this->thereIsInputEmpty();
                 }
-            }
+            }*/
 
             $data = $_POST;
             $this->registerCtrl($data, 0);

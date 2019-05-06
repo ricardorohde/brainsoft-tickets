@@ -1,10 +1,7 @@
-<?php 
+<?php
 include_once __DIR__ . '/../../utils/controller/account/account.ctrl.php';
 $accountController = AccountController::getInstance();
 $accountController->verifyPermission();
-
-$accountController->setPostReceived($_POST);
-$accountController->verifyPost();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -38,13 +35,8 @@ $accountController->verifyPost();
 
         <section class="forms">
             <div class="container-fluid">
-                <?php if ($accountController->getResult() != "") : ?>
-                <?php @$type = $accountController->getResult()[0];
-                $message = $accountController->getResult()[1]; ?>
-                <div class="alert alert-<?= $type ?> mt-3" role="alert">
-                    <?= $message ?>
-                </div>
-                <?php endif; ?>
+                <?= isset($_SESSION['changeStatus']) ? $_SESSION['changeStatus'] : "" ?>
+                <?php unset($_SESSION['changeStatus']) ?>
                 <div class="row">
                     <div class="col-lg-12 mt-3">
                         <div class="card">
@@ -52,21 +44,21 @@ $accountController->verifyPost();
                                 <h2 class="h5 display">Redefinir Senha</h2>
                             </div>
                             <div class="card-body">
-                                <form method="POST">
+                                <form method="POST" action="/controller/account/data">
                                     <div class="col-lg-6 form-group">
                                         <label for="actual-password">Senha Atual</label>
-                                        <input type="password" name="actual-password" id="actual-password" class="form-control">
+                                        <input type="password" name="actual-password" id="actual-password" class="form-control" required>
                                         <small id="actual-password-help" class="form-text text-muted">Informe a sua senha atual.</small>
                                     </div>
                                     <div class="row" style="margin-left: 1px;">
                                         <div class="col-lg-5">
                                             <label for="new-password">Nova Senha</label>
-                                            <input type="password" name="new-password" id="new-password" class="form-control">
+                                            <input type="password" name="new-password" id="new-password" class="form-control" required>
                                             <small id="new-password-help" class="form-text text-muted">Informe a sua nova senha.</small>
                                         </div>
                                         <div class="col-lg-5">
                                             <label for="confirmation-new-password">Confirmação da Nova Senha</label>
-                                            <input type="password" name="confirmation-new-password" id="confirmation-new-password" class="form-control">
+                                            <input type="password" name="confirmation-new-password" id="confirmation-new-password" class="form-control" required>
                                             <small id="confirmation-new-password-help" class="form-text text-muted">Confirme sua nova senha.</small>
                                         </div>
                                         <div class="col-lg-2">
@@ -78,42 +70,42 @@ $accountController->verifyPost();
                         </div>
 
                         <?php if ($accountController->findRole()['role'] == "adm") : ?>
-                        <div class="card mt-5">
-                            <div class="card-header d-flex align-items-center">
-                                <h2 class="h5 display">Redefinir senha de usuário</h2>
+                            <div class="card mt-5">
+                                <div class="card-header d-flex align-items-center">
+                                    <h2 class="h5 display">Redefinir senha de usuário</h2>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="/controller/account/data">
+                                        <div class="col-lg-6 form-group">
+                                            <label for="actual-password">Cartório</label>
+                                            <input type="text" name="registry" id="registry" class="form-control" required>
+                                            <small id="registry-help" class="form-text text-muted">Informe o cartório do cliente.</small>
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <label for="actual-password">Usuário</label>
+                                            <select name="client" id="client" class="form-control">
+                                                <option>Primeiramente, informe o cartório...</option>
+                                            </select>
+                                            <small id="client-help" class="form-text text-muted">Informe o cliente.</small>
+                                        </div>
+                                        <div class="row" style="margin-left: 1px;">
+                                            <div class="col-lg-5">
+                                                <label for="new-password">Nova Senha</label>
+                                                <input type="password" name="new-password-user" id="new-password-user" class="form-control">
+                                                <small id="new-password-help" class="form-text text-muted">Informe a nova senha.</small>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <label for="confirmation-new-password">Confirmação da Nova Senha</label>
+                                                <input type="password" name="confirmation-new-password-user" id="confirmation-new-password-user" class="form-control">
+                                                <small id="confirmation-new-password-help" class="form-text text-muted">Confirme a nova senha.</small>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button type="submit" class="btn btn-primary" style="margin-top: 32px; width: 90%;">Redefinir!</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <form method="POST">
-                                    <div class="col-lg-6 form-group">
-                                        <label for="actual-password">Cartório</label>
-                                        <input type="text" name="registry" id="registry" class="form-control" required>
-                                        <small id="registry-help" class="form-text text-muted">Informe o cartório do cliente.</small>
-                                    </div>
-                                    <div class="col-lg-6 form-group">
-                                        <label for="actual-password">Usuário</label>
-                                        <select name="client" id="client" class="form-control">
-                                            <option>Primeiramente, informe o cartório...</option>
-                                        </select>
-                                        <small id="client-help" class="form-text text-muted">Informe o cliente.</small>
-                                    </div>
-                                    <div class="row" style="margin-left: 1px;">
-                                        <div class="col-lg-5">
-                                            <label for="new-password">Nova Senha</label>
-                                            <input type="password" name="new-password-user" id="new-password-user" class="form-control">
-                                            <small id="new-password-help" class="form-text text-muted">Informe a nova senha.</small>
-                                        </div>
-                                        <div class="col-lg-5">
-                                            <label for="confirmation-new-password">Confirmação da Nova Senha</label>
-                                            <input type="password" name="confirmation-new-password-user" id="confirmation-new-password-user" class="form-control">
-                                            <small id="confirmation-new-password-help" class="form-text text-muted">Confirme a nova senha.</small>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <button type="submit" class="btn btn-primary" style="margin-top: 32px; width: 90%;">Redefinir!</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -152,4 +144,4 @@ $accountController->verifyPost();
     <!---->
 </body>
 
-</html> 
+</html>

@@ -28,12 +28,8 @@
                         <img src="http://brainsoftsistemas.com.br/img/comum/logomarca_brainsoft.png" alt="Logotipo da empresa Brainsoft" style="max-width: 22rem;" class="img-fluid mb-4">
                     </div>
                     <?php session_start(); ?>
-                    <?php if (isset($_SESSION['loginNo'])) : ?>
-                    <div id="statusLogin" class="alert alert-danger">
-                        <?= $_SESSION['loginNo'] ?>
-                        <?php unset($_SESSION['loginNo']); ?>
-                    </div>
-                    <?php endif ?>
+                    <?= isset($_SESSION['loginFail']) ? $_SESSION['loginFail'] : "" ?>
+                    <?php unset($_SESSION['loginFail']) ?>
                     <form class="form-validate" method="POST" action="/controller/credential/data">
                         <div class="form-group">
                             <label>Usuário</label>
@@ -46,7 +42,7 @@
                                 </div>
                                 <div class="col-auto"><a href="#" class="form-text small text-muted">Esqueceu sua senha?</a></div>
                             </div>
-                            <input name="password" placeholder="******" type="password" required data-msg="Por gentileza informe sua senha" class="form-control">
+                            <input name="password" type="password" required data-msg="Por gentileza informe sua senha" class="form-control">
                         </div>
                         <button type="submit" name="submit" value="fromDoLogin" class="btn btn-lg btn-block btn-primary mb-3">Acessar</button>
                     </form>

@@ -34,7 +34,7 @@ class CredentialJsController
 
     public function verifyIfExists()
     {
-        $credential = new Credential(self::$instance, $this->prepareInstance);
+        $credential = new Credential($this, $this->prepareInstance);
         $credential->setLogin($this->dataReceived['userToVerify']);
         $result = $credential->verifyIfExists();
         return $result['total'];
