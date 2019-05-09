@@ -332,9 +332,9 @@ class QueueController
 
 	function attendantsWaitingToGroup($group)
 	{
-		$element = [$group];
-		$query = "SELECT COUNT(*) as total FROM `ticket`, `employee` WHERE `id_attendant` = employee.id AND employee.id_role = 3 AND ticket.t_group = ?";
-		$data = $this->prepareInstance->prepare($query, $element, "all"); 
+		$elements = ["aberto", 3, $group];
+		$query = "SELECT COUNT(*) as total FROM `ticket`, `employee` WHERE t_status = ? AND `id_attendant` = employee.id AND employee.id_role = ? AND ticket.t_group = ?";
+		$data = $this->prepareInstance->prepare($query, $elements, "all"); 
 	
 		return $data[0]['total'];
 	}
