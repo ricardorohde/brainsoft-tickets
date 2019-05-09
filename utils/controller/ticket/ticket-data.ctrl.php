@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__ . "/../navbar/navbar.ctrl.php";
 include_once __DIR__ . "/../client/client.ctrl.php";
+include_once __DIR__ . "/../employee/employee.ctrl.php";
 include_once __DIR__ . "/../chat/chat.ctrl.php";
 include_once __DIR__ . "/../category/category.ctrl.php";
 include_once __DIR__ . "/../module/module.ctrl.php";
@@ -16,9 +17,12 @@ class TicketDataController
     private $navBarController;
 
     private $clientController;
+    private $employeeController;
     private $chatController;
     private $categoryController;
     private $moduleController;
+
+    private $currentAttendant;
 
     function __construct()
     {
@@ -27,6 +31,7 @@ class TicketDataController
 
         $this->setTimezone();
         $this->clientController = ClientController::getInstance();
+        $this->employeeController = EmployeeController::getInstance();
         $this->chatController = ChatController::getInstance();
         $this->categoryController = CategoryController::getInstance();
         $this->moduleController = ModuleController::getInstance();
@@ -44,12 +49,6 @@ class TicketDataController
 
             $this->registerCtrl($data, 1);
         } else if (isset($_POST['submit'])) {
-            /*foreach ($_POST as $key => $value) {
-                if ((!isset($_POST[$key]) || empty($_POST[$key])) && $key != 'submit' && $key != 'module' && $key != 'attendant' && $key != 'resolution' && $key != 'historic') {
-                    $this->thereIsInputEmpty();
-                }
-            }*/
-
             $data = $_POST;
             $this->registerCtrl($data, 0);
         } else {
@@ -59,12 +58,14 @@ class TicketDataController
 
     function registerCtrl($data, $finish)
     {
-        $id_who_opened = $_SESSION['login'];
+        $this->currentAttendant = $this->employeeController->findByName($data['target-attendant']);
 
+        $id_who_opened = $_SESSION['login'];
         isset($data['is_repeated']) ? $is_repeated = 1 : $is_repeated = 0;
 
-        $id_registry = $this->clientController->findIdRegistryByIdClient($data['client']);
-        $id_chat_found = $this->chatController->findByIdAndIdAttendant($data['id_chat'], $data['attendant']);
+        $id_registry = $this->findIdRegistry($data['client']);
+        $attendantToFind = $this->currentAttendant['id'] == 1 && $data['target-attendant'] == 1 ? $data['attendant'] : $this->currentAttendant['id'];
+        $id_chat_found = $this->chatController->findByIdAndIdAttendant($data['id_chat'], $attendantToFind);
         $id_category = $this->categoryController->findIdByDescription($data['selected_category']);
         $id_module = $this->moduleController->findIdByDescriptionAndCategory($data['selected_module'], $id_category);
 
@@ -73,7 +74,7 @@ class TicketDataController
 
             $ticket = new Ticket($this, $this->prepareInstance);
             $ticket->setIdRegistry($id_registry);
-            $ticket->setIdClient($data['client']);              
+            $ticket->setIdClient($data['client']);
             $ticket->setPriority($data['priority']);
             $ticket->setStatus($data['status']);
             $ticket->setSource($data['source']);
@@ -89,13 +90,38 @@ class TicketDataController
 
             $this->setSession("new");
         } elseif ($finish == 1) {
-            $this->finishTicket($id_chat_found, $id_registry, $data['client'], $data['priority'], $data['status'], $data['source'],
-                $data['type'], $data['group'], $id_module, $data['attendant'], $data['resolution'], $is_repeated, date("Y/m/d H:i:s"));
+            $this->finishTicket(
+                $id_chat_found,
+                $id_registry,
+                $data['client'],
+                $data['priority'],
+                $data['status'],
+                $data['source'],
+                $data['type'],
+                $data['group'],
+                $id_module,
+                $data['attendant'],
+                $data['resolution'],
+                $is_repeated,
+                date("Y/m/d H:i:s")
+            );
         } else {
             $this->chatController->update($data['id_chat'], $data['final_time'], $data['duration_in_minutes']);
 
-            $this->updateCtrl($id_chat_found, $id_registry, $data['client'], $data['priority'], $data['status'], $data['source'], $data['type'],
-                $data['group'], $id_module, $data['attendant'], $data['resolution'], $is_repeated);
+            $this->updateCtrl(
+                $id_chat_found,
+                $id_registry,
+                $data['client'],
+                $data['priority'],
+                $data['status'],
+                $data['source'],
+                $data['type'],
+                $data['group'],
+                $id_module,
+                $data['attendant'],
+                $data['resolution'],
+                $is_repeated
+            );
         }
     }
 
@@ -143,6 +169,11 @@ class TicketDataController
         die();
     }
 
+    private function findIdRegistry($idClient)
+    {
+        return $this->clientController->findIdRegistryByIdClient($idClient);
+    }
+
     function setSession($action)
     {
         switch ($action) {
@@ -175,7 +206,7 @@ class TicketDataController
 
     function verifyPermission()
     {
-        if (!isset($_SESSION['Ticket'.'_page_'.$_SESSION['login']])) {
+        if (!isset($_SESSION['Ticket' . '_page_' . $_SESSION['login']])) {
             header("Location:../painel");
         }
     }

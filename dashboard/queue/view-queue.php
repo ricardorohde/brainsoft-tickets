@@ -1,4 +1,4 @@
-<?php 
+<?php
 date_default_timezone_set('America/Sao_Paulo');
 
 include_once __DIR__ . '/../../utils/controller/ctrl-queue.php';
@@ -93,131 +93,145 @@ $queueController->verifyPermission();
                     <h3>Recepção | <a id="customers-in-reception" tabindex="0" role="button" class="btn popovers" data-container="body" data-trigger="focus" data-toggle="popover" title="" data-html="true" data-content="<?= $apiPct->getInfoCustomersAtReception() ?>" data-original-title="Clientes na fila"><?= $apiPct->toStringTotalCustomersAtReception(); ?></a></h3>
                     <hr>
                     <h1>Disponibilidade Grupo 1</h1>
-                    <div class="row" id="internal-row">
-                        <?php if ($queueGroup1 != null) : ?>
-                        <?php $placeInLine1 = 1; ?>
-                        <table align="center">
-                            <tr>
-                                <?php for ($i = 0; $i < $queueController->getCountGroupOne(); $i++) {
-                                    echo "<th class='place_in_line'>" . $placeInLine1 . "º </th>";
-                                    $placeInLine1++;
-                                } ?>
-                            </tr>
-                            <tr>
-                                <?php foreach ($queueGroup1 as $newQueue) : ?>
-                                <td class="colum_of_place">
-                                    <div class="card mb-3 user<?= $newQueue ?>" style="max-width: 18rem; float: left; margin-left: 3%;">
-                                        <div class="card-header"><?= $queueController->getGroupOne()[$newQueue]; ?></div>
-                                        <div class="card-body nivel1">
-                                            <?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
-                                            <?php if ($chat['t_group'] == "nivel1") : ?>
-                                            <?php if ($chat['id'] == $newQueue) : ?>
-                                            <div>
-                                                <?php $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat']); ?>
-                                                <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
-
-                                                <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-																   	<p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
-																   	<p>
-                                                                        <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
-                                                                        <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
-                                                                        <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
-                                                                        <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
-                                                                        <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
-                                                                    </p>
-																   	<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
-
-                                                <a href="#"></a>
-                                                <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
-
-                                                <?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
-
-                                                <div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time'] ?>">
-                                                    <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
-                                                </div>
-                                                <div>
-                                                    <p><?= $apiPct->getMessageToCard() ?></p>
-                                                </div>
-                                            </div>
-                                            <?php endif ?>
-                                            <?php endif ?>
-                                            <?php endforeach ?>
-                                        </div>
-                                    </div>
-                                </td>
-                                <?php $placeInLine1++; ?>
-                                <?php endforeach ?>
-                            </tr>
-                        </table>
-                        <?php else : ?>
-                        <div class="col-md-12">
-                            <span>Atenção! Fila não iniciada (Atendentes Off ou nenhum ticket atribuído).</span>
+                    <div class="row">
+                        <div class="col-lg-1 attendants-waiting">
+                            <?= $queueController->getAttendantsWaitingGroup1() ?>
                         </div>
-                        <?php endif ?>
+                        <div class="col-lg-10">
+                            <div class="row" id="internal-row">
+                                <?php if ($queueGroup1 != null) : ?>
+                                    <?php $placeInLine1 = 1; ?>
+                                    <table align="center">
+                                        <tr>
+                                            <?php for ($i = 0; $i < $queueController->getCountGroupOne(); $i++) {
+                                                echo "<th class='place_in_line'>" . $placeInLine1 . "º </th>";
+                                                $placeInLine1++;
+                                            } ?>
+                                        </tr>
+                                        <tr>
+                                            <?php foreach ($queueGroup1 as $newQueue) : ?>
+                                                <td class="colum_of_place">
+                                                    <div class="card mb-3 user<?= $newQueue ?>" style="max-width: 18rem; float: left; margin-left: 3%;">
+                                                        <div class="card-header"><?= $queueController->getGroupOne()[$newQueue]; ?></div>
+                                                        <div class="card-body nivel1">
+                                                            <?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
+                                                                <?php if ($chat['t_group'] == "nivel1") : ?>
+                                                                    <?php if ($chat['id'] == $newQueue) : ?>
+                                                                        <div>
+                                                                            <?php $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat']); ?>
+                                                                            <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
+
+                                                                            <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
+																   	                                                                                                                                                                <p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
+																   	                                                                                                                                                                <p>
+                                                                                                                                                                                                                                        <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
+                                                                                                                                                                                                                                        <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
+                                                                                                                                                                                                                                        <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
+                                                                                                                                                                                                                                        <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
+                                                                                                                                                                                                                                        <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
+                                                                                                                                                                                                                                    </p>
+																   	                                                                                                                                                                <button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
+
+                                                                            <a href="#"></a>
+                                                                            <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
+
+                                                                            <?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
+
+                                                                            <div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time'] ?>">
+                                                                                <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
+                                                                            </div>
+                                                                            <div>
+                                                                                <p><?= $apiPct->getMessageToCard() ?></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php endif ?>
+                                                                <?php endif ?>
+                                                            <?php endforeach ?>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <?php $placeInLine1++; ?>
+                                            <?php endforeach ?>
+                                        </tr>
+                                    </table>
+                                <?php else : ?>
+                                    <div class="col-md-12">
+                                        <span>Atenção! Fila não iniciada (Atendentes Off ou nenhum ticket atribuído).</span>
+                                    </div>
+                                <?php endif ?>
+                            </div>
+                        </div>
                     </div>
                     <hr>
                     <h1>Disponibilidade Grupo 2</h1>
-                    <div class="row" id="internal-row">
-                        <?php if ($queueGroup2 != null) : ?>
-                        <?php $placeInLine2 = 1; ?>
-                        <table align="center">
-                            <tr>
-                                <?php for ($i = 0; $i < $queueController->getCountGroupTwo(); $i++) {
-                                    echo '<th class="place_in_line">' . $placeInLine2 . 'º </th>';
-                                    $placeInLine2++;
-                                } ?>
-                            </tr>
-                            <tr>
-                                <?php foreach ($queueGroup2 as $newQueue) : ?>
-                                <td class="colum_of_place">
-                                    <div class="card mb-3 user<?= $newQueue ?>" style="max-width: 18rem; float: left; margin-left: 3%;">
-                                        <div class="card-header"><?= $queueController->getGroupTwo()[$newQueue]; ?></div>
-                                        <div class="card-body nivel2">
-                                            <?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
-                                            <?php if ($chat['t_group'] == "nivel2") : ?>
-                                            <?php if ($chat['id'] == $newQueue) : ?>
-                                            <div>
-                                                <?php $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat']); ?>
-                                                <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
-
-                                                <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-														<p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
-											   			<p>
-                                                            <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
-                                                            <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
-                                                            <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
-                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
-                                                            <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
-                                                        </p>
-											   			<button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
-														</div>"><?= $chat['id_chat'] ?></button>
-
-                                                <a href="#"></a>
-                                                <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
-
-                                                <?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
-
-                                                <div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time'] ?>">
-                                                    <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
-                                                </div>
-                                                <div>
-                                                    <p><?= $apiPct->getMessageToCard() ?></p>
-                                                </div>
-                                            </div>
-                                            <?php endif ?>
-                                            <?php endif ?>
-                                            <?php endforeach ?>
-                                        </div>
-                                    </div>
-                                </td>
-                                <?php endforeach ?>
-                            </tr>
-                        </table>
-                        <?php else : ?>
-                        <div class="col-md-12">
-                            <span>Atenção! Fila não iniciada (Atendentes Off ou nenhum ticket atribuído).</span>
+                    <div class="row">
+                        <div class="col-lg-1 attendants-waiting">
+                        <?= $queueController->getAttendantsWaitingGroup2() ?>
                         </div>
-                        <?php endif ?>
+                        <div class="col-lg-10">
+                            <div class="row" id="internal-row">
+                                <?php if ($queueGroup2 != null) : ?>
+                                    <?php $placeInLine2 = 1; ?>
+                                    <table align="center">
+                                        <tr>
+                                            <?php for ($i = 0; $i < $queueController->getCountGroupTwo(); $i++) {
+                                                echo '<th class="place_in_line">' . $placeInLine2 . 'º </th>';
+                                                $placeInLine2++;
+                                            } ?>
+                                        </tr>
+                                        <tr>
+                                            <?php foreach ($queueGroup2 as $newQueue) : ?>
+                                                <td class="colum_of_place">
+                                                    <div class="card mb-3 user<?= $newQueue ?>" style="max-width: 18rem; float: left; margin-left: 3%;">
+                                                        <div class="card-header"><?= $queueController->getGroupTwo()[$newQueue]; ?></div>
+                                                        <div class="card-body nivel2">
+                                                            <?php foreach ($queueController->getAllOpenChats() as $chat) : ?>
+                                                                <?php if ($chat['t_group'] == "nivel2") : ?>
+                                                                    <?php if ($chat['id'] == $newQueue) : ?>
+                                                                        <div>
+                                                                            <?php $apiPct->checkStatusOfChat(date('Y/m/d'), $chat['id_chat']); ?>
+                                                                            <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
+
+                                                                            <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
+														                                                                                                                                                                <p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
+											   			                                                                                                                                                                <p>
+                                                                                                                                                                                                                            <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
+                                                                                                                                                                                                                            <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
+                                                                                                                                                                                                                            <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
+                                                                                                                                                                                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
+                                                                                                                                                                                                                            <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
+                                                                                                                                                                                                                        </p>
+											   			                                                                                                                                                                <button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
+														                                                                                                                                                                </div>"><?= $chat['id_chat'] ?></button>
+
+                                                                            <a href="#"></a>
+                                                                            <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
+
+                                                                            <?php $time = $queueController->limitTimeToFinish($chat['id_module']); ?>
+
+                                                                            <div class="progress" title="<?= (int)$minutos ?> <?= (int)$minutos > 1 ? 'minutos' : 'minuto' ?> de <?= $time[0]['limit_time'] ?>">
+                                                                                <progress id="pg" value="<?= (int)$minutos ?>" max="<?= $time[0]['limit_time'] ?>"></progress>
+                                                                            </div>
+                                                                            <div>
+                                                                                <p><?= $apiPct->getMessageToCard() ?></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php endif ?>
+                                                                <?php endif ?>
+                                                            <?php endforeach ?>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            <?php endforeach ?>
+                                        </tr>
+                                    </table>
+                                <?php else : ?>
+                                    <div class="col-md-12">
+                                        <span>Atenção! Fila não iniciada (Atendentes Off ou nenhum ticket atribuído).</span>
+                                    </div>
+                                <?php endif ?>
+                            </div>
+                        </div>
                     </div>
                     <br>
                     <h1>Atendimentos</h1>
@@ -230,51 +244,51 @@ $queueController->verifyPermission();
                                 <td style="min-width: 50px;"></td>
                                 <td style="min-width: 150px;">Atendente</td>
                                 <?php for ($i = 0; $i < 20; $i++) : ?>
-                                <?php if ($i == 0) : ?>
-                                <td style="min-width: 150px;">Hoje</td>
-                                <?php else : ?>
-                                <td style="min-width: 150px;"><?= date('d/m', strtotime('-' . $i . ' days')); ?></td>
-                                <?php endif ?>
+                                    <?php if ($i == 0) : ?>
+                                        <td style="min-width: 150px;">Hoje</td>
+                                    <?php else : ?>
+                                        <td style="min-width: 150px;"><?= date('d/m', strtotime('-' . $i . ' days')); ?></td>
+                                    <?php endif ?>
                                 <?php endfor ?>
                             </tr>
                             <?php foreach ($attendants as $key => $attendant) : ?>
-                            <tr>
-                                <td><img src=<?= $queueController->checkStatusToIcon($attendant['on_chat']) ?>></td>
-                                <td><?= explode(" ", $attendant['name'])[0] ?></td>
+                                <tr>
+                                    <td><img src=<?= $queueController->checkStatusToIcon($attendant['on_chat']) ?>></td>
+                                    <td><?= explode(" ", $attendant['name'])[0] ?></td>
 
-                                <?php
-                                $totalCalls = $queueController->totalCalls($attendant, date('Y-m-d'));
-                                ?>
+                                    <?php
+                                    $totalCalls = $queueController->totalCalls($attendant, date('Y-m-d'));
+                                    ?>
 
-                                <td><?= $totalCalls['total']; ?></td>
+                                    <td><?= $totalCalls['total']; ?></td>
 
-                                <?php
-                                if (!isset($_SESSION['user' . $key])) {
-                                    $dataOfUser = array();
-                                    for ($j = 1; $j < 20; $j++) : ?>
-                                <?php 
-                                $totalCalls = $queueController->totalCalls($attendant, date('Y-m-d', strtotime('-' . $j . ' days')));
-                                array_push($dataOfUser, $totalCalls);
-                                ?>
+                                    <?php
+                                    if (!isset($_SESSION['user' . $key])) {
+                                        $dataOfUser = array();
+                                        for ($j = 1; $j < 20; $j++) : ?>
+                                            <?php
+                                            $totalCalls = $queueController->totalCalls($attendant, date('Y-m-d', strtotime('-' . $j . ' days')));
+                                            array_push($dataOfUser, $totalCalls);
+                                            ?>
 
-                                <td><?= $totalCalls['total']; ?></td>
-                                <?php endfor ?>
-                                <?php $_SESSION['user' . $key] = $dataOfUser; ?>
-                                <?php 
-                            } else {
-                                $data = $_SESSION['user' . $key];
-                                for ($j = 0; $j < 19; $j++) : ?>
-                                <td><?= $data[$j]['total']; ?></td>
-                                <?php endfor ?>
-                                <?php 
-                            } ?>
-                            </tr>
+                                            <td><?= $totalCalls['total']; ?></td>
+                                        <?php endfor ?>
+                                        <?php $_SESSION['user' . $key] = $dataOfUser; ?>
+                                    <?php
+                                } else {
+                                    $data = $_SESSION['user' . $key];
+                                    for ($j = 0; $j < 19; $j++) : ?>
+                                            <td><?= $data[$j]['total']; ?></td>
+                                        <?php endfor ?>
+                                    <?php
+                                } ?>
+                                </tr>
                             <?php endforeach ?>
                             <tr>
                                 <td></td>
                                 <td><strong>TOTAL</strong></td>
                                 <?php for ($j = 0; $j < 20; $j++) : ?>
-                                <td id="<?= $j + 2 ?>"></td>
+                                    <td id="<?= $j + 2 ?>"></td>
                                 <?php endfor ?>
                             </tr>
                         </table>
@@ -319,4 +333,4 @@ $queueController->verifyPermission();
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 </body>
 
-</html> 
+</html>

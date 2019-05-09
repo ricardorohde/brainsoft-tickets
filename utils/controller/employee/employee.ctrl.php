@@ -97,7 +97,7 @@ class EmployeeController
 
     public function verifyOnChatToSetSession($idCredential)
     {
-        $employee = new employee($this, $this->prepareInstance);
+        $employee = new Employee($this, $this->prepareInstance);
         $employee->setIdCredential($idCredential);
         return $employee->verifyOnChat();
     }

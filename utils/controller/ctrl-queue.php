@@ -29,6 +29,9 @@ class QueueController
 	private $groupTwo;
 	private $countGroupOne;
 	private $countGroupTwo;
+
+	private $attendantsWaitingGroup1;
+	private $attendantsWaitingGroup2;
 	
 	public function setNavBarController($navBarController)
 	{
@@ -75,6 +78,16 @@ class QueueController
 		$this->countGroupTwo = $countGroupTwo;
 	}
 
+	public function getAttendantsWaitingGroup1()
+	{
+		return $this->attendantsWaitingGroup1;
+	}
+
+	public function getAttendantsWaitingGroup2()
+	{
+		return $this->attendantsWaitingGroup2;
+	}
+
 	function __construct()
 	{
 		$this->setNavBarController(new NavBarController());
@@ -89,6 +102,9 @@ class QueueController
 		$this->countGroupOne = count($this->groupOne);
 		$this->countGroupTwo = count($this->groupTwo);
 		$this->cleanDataInTable();
+
+		$this->attendantsWaitingGroup1 = $this->attendantsWaitingToGroup("nivel1");
+		$this->attendantsWaitingGroup2 = $this->attendantsWaitingToGroup("nivel2");
 	}
 
 	function setPrepareInstance($prepareInstance)
@@ -190,13 +206,13 @@ class QueueController
 	{
 	    $limit_initialize_1 = $this->allAttendantsOfGroup1OnChat * 2;
 	    $elements = ["aberto", "nivel1", $limit_initialize_1];
-	    $query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
+	    $query = "SELECT id_attendant FROM ticket, employee WHERE t_status = :status AND ticket.t_group = :group AND ticket.id_attendant = employee.id AND employee.id_role != 3 ORDER BY registered_at DESC LIMIT :count";
 	    $this->initializedQueueOfGroup1 = json_decode($this->prepareInstance->prepareBind($query, $elements, "all"), true);
 
 	    $limit_finalized_1 = $this->allAttendantsOfGroup1OnChat;
 	    $elements = ["aberto", "nivel1", "off", $limit_finalized_1];
 	    $query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
-			t_status != :status AND ticket.t_group = :group AND employee.on_chat != :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
+			t_status != :status AND ticket.t_group = :group AND employee.on_chat != :active AND ticket.id_attendant = employee.id  AND employee.id_role != 3 ORDER BY registered_at DESC LIMIT :count";
 		$this->finalizedQueueOfGroup1 = json_decode($this->prepareInstance->prepareBind($query, $elements, "all"), true);
 	}
 
@@ -212,13 +228,13 @@ class QueueController
 	{
 		$limit_initialize_2 = $this->allAttendantsOfGroup2OnChat * 2;
 		$elements_to_initialize_queue_2 = ["aberto", "nivel2", $limit_initialize_2];
-		$query = "SELECT id_attendant FROM ticket WHERE t_status = :status AND t_group = :group ORDER BY registered_at DESC LIMIT :count";
+		$query = "SELECT id_attendant FROM ticket, employee WHERE t_status = :status AND ticket.t_group = :group AND ticket.id_attendant = employee.id AND employee.id_role != 3 ORDER BY registered_at DESC LIMIT :count";
 		$this->initializedQueueOfGroup2 = json_decode($this->prepareInstance->prepareBind($query, $elements_to_initialize_queue_2, "all"), true);
 
 		$limit_finalized_2 = $this->allAttendantsOfGroup2OnChat;
 		$elements_to_finalized_queue_2 = ["aberto", "nivel2", "off", $limit_finalized_2];
 		$query = "SELECT DISTINCT id_attendant FROM ticket, employee WHERE 
-			t_status != :status AND ticket.t_group = :group AND employee.on_chat != :active AND ticket.id_attendant = employee.id ORDER BY registered_at DESC LIMIT :count";
+			t_status != :status AND ticket.t_group = :group AND employee.on_chat != :active AND ticket.id_attendant = employee.id AND employee.id_role != 3 ORDER BY registered_at DESC LIMIT :count";
 		$this->finalizedQueueOfGroup2 = json_decode($this->prepareInstance->prepareBind($query, $elements_to_finalized_queue_2, "all"), true);
 	}
 
@@ -312,6 +328,15 @@ class QueueController
 		$module = $this->moduleController->findById($id);
 		$category = $this->categoryController->findById($module['id_category']);
 		return $category['description'] . "/" . $module['description'];
+	}
+
+	function attendantsWaitingToGroup($group)
+	{
+		$element = [$group];
+		$query = "SELECT COUNT(*) as total FROM `ticket`, `employee` WHERE `id_attendant` = employee.id AND employee.id_role = 3 AND ticket.t_group = ?";
+		$data = $this->prepareInstance->prepare($query, $element, "all"); 
+	
+		return $data[0]['total'];
 	}
 
 	public function checkStatusToIcon($status)

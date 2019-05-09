@@ -1,5 +1,13 @@
-/*global $, document, Chart, LINECHART, data, options, window*/
 $(document).ready(function() {
+
+  $.post(
+    "../../../../utils/controller/employee/employee-js.ctrl.php",
+    { group: $("select[name=group]").val() },
+    function(valor) {
+      $("select[name=attendant]").append(valor);
+    }
+  );
+
   $("#submit-search-register").click(function() {
     var idChat = $("#id_chat").val();
     var idAttendant = $("input[name='id_attendant']:checked").val();

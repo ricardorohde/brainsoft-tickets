@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once "../../utils/controller/ticket/ticket.ctrl.php";
 $ticketController = TicketController::getInstance();
 $ticketController->verifyPermission();
@@ -67,13 +67,13 @@ $connection = $ticketController->getConn();
                     <div class="col-lg-12">
                         <div class="card">
                             <?php if (!isset($_GET["id_chat"])) : ?>
-                            <div class="card-header d-flex align-items-center">
-                                <h2 class="h5 display">Novo ticket</h2>
-                            </div>
+                                <div class="card-header d-flex align-items-center">
+                                    <h2 class="h5 display">Novo ticket</h2>
+                                </div>
                             <?php endif ?>
                             <div class="card-body">
-                                <input type="hidden" id="target-attendant" value="<?= isset($targetAttendant) ? $targetAttendant['name'] : $row_attendant['name'] ?>">
                                 <form id="ticket-form" class="form-horizontal" action="/controller/ticket/data" method="POST">
+                                    <input type="hidden" id="target-attendant" name="target-attendant" value="<?= isset($targetAttendant) ? $targetAttendant['name'] : $row_attendant['name'] ?>">
                                     <div class="form-group row">
                                         <label class="col-sm-2 form-control-label">Reincidente</label>
                                         <div class="col-sm-1 select ui-widget">
@@ -89,9 +89,9 @@ $connection = $ticketController->getConn();
                                         <div class="col-sm-4 select">
                                             <select name="client" class="form-control" id="client">
                                                 <?php if ($row_id_chat != null) : ?>
-                                                <option value=<?= '"' . $row_id_chat['id_client'] . '"'; ?>><?= $row_id_chat['client']; ?></option>
+                                                    <option value=<?= '"' . $row_id_chat['id_client'] . '"'; ?>><?= $row_id_chat['client']; ?></option>
                                                 <?php else : ?>
-                                                <option>Primeiramente, informe o cartório...</option>
+                                                    <option>Primeiramente, informe o cartório...</option>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
@@ -290,15 +290,15 @@ $connection = $ticketController->getConn();
                                                     <li>Grupo 1
                                                         <ul>
                                                             <?php foreach ($ticketController->getCategoriesGroup1() as $key => $value) : ?>
-                                                            <li id='<?= $value->category ?>'><?= $value->category ?>
-                                                                <ul>
-                                                                    <?php foreach ($ticketController->findDataOfCategoriesGroup1() as $key => $c_value) : ?>
-                                                                    <?php if ($value->id == $c_value->id_category) : ?>
-                                                                    <li id='<?= $value->category . '/' . $c_value->description ?>'><?= $c_value->description ?></li>
-                                                                    <?php endif ?>
-                                                                    <?php endforeach ?>
-                                                                </ul>
-                                                            </li>
+                                                                <li id='<?= $value->category ?>'><?= $value->category ?>
+                                                                    <ul>
+                                                                        <?php foreach ($ticketController->findDataOfCategoriesGroup1() as $key => $c_value) : ?>
+                                                                            <?php if ($value->id == $c_value->id_category) : ?>
+                                                                                <li id='<?= $value->category . '/' . $c_value->description ?>'><?= $c_value->description ?></li>
+                                                                            <?php endif ?>
+                                                                        <?php endforeach ?>
+                                                                    </ul>
+                                                                </li>
                                                             <?php endforeach ?>
                                                         </ul>
                                                     </li>
@@ -306,15 +306,15 @@ $connection = $ticketController->getConn();
                                                     <li>Grupo 2
                                                         <ul>
                                                             <?php foreach ($ticketController->getCategoriesGroup2() as $key => $value) : ?>
-                                                            <li id='<?= $value->category ?>'><?= $value->category ?>
-                                                                <ul>
-                                                                    <?php foreach ($ticketController->findDataOfCategoriesGroup2() as $key => $c_value) : ?>
-                                                                    <?php if ($value->id == $c_value->id_category) : ?>
-                                                                    <li id='<?= $value->category . '/' . $c_value->description ?>'><?= $c_value->description ?></li>
-                                                                    <?php endif ?>
-                                                                    <?php endforeach ?>
-                                                                </ul>
-                                                            </li>
+                                                                <li id='<?= $value->category ?>'><?= $value->category ?>
+                                                                    <ul>
+                                                                        <?php foreach ($ticketController->findDataOfCategoriesGroup2() as $key => $c_value) : ?>
+                                                                            <?php if ($value->id == $c_value->id_category) : ?>
+                                                                                <li id='<?= $value->category . '/' . $c_value->description ?>'><?= $c_value->description ?></li>
+                                                                            <?php endif ?>
+                                                                        <?php endforeach ?>
+                                                                    </ul>
+                                                                </li>
                                                             <?php endforeach ?>
                                                         </ul>
                                                     </li>
@@ -348,13 +348,13 @@ $connection = $ticketController->getConn();
                                         <div class="col-sm-4 select">
                                             <select name="attendant" class="form-control" id="attendant">
                                                 <?php if ($row_attendant != null) : ?>
-                                                <option value=<?= '"' . $row_attendant['id'] . '"'; ?>><?= $row_attendant['name']; ?></option>
+                                                    <option value=<?= '"' . $row_attendant['id'] . '"'; ?>><?= $row_attendant['name']; ?></option>
                                                 <?php else : ?>
-                                                <option value="">Selecione um atendente...</option>
+                                                    <option value="">Selecione um atendente...</option>
                                                 <?php endif; ?>
                                             </select>
                                             <?php if ($row_id_chat == null) : ?>
-                                            <span id="span-attendant"><?= $targetAttendant['name'] != "Camila Bortolanza" ? "Selecione o atendente <strong>" . $targetAttendant['name'] . "</strong>" : "" ?>.</span>
+                                                <span id="span-attendant"><?= $targetAttendant['name'] != "Camila Bortolanza" ? "Selecione o atendente <strong>" . $targetAttendant['name'] . "</strong>" : "" ?>.</span>
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -368,145 +368,145 @@ $connection = $ticketController->getConn();
                                     <?php $dateToGetChats = is_null($row_id_chat['registered_at']) ? date('Y/m/d') : $row_id_chat['registered_at'] ?>
                                     <?php $ticketController->getHistoryOfChat($dateToGetChats); ?>
                                     <?php if ($_GET['id_chat'] > 100000 && $row_id_chat['t_status'] != "aberto") : ?>
-                                    <div class="row text-center">
-                                        <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            Histórico e Relatório do Chat
-                                        </a>
-                                    </div>
-                                    <div class="collapse" id="collapseExample">
-                                        <div class="card card-body mt-3">
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 form-control-label">Histórico do chat</label>
-                                                <div class="col-sm-10 select" style="height: 400px; overflow: auto;">
+                                        <div class="row text-center">
+                                            <a class="col-sm-4 offset-sm-4 btn btn-info text-center" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                Histórico e Relatório do Chat
+                                            </a>
+                                        </div>
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="card card-body mt-3">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 form-control-label">Histórico do chat</label>
+                                                    <div class="col-sm-10 select" style="height: 400px; overflow: auto;">
 
-                                                    <?php foreach ($ticketController->getHistoryOfChat($dateToGetChats) as $key => $value) :
-                                                        $date = strtotime($value->timestamp);
+                                                        <?php foreach ($ticketController->getHistoryOfChat($dateToGetChats) as $key => $value) :
+                                                            $date = strtotime($value->timestamp);
 
-                                                        if (empty($ticketController->getOpenedAt())) {
-                                                            $ticketController->setOpenedAt(date('H:i:s', $date));
-                                                        }
-                                                        ?>
+                                                            if (empty($ticketController->getOpenedAt())) {
+                                                                $ticketController->setOpenedAt(date('H:i:s', $date));
+                                                            }
+                                                            ?>
 
-                                                    <div style="display: table;">
-                                                        <div style="float: left;">
-                                                            <p style="font-size: 10px;"><?= date('H:i:s', $date); ?></p>
-                                                        </div>
-                                                        <?php if ($value->tipo == "M") : ?>
-                                                        <?php
-                                                        $type = "--- Sistema";
-                                                        $termo = 'Chat transferido';
-                                                        $termo2 = 'Atendido por';
-                                                        $hasTransfer = "";
+                                                            <div style="display: table;">
+                                                                <div style="float: left;">
+                                                                    <p style="font-size: 10px;"><?= date('H:i:s', $date); ?></p>
+                                                                </div>
+                                                                <?php if ($value->tipo == "M") : ?>
+                                                                    <?php
+                                                                    $type = "--- Sistema";
+                                                                    $termo = 'Chat transferido';
+                                                                    $termo2 = 'Atendido por';
+                                                                    $hasTransfer = "";
 
-                                                        $pattern = '/' . $termo . '/'; //Padrão a ser encontrado
-                                                        if (preg_match($pattern, $value->texto)) {
-                                                            $ticketController->setTransferedAt(date('H:i:s', $date));
-                                                        }
+                                                                    $pattern = '/' . $termo . '/'; //Padrão a ser encontrado
+                                                                    if (preg_match($pattern, $value->texto)) {
+                                                                        $ticketController->setTransferedAt(date('H:i:s', $date));
+                                                                    }
 
-                                                        $pattern2 = '/' . $termo2 . '/'; //Padrão a ser encontrado
-                                                        if (preg_match($pattern2, $value->texto)) {
-                                                            $hasTransfer = date('H:i:s', $date);
-                                                        }
-                                                        ?>
-                                                        <div style="float: left; margin-left: 8px;">
-                                                            <p><?= "<b>" . $type . "</b>: " . $value->texto; ?></p>
-                                                        </div>
-                                                        <?php elseif ($value->tipo == "A") : ?>
-                                                        <?php if ($hasTransfer != "") : ?>
-                                                        <?php $type = ucfirst($ticketController->getAttendant()); ?>
-                                                        <?php is_null($ticketController->getAfterTransferStartAt()) ? $ticketController->setAfterTransferStartAt(date('H:i:s', $date)) : "" ?>
-                                                        <div style="float: left; margin-left: 8px;">
-                                                            <p><?= "<b>" . $type . "</b>: " . $value->texto; ?></p>
-                                                        </div>
-                                                        <?php else : ?>
-                                                        <div style="float: left; margin-left: 8px;">
-                                                            <p><?= "<b>Camila</b>: " . $value->texto; ?></p>
-                                                            <?php $ticketController->setLastMessageByReceptionAt(date('H:i:s', $date)) ?>
-                                                        </div>
-                                                        <?php endif; ?>
-                                                        <?php else : $type = ucfirst($ticketController->getClient()); ?>
-                                                        <div style="float: left; margin-left: 8px;">
-                                                            <p><?= "<b>" . $type . "</b>: " . $value->texto; ?></p>
-                                                        </div>
-                                                        <?php endif; ?>
+                                                                    $pattern2 = '/' . $termo2 . '/'; //Padrão a ser encontrado
+                                                                    if (preg_match($pattern2, $value->texto)) {
+                                                                        $hasTransfer = date('H:i:s', $date);
+                                                                    }
+                                                                    ?>
+                                                                    <div style="float: left; margin-left: 8px;">
+                                                                        <p><?= "<b>" . $type . "</b>: " . $value->texto; ?></p>
+                                                                    </div>
+                                                                <?php elseif ($value->tipo == "A") : ?>
+                                                                    <?php if ($hasTransfer != "") : ?>
+                                                                        <?php $type = ucfirst($ticketController->getAttendant()); ?>
+                                                                        <?php is_null($ticketController->getAfterTransferStartAt()) ? $ticketController->setAfterTransferStartAt(date('H:i:s', $date)) : "" ?>
+                                                                        <div style="float: left; margin-left: 8px;">
+                                                                            <p><?= "<b>" . $type . "</b>: " . $value->texto; ?></p>
+                                                                        </div>
+                                                                    <?php else : ?>
+                                                                        <div style="float: left; margin-left: 8px;">
+                                                                            <p><?= "<b>Camila</b>: " . $value->texto; ?></p>
+                                                                            <?php $ticketController->setLastMessageByReceptionAt(date('H:i:s', $date)) ?>
+                                                                        </div>
+                                                                    <?php endif; ?>
+                                                                <?php else : $type = ucfirst($ticketController->getClient()); ?>
+                                                                    <div style="float: left; margin-left: 8px;">
+                                                                        <p><?= "<b>" . $type . "</b>: " . $value->texto; ?></p>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        <?php endforeach; ?>
+
                                                     </div>
-                                                    <?php endforeach; ?>
-
                                                 </div>
-                                            </div>
-                                            <div class="line"></div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 form-control-label">Relatório do chat</label>
-                                                <div class="col-sm-10 select">
-                                                    <p><b>IP:</b> <?= $ticketController->getIpClient(); ?> </p>
-                                                    <p><b>Solicitou chat às:</b> <?= date('H:i:s', strtotime($ticketController->getStart())); ?> </p>
-                                                    <p><b>Finalizado às:</b> <?= date('H:i:s', strtotime($ticketController->getFinal())); ?> </p>
-                                                    <p><b>Nota de Atendimento:</b>
-                                                        <?= empty($rating) ? 'Não votou' : $ticketController->getRating() ?>
-                                                    </p>
-                                                    <br>
-                                                    <p><b>Tempo até ser atendido:</b>
-                                                        <?php
-                                                        $enterDate = new DateTime($ticketController->getStart(), new DateTimeZone('America/Sao_Paulo'));
-                                                        $attendantDate = new DateTime($ticketController->getOpenedAt(), new DateTimeZone('America/Sao_Paulo'));
+                                                <div class="line"></div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 form-control-label">Relatório do chat</label>
+                                                    <div class="col-sm-10 select">
+                                                        <p><b>IP:</b> <?= $ticketController->getIpClient(); ?> </p>
+                                                        <p><b>Solicitou chat às:</b> <?= date('H:i:s', strtotime($ticketController->getStart())); ?> </p>
+                                                        <p><b>Finalizado às:</b> <?= date('H:i:s', strtotime($ticketController->getFinal())); ?> </p>
+                                                        <p><b>Nota de Atendimento:</b>
+                                                            <?= empty($rating) ? 'Não votou' : $ticketController->getRating() ?>
+                                                        </p>
+                                                        <br>
+                                                        <p><b>Tempo até ser atendido:</b>
+                                                            <?php
+                                                            $enterDate = new DateTime($ticketController->getStart(), new DateTimeZone('America/Sao_Paulo'));
+                                                            $attendantDate = new DateTime($ticketController->getOpenedAt(), new DateTimeZone('America/Sao_Paulo'));
 
-                                                        $totalTime = $attendantDate->diff($enterDate);
-                                                        echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
-                                                        ?>
-                                                    </p>
-                                                    <p><b>Duração do atendimento:</b>
-                                                        <?php
-                                                        $openedIn = new DateTime($ticketController->getOpenedAt(), new DateTimeZone('America/Sao_Paulo'));
-                                                        $transferTime = new DateTime($ticketController->getLastMessageByReceptionAt(), new DateTimeZone('America/Sao_Paulo'));
-                                                        $finalDate = new DateTime(date('H:i:s', strtotime($ticketController->getFinal())), new DateTimeZone('America/Sao_Paulo'));
+                                                            $totalTime = $attendantDate->diff($enterDate);
+                                                            echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
+                                                            ?>
+                                                        </p>
+                                                        <p><b>Duração do atendimento:</b>
+                                                            <?php
+                                                            $openedIn = new DateTime($ticketController->getOpenedAt(), new DateTimeZone('America/Sao_Paulo'));
+                                                            $transferTime = new DateTime($ticketController->getLastMessageByReceptionAt(), new DateTimeZone('America/Sao_Paulo'));
+                                                            $finalDate = new DateTime(date('H:i:s', strtotime($ticketController->getFinal())), new DateTimeZone('America/Sao_Paulo'));
 
-                                                        if ($ticketController->getTransferedAt() != "") {
-                                                            $totalTime = $transferTime->diff($openedIn);
-                                                        } else {
-                                                            $totalTime = $finalDate->diff($openedIn);
-                                                        }
-                                                        echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
-                                                        ?>
-                                                    </p>
+                                                            if ($ticketController->getTransferedAt() != "") {
+                                                                $totalTime = $transferTime->diff($openedIn);
+                                                            } else {
+                                                                $totalTime = $finalDate->diff($openedIn);
+                                                            }
+                                                            echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
+                                                            ?>
+                                                        </p>
 
-                                                    <?php if ($ticketController->getTransferedAt() != "") : ?>
-                                                    <p><b>Tempo de espera (Transferido - Atendido):</b>
-                                                        <?php
-                                                        $transferedTime = new DateTime($ticketController->getTransferedAt(), new DateTimeZone('America/Sao_Paulo'));
-                                                        $afterTransfer = new DateTime($ticketController->getAfterTransferStartAt(), new DateTimeZone('America/Sao_Paulo'));
+                                                        <?php if ($ticketController->getTransferedAt() != "") : ?>
+                                                            <p><b>Tempo de espera (Transferido - Atendido):</b>
+                                                                <?php
+                                                                $transferedTime = new DateTime($ticketController->getTransferedAt(), new DateTimeZone('America/Sao_Paulo'));
+                                                                $afterTransfer = new DateTime($ticketController->getAfterTransferStartAt(), new DateTimeZone('America/Sao_Paulo'));
 
-                                                        $totalTime = $afterTransfer->diff($transferedTime);
-                                                        echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
-                                                        ?>
-                                                    </p>
-                                                    <p><b>Duração do suporte:</b>
-                                                        <?php
-                                                        $initialSupport = new DateTime($ticketController->getAfterTransferStartAt(), new DateTimeZone('America/Sao_Paulo'));
-                                                        $finalSupport = new DateTime(date('H:i:s', strtotime($ticketController->getFinal())), new DateTimeZone('America/Sao_Paulo'));
+                                                                $totalTime = $afterTransfer->diff($transferedTime);
+                                                                echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
+                                                                ?>
+                                                            </p>
+                                                            <p><b>Duração do suporte:</b>
+                                                                <?php
+                                                                $initialSupport = new DateTime($ticketController->getAfterTransferStartAt(), new DateTimeZone('America/Sao_Paulo'));
+                                                                $finalSupport = new DateTime(date('H:i:s', strtotime($ticketController->getFinal())), new DateTimeZone('America/Sao_Paulo'));
 
-                                                        $totalTime = $finalSupport->diff($initialSupport);
-                                                        echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
-                                                        ?>
-                                                    </p>
-                                                    <?php endif; ?>
+                                                                $totalTime = $finalSupport->diff($initialSupport);
+                                                                echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
+                                                                ?>
+                                                            </p>
+                                                        <?php endif; ?>
 
-                                                    <p><b>Duração total do chat:</b>
-                                                        <?php 
-                                                        $startDate = new DateTime($ticketController->getStart(), new DateTimeZone('America/Sao_Paulo'));
-                                                        $finalDate = new DateTime($ticketController->getFinal(), new DateTimeZone('America/Sao_Paulo'));
+                                                        <p><b>Duração total do chat:</b>
+                                                            <?php
+                                                            $startDate = new DateTime($ticketController->getStart(), new DateTimeZone('America/Sao_Paulo'));
+                                                            $finalDate = new DateTime($ticketController->getFinal(), new DateTimeZone('America/Sao_Paulo'));
 
-                                                        $totalTime = $finalDate->diff($startDate);
+                                                            $totalTime = $finalDate->diff($startDate);
 
-                                                        $totalTimeInMinutes = ($totalTime->h * 60) + $totalTime->i;
+                                                            $totalTimeInMinutes = ($totalTime->h * 60) + $totalTime->i;
 
-                                                        echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
-                                                        ?>
-                                                    </p>
+                                                            echo ($totalTime->h . " horas " . $totalTime->i . " minutos e " . $totalTime->s . " segundos");
+                                                            ?>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="line"></div>
+                                        <div class="line"></div>
                                     <?php endif; ?>
                                     <div class="form-group row">
                                         <div class="offset-sm-2 col-sm-12">
@@ -604,4 +604,4 @@ $connection = $ticketController->getConn();
     <!---->
 </body>
 
-</html> 
+</html>

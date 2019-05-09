@@ -139,7 +139,7 @@ class Client
     	$element = $this->getIdCredential();
         $query = "SELECT * FROM client WHERE id_credential = ?";
         return $this->prepareInstance->prepare($query, $element, "");
-    }
+	}
 
 	public function findIdRegistry()
     {

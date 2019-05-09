@@ -62,10 +62,12 @@ $ticketController = NewFindTicketController::getInstance();
                                                 <label class="custom-control-label" for="attendant<?= $attendant['id'] ?>"><?= explode(' ', $attendant['name'])[0]; ?></label>
                                             </div>
                                         <?php endforeach ?>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="attendant1" name="id_attendant" value="1" class="custom-control-input" <?= $_SESSION['login'] == 4 ? "checked" : "" ?>>
-                                            <label class="custom-control-label" for="attendant1">Recepção</label>
-                                        </div>
+                                        <?php if ($_SESSION['role'] == '3') : ?>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="attendant1" name="id_attendant" value="<?= $_SESSION['id'] ?>" class="custom-control-input" checked>
+                                                <label class="custom-control-label" for="attendant1">Recepção</label>
+                                            </div>
+                                        <?php endif ?>
                                     </div>
                                     <span class="offset-sm-2 mb-4" style="margin-top: -12px;">(Caso o atendente esteja com 2 atendimentos ou Offline ele não aparecerá aqui.)</span>
                                 </div>

@@ -294,3 +294,8 @@ a:link {
 button[name=filter-to-bar-tickets-by-registry] {
   width: 100%;
 }
+
+.attendants-waiting {
+  font-size: 30px;
+  margin-top: 50px;
+}
