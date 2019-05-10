@@ -14,4 +14,6 @@ $(document).ready(function(){
 			$(this).html(soma);
 		}
 	});
+
+	$('[data-toggle="tooltip"]').tooltip();
 });

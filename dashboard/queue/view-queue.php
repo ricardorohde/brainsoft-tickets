@@ -95,7 +95,9 @@ $queueController->verifyPermission();
                     <h1>Disponibilidade Grupo 1</h1>
                     <div class="row">
                         <div class="col-lg-1 attendants-waiting">
-                            <?= $queueController->getAttendantsWaitingGroup1() ?>
+                            <p data-toggle="tooltip" data-placement="right" title="<?php foreach ($queueController->getAttendantsWaitingGroup1() as $a) {
+                                echo $a->name . " | ";
+                            } ?>"><?= $queueController->getQtdAttendantsWaitingGroup1() ?></p>
                         </div>
                         <div class="col-lg-10">
                             <div class="row" id="internal-row">
@@ -122,15 +124,15 @@ $queueController->verifyPermission();
                                                                             <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
 
                                                                             <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-																   	                                                                                                                                                                <p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
-																   	                                                                                                                                                                <p>
-                                                                                                                                                                                                                                        <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
-                                                                                                                                                                                                                                        <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
-                                                                                                                                                                                                                                        <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
-                                                                                                                                                                                                                                        <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
-                                                                                                                                                                                                                                        <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
-                                                                                                                                                                                                                                    </p>
-																   	                                                                                                                                                                <button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
+																   	                                                                                                                                                                                    <p><strong>Ticket: </strong><?= $chat['id_chat'] ?></p>
+																   	                                                                                                                                                                                    <p>
+                                                                                                                                                                                                                                                            <strong>Inicio: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
+                                                                                                                                                                                                                                                            <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
+                                                                                                                                                                                                                                                            <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
+                                                                                                                                                                                                                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
+                                                                                                                                                                                                                                                            <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
+                                                                                                                                                                                                                                                        </p>
+																   	                                                                                                                                                                                    <button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button></div>"><?= $chat['id_chat'] ?></button>
 
                                                                             <a href="#"></a>
                                                                             <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">
@@ -166,7 +168,9 @@ $queueController->verifyPermission();
                     <h1>Disponibilidade Grupo 2</h1>
                     <div class="row">
                         <div class="col-lg-1 attendants-waiting">
-                        <?= $queueController->getAttendantsWaitingGroup2() ?>
+                            <p data-toggle="tooltip" data-placement="right" title="<?php foreach ($queueController->getAttendantsWaitingGroup2() as $a) {
+                                echo $a->name . " | ";
+                            } ?>"><?= $queueController->getQtdAttendantsWaitingGroup2() ?></p>
                         </div>
                         <div class="col-lg-10">
                             <div class="row" id="internal-row">
@@ -193,16 +197,16 @@ $queueController->verifyPermission();
                                                                             <?php $minutos = $queueController->progressBar($chat['registered_at']); ?>
 
                                                                             <button class="btn btn-secondary filha" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<div id='popover_content_wrapper'>
-														                                                                                                                                                                <p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
-											   			                                                                                                                                                                <p>
-                                                                                                                                                                                                                            <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
-                                                                                                                                                                                                                            <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
-                                                                                                                                                                                                                            <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
-                                                                                                                                                                                                                            <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
-                                                                                                                                                                                                                            <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
-                                                                                                                                                                                                                        </p>
-											   			                                                                                                                                                                <button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
-														                                                                                                                                                                </div>"><?= $chat['id_chat'] ?></button>
+														                                                                                                                                                                                    <p><strong>Chat / Ticket: </strong><?= $chat['id_chat'] ?></p>
+											   			                                                                                                                                                                                    <p>
+                                                                                                                                                                                                                                                <strong>Inicio do chat: </strong><?= date('d/m/Y H:i:s', strtotime($chat['registered_at'])) ?><br>
+                                                                                                                                                                                                                                                <strong>Cliente: </strong><?= $queueController->findClientOfTicketById($chat['client']) ?> do <?= $queueController->findRegistryOfTicketById($chat['registry']) ?><br>
+                                                                                                                                                                                                                                                <strong>Fonte: </strong><?= ucfirst($chat['source']) ?><br>
+                                                                                                                                                                                                                                                <strong>Módulo: </strong><?= $queueController->findModuleOfTicketById($chat['id_module']) ?><br>
+                                                                                                                                                                                                                                                <strong>Status: </strong><?= $apiPct->getMessageToStatus() ?>
+                                                                                                                                                                                                                                            </p>
+											   			                                                                                                                                                                                    <button id='btn-modal' class='btn btn-primary' value='<?= $chat['id_chat'] ?>' onClick='redirectToTicket(this.value, <?= $newQueue ?>)'>Visualizar Ticket</button>
+														                                                                                                                                                                                    </div>"><?= $chat['id_chat'] ?></button>
 
                                                                             <a href="#"></a>
                                                                             <input type="hidden" name="startedTime<?= $rand ?>" value="<?= $chat['registered_at'] ?>">

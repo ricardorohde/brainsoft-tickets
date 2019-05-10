@@ -30,6 +30,8 @@ class QueueController
 	private $countGroupOne;
 	private $countGroupTwo;
 
+	private $qtdAttendantsWaitingGroup1;
+	private $qtdAttendantsWaitingGroup2;
 	private $attendantsWaitingGroup1;
 	private $attendantsWaitingGroup2;
 	
@@ -78,11 +80,21 @@ class QueueController
 		$this->countGroupTwo = $countGroupTwo;
 	}
 
+	public function getQtdAttendantsWaitingGroup1()
+	{
+		return $this->qtdAttendantsWaitingGroup1;
+	}
+
+	public function getQtdAttendantsWaitingGroup2()
+	{
+		return $this->qtdAttendantsWaitingGroup2;
+	}
+
 	public function getAttendantsWaitingGroup1()
 	{
 		return $this->attendantsWaitingGroup1;
 	}
-
+ 
 	public function getAttendantsWaitingGroup2()
 	{
 		return $this->attendantsWaitingGroup2;
@@ -103,8 +115,8 @@ class QueueController
 		$this->countGroupTwo = count($this->groupTwo);
 		$this->cleanDataInTable();
 
-		$this->attendantsWaitingGroup1 = $this->attendantsWaitingToGroup("nivel1");
-		$this->attendantsWaitingGroup2 = $this->attendantsWaitingToGroup("nivel2");
+		$this->attendantsWaitingToGroup("nivel1");
+		$this->attendantsWaitingToGroup("nivel2");
 	}
 
 	function setPrepareInstance($prepareInstance)
@@ -332,11 +344,23 @@ class QueueController
 
 	function attendantsWaitingToGroup($group)
 	{
-		$elements = ["aberto", 3, $group];
-		$query = "SELECT COUNT(*) as total FROM `ticket`, `employee` WHERE t_status = ? AND `id_attendant` = employee.id AND employee.id_role = ? AND ticket.t_group = ?";
+		$elements = [$group, "aberto", 3];
+		$query = "SELECT c.name FROM ticket AS t INNER JOIN employee AS e ON t.id_attendant = e.id AND t.t_group = ? AND t_status = ? AND e.id_role = ? INNER JOIN client AS c ON t.id_client = c.id";
 		$data = $this->prepareInstance->prepare($query, $elements, "all"); 
-	
-		return $data[0]['total'];
+
+		if ($group == "nivel1") {
+			$this->qtdAttendantsWaitingGroup1 = count($data);
+
+			$data = json_encode($data);
+			$decode = json_decode($data);
+			$this->attendantsWaitingGroup1 = $decode;
+		} else {
+			$this->qtdAttendantsWaitingGroup2 = count($data);
+
+			$data = json_encode($data);
+			$decode = json_decode($data);
+			$this->attendantsWaitingGroup2 = $decode;
+		}
 	}
 
 	public function checkStatusToIcon($status)
