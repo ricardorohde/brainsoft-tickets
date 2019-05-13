@@ -184,7 +184,7 @@ $newUserController->verifyGet($_GET);
                                                             <td><?= $ticket['category'] ?> / <?= $ticket['module'] ?></td>
                                                             <td><?= $ticket['attendant'] ?></td>
                                                             <td class="actions text-center">
-                                                                <a href="../ticket/<?= $ticket['chat'] ?>/<?= $ticket['attendant_id'] ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                                                <a href="/painel/ticket/<?= $ticket['chat'] ?>/<?= $ticket['attendant_id'] ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                                             </td>
                                                         </tr>
                                                         <?php endforeach; ?>
